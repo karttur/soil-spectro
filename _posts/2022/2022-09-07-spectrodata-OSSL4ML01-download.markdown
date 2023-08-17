@@ -1,13 +1,13 @@
 ---
 layout: post
-title: Arranging OSSL data
+title: Download OSSL data
 categories: libspectrodata
-excerpt: "Downloading and organizing OSSL data for Machine Learning modeling in Python, using Sweden as an example"
+excerpt: "Download OSSL data over a selected region to use for Machine Learning modelling, the post uses Sweden as an example"
 tags:
   - OSSL
   - api
   - explorer
-  - organizing
+  - download
   - Sweden
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
 date: '2022-09-07 11:27'
@@ -18,11 +18,7 @@ share: true
 
 ### Introduction
 
-This post builds on the two previous posts in this blog: [Open Soil Spectral Library (OSSL)](../spectrodata-OSSL-intro) and [OSSL explorer API](../spectrodata-OSSL-api-explorer). In this post you will access selected OSSL data and organize that data into a single matrix that can be imported to Python for Machine Learning modelling. The data used as an example is Near-InfraRed (NIR) OSSL data over Sweden. You can change the study area by selecting any other geographical region, select via soil textures (attributes) or source dataset as outlined in the [previous](../spectrodata-OSSL-api-explorer) post.  
-
-### Prerequisites
-
-
+This post builds on the two previous posts in this blog: [Open Soil Spectral Library (OSSL)](../spectrodata-OSSL-intro) and [OSSL explorer API](../spectrodata-OSSL-api-explorer). In this post you will download selected OSSL data  that will then be used in the following posts for Machine Learning modelling. The data used as an example is Near-InfraRed (NIR) OSSL data over Sweden. You can change the study area by selecting any other geographical region, select via soil textures (attributes) or source dataset as outlined in the [previous](../spectrodata-OSSL-api-explorer) post.  
 
 ### Select OSSL data
 
@@ -39,9 +35,6 @@ For most country searches you can select sub-regions, in the example of Sweden (
 {: .pull-left}
 You can also select the dataset(s) to extract from the selected region by clicking the <span class='button'>Dataset</span> button in the Data selection window. The Swedish OSSL data stem from three different datasets, ICRAF-ISRIC, LUCAS-WOODWELL.SSL and LUCAS.SSL. [LUCAS](https://land.copernicus.eu/imagery-in-situ/lucas) is a European wide soil survey that is repeated every three years. The ICRAF-ISRIC dataset focuses on the Mid-Infrared  (MIR) spectral regions and will not be used, also because it only contains 5 sample sites in Sweden. The LUCAS-WOODWELL.SSL only contains a single sample site over Sweden, including or omitting it will not really influence the modelling.
 
-<figure>
-<img src="../../images/whitespace.png">
-</figure>
 ### Select NeoSpectra data
 
 If you want to analyse and evaluate the predictive power of the [NeoSpectra](https://www.si-ware.com) advanced handheld NIR field spectrometer mentioned in the [previous](../spectrodata-OSSL-api-explorer) post, select the NEOSPECTRA.SSL as Dataset from the global (or USA) geographical region.
@@ -61,6 +54,35 @@ Download your selected OSSL data by clicking the <span class='button'>Download n
 - soilsite.data.csv [sample site data]
 - visnir.data.csv [VIS-NIR spectral scans (excluding NeoSpectra)]
 
-####
+### Arranging OSSL data
 
-Arranging the OSSL data into a single table relies on the site uuid identifier for linking the data. In the present version of the OSSL, the uuid column of each table (csv file) is called _id.layer_uuid_txt_. The headers are hardcoded in the script and if the headers change you need to edit directly in the code.
+In the [next](../spectrodata-OSSL4ML02-arrange/) post you will use a python script to arrange (import) the data from the <span class='file'>csv</span> files into a combined <span class='file'>json</span> file. To keep your data in order I suggest that you create a dedicated folder (directory) under your user where you keep the OSSL data that you download. In my system I have a folder called <span class='file'>OSSL</span> and in that root folder I create subfolders with regional and/or thematic names indicating the OSSL data that I downloaded. I save the downloaded file, that is always called <span class='file'>data.zip</span>, in that folder, then I unzip the file and the 5 <span class='file'>csv</span> files will end up in a subfolder called <span class='file'>data</span>. Do not rename the downloaded and unzipped files if you want to use the Pythons cripts in the following posts. My OSSL folder now looks like this:
+
+```
+.
+|____Sweden
+| |____LUCAS
+| | |____data.zip
+| | |____data
+| | | |____visnir.data.csv
+| | | |____neon.data.csv
+| | | |____soillab.data.csv
+| | | |____mir.data.csv
+| | | |____soilsite.data.csv
+|____Uganda
+| |____data.zip
+| |____data
+| | |____visnir.data.csv
+| | |____soillab.data.csv
+| | |____mir.data.csv
+| | |____soilsite.data.csv
+|____USA
+| |____NeoSpectra
+| | |____data.zip
+| | |____data
+| | | |____visnir.data.csv
+| | | |____neon.data.csv
+| | | |____soillab.data.csv
+| | | |____mir.data.csv
+| | | |____soilsite.data.csv
+```
