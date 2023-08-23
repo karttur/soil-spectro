@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Model OSSL data
+title: "Model OSSL data: 3 hyper-parameter tuning"
 categories: libspectrodata
 excerpt: "Model OSSL data using Python's Machine Learning (ML) package Scikit learn (sklearn)."
 tags:
@@ -10,8 +10,8 @@ tags:
   - scikit learn
   - sklearn
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
-date: '2022-09-17 11:27'
-modified: '2023-07-05 11:27'
+date: '2022-09-21 11:27'
+modified: '2023-08-05 11:27'
 comments: true
 share: true
 ---
