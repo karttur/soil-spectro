@@ -114,7 +114,7 @@ When you have fine-tuned your search you can download the selected dataset by cl
 
 ##### OSSL Explorer download
 
-Data downloaded from the [OSSL Explorer](https://explorer.soilspectroscopy.org) is delivered as a <span class='file'>zip</span> file. When unzipped, 4 files are created, in alphabetic order:
+Data downloaded from the [OSSL Explorer](https://explorer.soilspectroscopy.org) is delivered as a <span class='file'>zip</span> file. When unzipped, 5 files are created, in alphabetic order:
 
 - mir.data.csv [MIR spectral scans]
 - neon.data.csv [NeoSpectra spectral scans]
