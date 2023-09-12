@@ -15,17 +15,19 @@ comments: true
 share: true
 ---
 
+This post is the third in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+
 ### Introduction
 
 This post is a manual for how to explore, by plotting, the OSSL data downloaded and organized as otlined in the previous posts of this blog. The plotting is done using a Python script and the <span class='package'>matplotlib</span> package. With it you can plot both the spectra and the laboratory data.
 
 ### Prerequisites
 
-This post requires that you followed processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML01-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the <span class='package'>matplotlib</span> package installed. The previous post tells how to setup a Python environment using <span class='terminalapp'>conda</span>, including adding the <span class='package'>matplotlib</span> package.
+This post requires that you followed processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML01-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the <span class='package'>matplotlib</span> package installed. If you want to have an example structure of command files, access the [OSSL-data repo](https://github.com/karttur/OSSL-data/). This post is more of a stand-alone explanation of how to setup processing using the python module <span class='module'>OSSL_plot</span>; the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) instead starts from the structure of a prepared example of [OSSL-data](https://github.com/karttur/OSSL-data/), also accessible from GitHub.
 
 ### Plot OSSL
 
-The python package <span class='package'>matplotlib</span> have almost endless possibilities for designing data plots. Only a few of the functions are predefined in the module <span class='module'>OSSL_plot.py</span>. If you want to develop your own plot functions for OSSL spectral data plots you are free to use the <span class='module'>OSSL_plot.py</span> as a starting point. I use the <span class='app'>Eclipse</span> Integrated Development Environment (IDE) for developing my Python scripts and package, and the [previous post](../spectrodata-OSSL4ML01-arrange) contain links to instructions for installing <span class='app'>Eclipse</span> for PyDev.
+The python package <span class='package'>matplotlib</span> has almost endless possibilities for designing data plots. Only a few of the functions are predefined in the module <span class='module'>OSSL_plot.py</span>. If you want to develop your own plot functions for OSSL spectral data plots you are free to use the <span class='module'>OSSL_plot.py</span> as a starting point.
 
 #### Spectral plots
 
@@ -44,7 +46,7 @@ You can plot either the raw spectra or the first derivate (change of spectra bet
   <img src="../../images/LUCAS_460-1050_10_spectra+derivative.png" alt="image">
   </a>
 
-	<figcaption>Plots of raw spectral signal, derivates of spectral signals and both raw and derivate signals together (see text).</figcaption>
+	<figcaption>Figure 1. Plots of raw spectral signal, derivates of spectral signals and both raw and derivate signals together (see text).</figcaption>
 </figure>
 
 
@@ -53,20 +55,18 @@ You can plot either the raw spectra or the first derivate (change of spectra bet
 The laboratory data ("features") can be plotted as histograms and box-whisker (box) plots. You can plot individual features or combine all selected features in a single plot (figure 2). You can define individual colours for each feature, as exemplified in figure 2.
 
 <figure class="half">
+  <a href="../../images/LUCAS_SE_histogram_all-features.png">
+  <img src="../../images/LUCAS_SE_histogram_all-features.png" alt="image">
+  </a>  
 	<a href="../../images/LUCAS_SE_boxwhisker_all-features.png">
   <img src="../../images/LUCAS_SE_boxwhisker_all-features.png" alt="image">
   </a>
-
-  <a href="../../images/LUCAS_SE_histogram_all-features.png">
-  <img src="../../images/LUCAS_SE_histogram_all-features.png" alt="image">
-  </a>
-
-	<figcaption>Plots of laboratory data features, left panel shows histogram distribution and right panel shows box-whisler plots.</figcaption>
+	<figcaption>Figure 2. Plots of laboratory data features, left panel shows histogram distribution and right panel shows box-whisler plots.</figcaption>
 </figure>
 
 #### Python Module OSSL_plot.py
 
-Running the <span class='module'>OSSL_plot.py</span> script is similar to running the import script, and requires specifications of the paths and names of 1) the OSSL data and 2) the command files that define what you want to plot and some minimal layout options. The required parameters are identical to those required by the import script in the [previous post](../spectrodata-OSSL4ML01-arrange):
+Running the <span class='module'>OSSL_plot.py</span> script is similar to running the [import script](../spectrodata-OSSL4ML02-arrange), and requires specifications of the paths and names of 1) the OSSL data and 2) the command files that define what you want to plot and some minimal layout options:
 
 - **rootpath**: full path to folder with a downloaded OSSL zip file; parent folder to  "sourcedatafolder", "arrangeddatafolder", and "jsonfolder"
 - **sourcedatafolder**: subfolder under "rootpath" with the exploded content of the OSSL zip file (default = "data")
@@ -92,7 +92,7 @@ All of the paths and names listed above must be specified in a json file, and th
 
 The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [download](../spectrodata-OSSL4ML01-download) post. Before you can plot any data you must create 1) a json command file defining how to plot the OSSL data, and 2) a text file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project text file can link to any number of json command files. You can thus run multiple plot designs for one and the same dataset, or run plots for multiple datasets using a single project file and a single run.
 
-The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from the [GitHub repo](https://github.com/karttur/OSSL-py). To generate a template change the parameter _createjsonparams_ to _true_.
+The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template change the parameter _createjsonparams_ to _true_.
 
 ```
 {
@@ -538,4 +538,4 @@ I then create the project file _plot_spectra.txt_ (in the project root folder) a
 
 You can now run the Python script _OSSL_plot.py_ with a single command, the path to the [json specification file](#json-specification-file). The json specification file points to the arranged data and then plot project file (a simple text file) that in turn points the json command file. The project text file can point to any number of json command files and they will be executed in sequence.
 
-The module generates the requested plots, and shows them on screen and/or saves it as a png file as requested in the json command file.
+The module generates the requested plots, and shows them on screen and/or saves them as a png files as requested in the json command file. For instance [figure 1](#spectral-plots) and [figure 2](#feature-plots) above were generated in this way.

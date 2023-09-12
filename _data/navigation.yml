@@ -12,6 +12,10 @@
   url: /libspectrodata/
   include: 'N'
 
+- title: Support
+  url: /libspectrosupport/
+  include: 'N'
+
 - title: Search
   url: /search/
   include: 'N'

@@ -16,6 +16,8 @@ comments: true
 share: true
 ---
 
+This post is the first in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). 
+
 ### Introduction
 
 This post builds on the two previous posts in this blog: [Open Soil Spectral Library (OSSL)](../spectrodata-OSSL-intro) and [OSSL explorer API](../spectrodata-OSSL-api-explorer). In this post you will download selected OSSL data  that will then be used in the following posts for Machine Learning modelling. The data used as an example is Near-InfraRed (NIR) OSSL data over Sweden. You can change the study area by selecting any other geographical region, select via soil textures (attributes) or source dataset as outlined in the [previous](../spectrodata-OSSL-api-explorer) post.  

@@ -1,17 +1,19 @@
 ---
 layout: post
 title: Extract Soil Line
-categories: libspectrodata
+categories: undefined
 excerpt: "Extract the spectral soil line from OSSL data."
 tags:
   - OSSL
   - soil line
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
-date: '2022-09-14 11:27'
-modified: '2023-08-16 11:27'
+date: '2020-09-14 11:27'
+modified: '2020-08-16 11:27'
 comments: true
 share: true
 ---
+
+The python module described in this post is not publicly available.
 
 ### Introduction
 

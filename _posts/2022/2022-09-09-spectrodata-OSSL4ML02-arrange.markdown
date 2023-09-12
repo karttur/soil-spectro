@@ -16,44 +16,23 @@ comments: true
 share: true
 ---
 
+This post is the second in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+
 ### Introduction
 
 In this post you will arrange (import) a downloaded OSSL dataset using a python script. The script will combine data on the site, laboratory data and spectral scans. The combined data is saved as a <span class='file'>json</span> file and used for plotting, soil line extraction and Machine Learning analyses and modelling in the following posts.
 
 ### Prerequisites
 
-This post requires that you downloaded OSSL as outlined in the [previous](../spectrodata-OSSL4ML01-download) post. You must also have access to a Python interpreter. For developing the Python scripts that you will use throughout these tutorials I setup my Python environments using [<span class='app'>Anaconda</span>](https://anaconda.org) including its terminal-app <span class='terminalapp'>conda</span>. You will most likely need to install [<span class='app'>Anaconda</span>](https://anaconda.org) or its minimalistic terminal-app version, [<span class='app'>miniconda</span>](https://docs.conda.io/projects/miniconda/en/latest/). If you are new to Python or setting up environments for Python for the the first time, I recommend that you install [<span class='app'>Anaconda</span>](https://anaconda.org). In a another of my "blogs" you find a more detailed manual for how to do that (written for MacOS):
-
-- [Install Annaconda](https://karttur.github.io/setup-ide/setup-ide/install-anaconda/)
-
-To run the python scripts for importing, exploring and analysing the OSSL data you only need a terminal window. If you want to have a Graphical User Interface (GUI) for running the scripts then you can setup a PyDev environment in <span class='app'>Eclipse</span> Integrated Development Environment (IDE). That is not required, but if you want to be able to rewrite or edit the Python package, <span class='app'>Eclipse</span> is an options:
-
-- [Setup Eclipse for PyDev](https://karttur.github.io/setup-ide/setup-ide/install-eclipse/)
-
-All the scripts for the OSSL processing are freely available on [GitHub](https://github.com/karttur/OSSL-py).
-
-### Anaconda python environment
-
-If you want to to use [<span class='app'>Anaconda</span>](https://anaconda.org) for setting up the virtual python environment, the [GitHub](https://github.com/karttur/OSSL-py/tree/main/py-env) repo contains two environment installation (<span class='file'>yml</span>):
-
-- spectra-ossl_from-history_py38.yml, and
-- spectra-ossl_full_py38.yml
-
-The first version (_from-history_) should work across all OS platforms whereas the second version (_full_) is built on a MacOS and may contain packages that are not compatible with other OS. To setup the environment in <spanc class='terminalapp'>conda</span> run the command:
-
-<span class='terminal'>conda env create --name envname --file=environments.yml</span>
-
-conda env create --name spectra_py38 --file=spectra-ossl_from-history_py38.yml
+This post requires that you downloaded OSSL as outlined in the [previous](../spectrodata-OSSL4ML01-download) post. You must also have access to a Python interpreter. If you know how to use Python you only need to access the python package from the GitHub repo [OSSL-pydev](https://github.com/karttur/OSSL-pydev/), as detailed in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone). If you want to have an example structure of command files, also access the adjoining repo [OSSL-data](https://github.com/karttur/OSSL-data/). This post is more of a stand-alone explanation of how to setup processing using the python module <span class='module'>OSSL_import</span>; the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) instead starts from the structure of a prepared example of [OSSL-data](https://github.com/karttur/OSSL-data/), also accessible from GitHub.
 
 ### Arrange OSSL
 
-At the end of the [previous](../spectrodata-OSSL4ML01-download) post I suggested how to organise downloaded OSSL files. It is better to put up that structure from the beginning as you will need to state folder paths in the command files that are used to pilot the Python script.
+At the end of the [previous](../spectrodata-OSSL4ML01-download) post I suggested how to organise downloaded OSSL files. It is better to put up that structure from the beginning as you will need to state folder paths in the command files that are used to pilot the Python script. The post on hot to [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) contains details about the file and folder structure.
 
-#### Python Module OSSL.py
+#### Python Module OSSL_imort.py
 
-The rearranging (or importing) of the downloaded OSSL data is done by a single stand-alone python module (script) called <span class='module'>OSSL_import.py</span>. The script is available from [GitHub](https://github.com).
-
-TO BE FURTHER DEVELOPED
+The rearranging (or importing) of the downloaded OSSL data is done by a single stand-alone python module (script) called <span class='module'>OSSL_import.py</span>. The script is available from [GitHub](https://github.com/karttur/OSSL-pydev) - for details the post on [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
 
 Running the <span class='module'>OSSL_import.py</span> script requires specifications of the paths and names of 1) the OSSL data and 2) the command files that define how to rearrange the data while importing:
 
@@ -70,7 +49,7 @@ All of the paths and names listed above must be specified in a json file, and th
 
 ```
 {
-  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "rootpath": "/local/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
@@ -81,11 +60,11 @@ All of the paths and names listed above must be specified in a json file, and th
 
 The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [previous](../spectrodata-OSSL4ML01-download) post. Before you can actually import any data you must create 1) a json command file defining how to arrange the OSSL data, and 2) a text file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project text file can link to any number of json command files. You can thus rearrange and import multiple versions (for instance with different wavelength coverage) using a single project file and a single run.
 
-The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from the [GitHub repo](#). To generate a template change the parameter _createjsonparams_ to _true_.
+The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template change the parameter _createjsonparams_ to _true_.
 
 ```
 {
-  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "rootpath": "/local/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
@@ -96,7 +75,7 @@ The first time you use the script you must copy or create and then edit the json
 
 ##### Run script
 
-To run the script, open a <span class='app'>terminal</span> window. Change directory (<span class='terminalapp'>cd</span>) to where you downloaded the <span class='module'>OSSL_import.py</span> script (or give the full path).
+To run the script, open a <span class='app'>terminal</span> window. Change directory (<span class='terminalapp'>cd</span>) to where you saved the <span class='module'>OSSL_import.py</span> script (or give the full path).
 
 Before you can run the script you probably have to set the script to have execution rights on your local machine. In MacOS and Linux you do that with the <span class='terminalapp'>chmod</span> (change mode) command:
 
@@ -104,7 +83,7 @@ Before you can run the script you probably have to set the script to have execut
 
  Then you can run the script with the full, local path to the json file [above](#json-specification-file) as the only parameter:
 
-<span class='terminal'>python OSSL_import.py \"/Users/thomasgumbricht/docs-local/OSSL/import_ossl.json\"</span>
+<span class='terminal'>python OSSL_import.py \"/local/path/to/import_ossl.json\"</span>
 
 With the parameter _createjsonparams_ set to _true_ the script will report that a template file was created:
 
@@ -267,7 +246,7 @@ Here is the same command file, but with comments (you can not have comments in a
 
 ###### Editing the json command file
 
-To actually run the rearrangement you need to edit the json command file to fit your input data and the output you want. The example below is the command file structure for rearranging the LUKAS NIR spectral data that I downloaded in the [previous](../spectrodata-OSSL4ML01-download) post:
+To actually run the rearrangement you need to edit the json command file to fit your input data and the output you want. The example below is the command file structure for rearranging the LUKAS NIR spectral data that were downloaded in the [previous](../spectrodata-OSSL4ML01-download) post:
 
 ```
 {
@@ -284,7 +263,7 @@ To actually run the rearrangement you need to edit the json command file to fit 
     "units": "fraction",
     "geoRegion": "Sweden"
   },
-  "rootFP": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "rootFP": "/local/path/to/OSSL/Sweden/LUCAS",
   "visnir": {
     "apply": true,
     "subFP": "visnir",
@@ -337,7 +316,7 @@ To actually run the rearrangement you need to edit the json command file to fit 
 }
 ```
 
-I then rename the file to reflect the rearrangement, in my case to _import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_, where:
+Rename the file to reflect the rearrangement, in my case to _import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_, where:
 
 - _sweden_ is the region,
 - _LUCAS_ the source dataset,
@@ -348,18 +327,18 @@ I then rename the file to reflect the rearrangement, in my case to _import_ossl-
 
 The full path to the command file then becomes _/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_.
 
-I then create the project file _extract_rawdata.txt_ (in the subfolder _arranged-data_) and enter the full path to my command file:
+Create the project file _extract_rawdata.txt_ (in the subfolder _arranged-data_) and enter the full path to the command file (example for my local setup):
 
 ```
 /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
 ```
 ###### Running the project file
 
-To run the script (<spanc class='module'>OSSL_import.py</span>) make sure the [json specification file](#json-specification-file) links to both to the correct data folder and project file, and set the parameter __ to _false_:
+To run the script (<span class='module'>OSSL_import.py</span>) make sure the [json specification file](#json-specification-file) links to both to the correct data folder and project file, and set the parameter _createjsonparams_ to _false_:
 
 ```
 {
-  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "rootpath": "/local/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
@@ -370,9 +349,7 @@ To run the script (<spanc class='module'>OSSL_import.py</span>) make sure the [j
 
 With all the data and folder structure in place, run the script from the command line:
 
-<span class='terminal'></span>
-
-I can now run the Python script _OSSL_import.py_
+<span class='terminal'>python OSSL_import.py "/Users/thomasgumbricht/docs-local/OSSL/import_ossl.json"</span>
 
  The terminal will report the following:
 
@@ -388,7 +365,7 @@ As I defined the rearrangement for the Swedish LUKAS NIR spectra, the output fro
 
 ###### Parameter output file
 
-The parameter output file is simply a replica of the input parameter file. The copy is saved along the rearranged data as a reference to how it was created.
+The parameter output file is simply a replica of the input parameter file. The copy is saved along the rearranged data as a reference to how it was created. If you had set the _id_ and _name_ to auto_ the script sets default _id_ and _name_ and that is changed in saved copy of the parameter (json) file.
 
 ###### Data output file
 
@@ -465,9 +442,9 @@ The data output file contains the rearranged and combined OSSL data. The file fo
 }
 ```
 
-##### Multiple rearrangements
+##### Multiple imports in one go
 
-If you further down the line want to test different wavelengths, bandwidhts or soils with particular characteristics, you can generate any number of outputs in one project. You simple create one json command file for each output, and list them all in the project file. Following the naming convention I used for the json command file in this example, the following project file will directly generate 12 different rearrangements of the LUKAS data for Sweden (lines staring with # are not executed):
+If you further down the line want to test different wavelengths, bandwidhts or soils with particular characteristics, you can generate any number of outputs in one project. You simply create one json command file for each output, and list them all in the project file. Following the naming convention I used for the json command file in this example, the following project file will directly generate 12 different rearrangements of the LUCAS data for Sweden (lines staring with # are not executed):
 
 ```
 # OSSL LUCAS Sweden extract raw data

@@ -16,13 +16,22 @@ comments: true
 share: true
 ---
 <script src="https://karttur.github.io/common/assets/js/karttur/togglediv.js"></script>
+
+This post is part of a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also the first post in a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. The following posts deals with different detailed aspects of data mining applying ML:
+
+- [plot layout](../spectrodata-OSSL4ML06-mlmodel02),
+- [hyper-parameter tuning](../spectrodata-OSSL4ML07-mlmodel03), and
+- [manual settings](../spectrodata-OSSL4ML08-mlmodel04).
+
+To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+
 ### Introduction
 
-As the Open Soil Spectral Library (OSSL) contains thousands of individual samples, each with thousands of recorded reflectances in different wavelengths and additional physical and chemical soil properties, it is a suitable dataset for applying Machine Learning (ML) modelling. This post both illustrates how to apply ML for modelling soil properties from soil spectral data, and is at the same time a hands-on manual for modelling soil spectra from OSSL using the python script <span class='module'>OSSL_mlmodel.py</span>.
+As the Open Soil Spectral Library (OSSL) contains thousands of individual samples, each with thousands of recorded reflectances in different wavelengths, and additional physical and chemical soil properties, it is a suitable dataset for applying Machine Learning (ML) modelling. This post both illustrates how to apply ML for modelling soil properties from soil spectral data, and is at the same time a hands-on manual for modelling soil spectra from OSSL using the python script <span class='module'>OSSL_mlmodel.py</span>.
 
 ### Prerequisites
 
-To follow the hands-on instructions, this post requires that you completed the processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [arranging](../spectrodata-OSSL4ML02-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the packages [<span class='package'>matplotlib</span>](https://matplotlib.org) and [<span class='package'>scikit learn (sklearn)</span>](https://scikit-learn.org/stable/) installed.  
+To follow the hands-on instructions, this post requires that you completed the processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML02-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the packages [<span class='package'>matplotlib</span>](https://matplotlib.org) and [<span class='package'>scikit learn (sklearn)</span>](https://scikit-learn.org/stable/) installed.  
 
 ### Machine Learning
 
@@ -34,7 +43,7 @@ The first you need to do before running the process-flow is to define the target
 
 #### Target features
 
-The target features to evaluate must of course correspond to properties that are available in the input data. The physical and chemical soil properties available are listed in the json output from when you [arranged](../spectrodata-OSSL4ML02-arrange) the OSSL data. Each re-arranged data point will list the laboratory observed soil properties under the tag _abundances_:
+The target features to evaluate must of course correspond to properties that are available in the input data. The physical and chemical soil properties available are listed in the json output from when you [arranged (imported)](../spectrodata-OSSL4ML02-arrange) the OSSL data. Each re-arranged data point lists the laboratory observed soil properties under the tag _abundances_:
 
 ```
     "abundances": [
@@ -54,7 +63,7 @@ The target features to evaluate must of course correspond to properties that are
 
 The target features to choose from are those under the _substance_ tags.
 
-In the json command file for the process-flow, list the target features you want to include:
+In the json command file for the process-flow, list the target features you want to include, for example:
 
 ```
 "targetFeatures": [
@@ -100,6 +109,8 @@ In the json command file, each regressor must be given with its abbreviation and
   },
 ```
 
+Do not worry about the hyper-parameters yet, just accept the defaults. If you want to try to tune the hyper-parameters, the post [hyper-parameter tuning](../spectrodata-OSSL4ML07-mlmodel03) will guide you.
+
 ### Setting the process steps
 
 The general steps in process-flow are:
@@ -112,7 +123,7 @@ The general steps in process-flow are:
 - [feature clustering](#feature-clustering)
 3. [Model related feature selection](#model-related-feature-selection)
 - [permutation importance selection](#permutation-importance-selection)
-- [Recursive Feature Elimination (RFE)](#recursive-feature-elimination))
+- [Recursive Feature Elimination (RFE)](#recursive-feature-elimination)
 4. [Feature importance evaluation](#feature-importance-evaluation)
 - [permutation importance evaluation](#permutation-importance-evaluation)
 - [coefficient importance](#coefficient-importance)
@@ -121,13 +132,13 @@ The general steps in process-flow are:
 - [train/test divided prediction](#traintest-divided-prediction)
 - [cross validated prediction](#cross-validated-prediction)
 
-The next sections go through the general steps oulined above. If you just want to run the <span class='module'>OSSL_mlmodel</span> package and do not need the instructions, just jump to the section [Complete process-flow for Swedish OSSL data](#complete-process-flow-for-swedish-ossl-data).
+The next sections go through the general steps oulined above. If you just want to run the <span class='module'>OSSL_mlmodel</span> package and do not need the instructions, just jump to the section [Complete process-flow for Swedish OSSL data](#complete-process-flow-for-swedish-ossl-data). Or go to the post [Run ossl-xspectre modules](../../libspectrosupprt/spectrosupport-OSSL-run).
 
 #### Global data cleaning and selection
 
 The OSSL data contain a large number of samples, each with hundreds or even thousands of recorded wavelength reflectances. The data can contain errors (outliers) and using all the data can lead to over-parameterised models. It is also inevitable that some wavelengths (or bands) contain less information compared to others; a band with no variation (i.e. constant reflection) does not contain any relevant information for ML modelling.
 
-The global data cleaning and selection methods analyse the independent features (the covariates) disregarding both the target and the ML model for estimation of the target variations. It is a more crude method for discarding data compared to the methods that compare the covariates in relation to the target and the estimator (the two following steps in the process-flow). The global methods are, however comparatively fast and applying the global methods means that all subsequent processing in the framework will use the cleaned and reduced dataset.
+The global data cleaning and selection methods analyse the independent features (the covariates) disregarding both the target and the ML regressor used for estimation of the target variations. It is a more crude method for discarding data compared to the methods that compare the covariates in relation to the target and the estimator (the two following steps in the process-flow). The global methods are, however comparatively fast and applying the global methods means that all subsequent processing in the framework will use the cleaned and reduced dataset and thus also become faster.
 
 ##### Outlier detection and removal
 
@@ -150,7 +161,7 @@ The only parameter that can be changed in the present version of the framework i
 
 ##### Variance threshold feature selection
 
-Applying the sklearn method [VarianceThreshold](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.VarianceThreshold.html) removes all low-variance features with variances below a stated threshold. The removal is unrelated to the target features and regression model. To neutralise the range of the input features the sklearn [MinMaxScaler](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html) is applied as a pre-process. The only parameter that you can set in the process-flow command file is the _threshold_ for retaining or discarding a feature. You will probably have to iteratively test different thresholds. In the json command you include variance feature selection by these lines:
+Applying the sklearn method [VarianceThreshold](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.VarianceThreshold.html) removes all low-variance features with variances below a stated threshold. The removal is unrelated to the target features and the regressor. To neutralise the range of the input features the sklearn [MinMaxScaler](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html) is applied as a pre-process. The only parameter that you can set in the process-flow command file is the _threshold_ for retaining or discarding a feature. You will probably have to iteratively test different thresholds. In the json command you include variance feature selection by these lines:
 
 ```
   "globalFeatureSelection": {
@@ -187,7 +198,7 @@ There are several methods available for univariate feature selection. In the pre
 },
 ```
 
-The univariate feature selection is set separately for each target feature (soil property) to model and the selection of KBest features for one target property has no affect on the selection of features for other soil properties.
+The univariate feature selection is set separately for each target feature (soil property) to model and the selection of KBest features for one target property does not affect the selection of features for other soil properties.
 
 ##### Feature clustering
 
@@ -223,7 +234,7 @@ In the example above I have asked the tuning function to evaluate all optional c
 
 #### Model related feature selection
 
-The most advanced options for reducing the number of covariates considers both the target property and the applied regressor. The process-flow includes two methods that can be used for this kind of model related feature selection: [Permutation Importance Selection](https://scikit-learn.org/stable/modules/permutation_importance.html) and [Recursive Feature Elimination (RFE)](https://scikit-learn.org/stable/modules/feature_selection.html#recursive-feature-elimination). Permutation importance can be applied to all kinds of regressors, whereas RFE is not applicable for example for KnnRegr or MLP. if you request RFE for any of these, the process-flow will instead do a Permutation Importance Selection. You can only apply one of the two model related feature selection methods in each modelling exercise. If both are turned on, the process-flow will automatically select permutation importance.
+The most advanced options for reducing the number of covariates consider both the target property and the applied regressor. The process-flow includes two methods that can be used for this kind of model related feature selection: [Permutation Importance Selection](https://scikit-learn.org/stable/modules/permutation_importance.html) and [Recursive Feature Elimination (RFE)](https://scikit-learn.org/stable/modules/feature_selection.html#recursive-feature-elimination). Permutation importance can be applied to all kinds of regressors, whereas RFE is not applicable for example for KnnRegr or MLP. if you request RFE for any of these, the process-flow will instead do a Permutation Importance Selection. You can only apply one of the two model related feature selection methods in each modelling exercise. If both are turned on, the process-flow will automatically select permutation importance.
 
 ##### Permutation importance selection
 
@@ -245,7 +256,7 @@ The implemented permutation importance selection methods is also part of the pro
 
 ##### Recursive Feature Elimination
 
-[RFE](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) can be applied it two modes, with and without Cross Validation (CV). While [RFECV](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html) takes a bit longer it is the recommended mode. As note above RFE does not work with all regressors, and is only applied if the permutation selector is turned off. If RFE/RFECV is invoked, regressors that can not apply RFE/REFCV instead use permutation selection. To use RFE/RFECV as part of your project, edit the following lines of the json command file:
+[RFE](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) can be applied it two modes, with and without Cross Validation (CV). While [RFECV](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html) takes a bit longer it is the recommended mode. As noted above RFE does not work with all regressors, and is only applied if the permutation selector is turned off. If RFE/RFECV is invoked, regressors that can not apply RFE/REFCV instead use permutation selection. To use RFE/RFECV as part of your project, edit the following lines of the json command file:
 
 ```
 "modelFeatureSelection": {
@@ -269,7 +280,7 @@ Note that RFE, and even more so, RFECV, will take a long time if you have large 
 
 #### Feature importance evaluation
 
-After having selected the features to use (or not) you can choose to evaluate the feature importances for each combination of target feature and regression model. The evaluation is done both for [Permutation importance](https://scikit-learn.org/stable/modules/permutation_importance.html) (the decrease in a model score when a single feature value is randomly shuffled) and for model coefficients or feature importances (depends on the type of regressor).
+After having selected the features to use (or not) you can choose to evaluate the feature importances for each combination of target feature and regressor included in the project. The evaluation is done both for [Permutation importance](https://scikit-learn.org/stable/modules/permutation_importance.html) (the decrease in a model score when a single feature value is randomly shuffled) and for model coefficients or feature importances (depends on the type of regressor).
 
 To include feature importance evaluation edit the json command file:
 
@@ -313,7 +324,7 @@ The coefficent importanec (for linear regressors) or feature importance (for e.g
 
 #### Hyper-parameter tuning
 
-[Hyper-parameters](https://scikit-learn.org/stable/modules/grid_search.html) are parameters that determine how an estimator learns to find patterns and are not directly learnt within estimators. Put differently, each time an estimator is applied for fitting a model, the training depends on the setting of the hyper-parameters. Tweaking the hyper-parameter setting is thus an important part of fitting ML models to generate the best predictions for a particular target feature. It is, however, a rather complex and time-consuming process and is dealt with in a separate post: [Model OSSL data: 3 hyper-parameter tuning](../spectrodata-OSSL4ML06-mlmodel07).
+[Hyper-parameters](https://scikit-learn.org/stable/modules/grid_search.html) are parameters that determine how an estimator learns to find patterns and are not directly learnt within estimators. Put differently, each time an estimator is applied for fitting a model, the training depends on the setting of the hyper-parameters. Tweaking the hyper-parameter setting is thus an important part of fitting ML models to generate the best predictions for a particular target feature. It is, however, a rather complex and time-consuming process and is dealt with in a separate post: [Model OSSL data: 3 hyper-parameter tuning](../spectrodata-OSSL4ML07-mlmodel03).
 
 For this post, I suggest that you leave the hyper-parameter tuning off:
 
@@ -363,7 +374,7 @@ The train/test divided methods for determining model predication power divides t
 
 ##### cross validated prediction
 
-[Cross validated prediction](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_predict.html) splits the data into multiple training and testing subsets and is repeated (folded) as stated by the parameters _folds_. The test size equals the inversion of _folds_ (i.e if folds = 10 then the test size is 0.1) and each data point is included in the test fraction once, and only once.
+[Cross validated prediction](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_predict.html) splits the data into multiple training and testing subsets and is repeated (folded) as stated by the parameters _folds_. The test size equals the inversion of _folds_ (i.e if folds = 10 then the test size is 0.1) and each data point is included in the test fraction once and only once.
 
 ### Complete process-flow for Swedish OSSL data
 
@@ -766,7 +777,7 @@ The complete process-flow for the Swedish OSSL data (downloaded and arranged in 
 
 Running the process-flow will generate three different types of results:
 
-- a json formatted complete report,
+- a json formatted report,
 - conserved model settings ("pickle" files) for all combinations of regressor and target features, and
 - plot of feature importances and model predictions, also for all combinations of regressor and target features (optional).
 
@@ -1753,7 +1764,7 @@ Multi plot images generated from a combination of 4 target features and 2 regres
 - 4 multi-row target images, and
 - 2 multi-row regressor images.
 
-The columns to include in the multi-row plots is defined in the json command file (and explained in the [next post](../spectrodata-OSSL4ML06-mlmodel/). Altogether there are 4 columns that can be included in the multi-row plots:
+The columns to include in the multi-row plots are defined in the json command file (and explained in the [next post](../spectrodata-OSSL4ML06-mlmodel02/). Altogether there are 4 columns that can be included in the multi-row plots:
 
 - permutation importance (permutationImportance),
 - feature (coefficient) importance (featureImportance),
