@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Model OSSL data: 4 Manual setting"
+title: "Model OSSL data: 4 manual settings"
 categories: libspectrodata
 excerpt: "Model OSSL data using Python's Machine Learning (ML) package Scikit learn (sklearn)."
 tags:
