@@ -27,15 +27,479 @@ To run the scripts used in this post you need to setup a Python environment, and
 
 ### Introduction
 
-As the Open Soil Spectral Library (OSSL) contains thousands of individual samples, each with thousands of recorded reflectances in different wavelengths, and additional physical and chemical soil properties, it is a suitable dataset for applying Machine Learning (ML) modelling. This post both illustrates how to apply ML for modelling soil properties from soil spectral data, and is at the same time a hands-on manual for modelling soil spectra from OSSL using the python script <span class='module'>OSSL_mlmodel.py</span>.
+As the Open Soil Spectral Library (OSSL) contains thousands of individual samples, each with thousands of recorded reflectances in different wavelengths, and additional physical and chemical soil properties, it is a suitable dataset for applying Machine Learning (ML) modelling. This post both illustrates how to apply ML for modelling soil properties from soil spectral data, and is at the same time a hands-on manual for using the python script <span class='module'>OSSL_mlmodel.py</span>.
 
 ### Prerequisites
 
 To follow the hands-on instructions, this post requires that you completed the processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML02-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the packages [<span class='package'>matplotlib</span>](https://matplotlib.org) and [<span class='package'>scikit learn (sklearn)</span>](https://scikit-learn.org/stable/) installed.  
 
+This post is more of a stand-alone explanation of how to setup processing using the python module <span class='module'>OSSL_mlmodel</span>; the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) instead starts from the structure of a prepared example of [OSSL-data](https://github.com/karttur/OSSL-data/), also accessible from GitHub.
+
 ### Machine Learning
 
 Machine Learning (ML) includes a range of methods for preparing, refining, selecting, aggregating, evaluating and modelling different dependent properties from a set of independent features (covariates). For the ML modelling of soil properties from spectral data I have built a predefined process-flow structure. The process-flow is governed by a command file using json syntax. Editing the json file you can chose which target features, regressors and steps to include in your own ML modelling.
+
+#### Python Module OSSL_mlmodel.py
+
+Running the <span class='module'>OSSL_plot.py</span> script is similar to running the [import script](../spectrodata-OSSL4ML02-arrange), and requires specifications of the paths and names of 1) the OSSL data and 2) the command files that define what you want to plot and some minimal layout options:
+
+- **rootpath**: full path to folder with a downloaded OSSL zip file; parent folder to  "sourcedatafolder", "arrangeddatafolder", and "jsonfolder"
+- **sourcedatafolder**: subfolder under "rootpath" with the exploded content of the OSSL zip file (default = "data")
+- **arrangeddatafolder**: subfolder under "rootpath" where the imported (rearranged) OSSL data will be stored
+- **jsonfolder**: subfolder under "rootpath" where the json model parameter files must be located
+- **projFN**: the name of an existing txt file that sequentially lists json model parameter files to run, must be directly under the "arrangeddatafolder"
+- **createjsonparams**: if set to true the script will create a template json file and exit
+
+##### json specification file
+
+All of the paths and names listed above must be specified in a json file, and the local path to this json file is the only parameter that is required when running the <span class='module'>OSSL_mlmodel.py</span> script. The json file for modelling the data over Sweden that were [downloaded](../spectrodata-OSSL4ML01-download) and then [imported](../spectrodata-OSSL4ML02-arrange) looks like this:
+
+```
+{
+  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "sourcedatafolder": "data",
+  "arrangeddatafolder": "arranged-data",
+  "jsonfolder": "json-ml-modeling",
+  "projFN": "ml-model_spectra.txt",
+  "createjsonparams": false
+}
+```
+
+The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [download](../spectrodata-OSSL4ML01-download) post. Before you can plot any data you must create 1) a json command file defining how to model the OSSL data, and 2) a text file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project text file can link to any number of json command files. You can thus run multiple models for one and the same dataset, or run models for multiple datasets using a single project file and a single run.
+
+The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template set the _rootpath_ and change the parameter _createjsonparams_ to _true_.
+
+```
+{
+  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "sourcedatafolder": "data",
+  "arrangeddatafolder": "arranged-data",
+  "jsonfolder": "json-ml-modeling",
+  "projFN": "ml-model_spectra.txt",
+  "createjsonparams": true
+}
+```
+##### Run script
+
+To run the script, open a <span class='app'>terminal</span> window. Change directory (<span class='terminalapp'>cd</span>) to where you downloaded the <span class='module'>OSSL_mlmodel.py</span> script (or give the full path).
+
+Before you can run the script you probably have to set the script to have execution rights on your local machine. In MacOS and Linux you do that with the <span class='terminalapp'>chmod</span> (change mode) command:
+
+ <span class='terminal'>chmod OSSL_mlmodel.py 755</span>
+
+ Then you can run the script with the full, local path to the json file [above](#json-specification-file) as the only parameter:
+
+<span class='terminal'>python OSSL_mlmodel.py \"/Users/thomasgumbricht/docs-local/OSSL/model_ossl.json\"</span>
+
+With the parameter _createjsonparams_ set to _true_ the script will report that a template file was created:
+
+```
+json parameter file created: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-ml-model/template_model_ossl-spectra.json
+ Edit the json file for your project and rename it to reflect the commands.
+ Add the path of the edited file to your project file (ml-model_spectra.txt).
+ Then set createjsonparams to False in the main section and rerun script.
+```
+
+###### json command file structure
+
+The json command file that defines the plotting of the OSSL data is very long and explained in bits and pieces in the rest of this tutorial. If you want to preview the complete structure it is under the Hide/Show toggle.
+
+<button id= "toggle_process-flow-template" onclick="hiddencode('template-flow-se')">Hide/Show json command for template process-flow</button>
+
+<div id="template-flow-se" style="display:none">
+
+{% capture text-capture %}
+{% raw %}
+
+```
+{
+  "verbose": 1,
+  "id": "Sweden_LUCAS_460-1050_10_20230808",
+  "name": "Sweden_LUCAS_460-1050_10",
+  "userId": "thomasg",
+  "importVersion": "OSSL-202308",
+  "campaign": {
+    "campaignId": "OSSL-LUCAS-SE",
+    "campaignShortId": "OSSL-LUCAS-SE",
+    "campaignType": "laboratory",
+    "theme": "soil",
+    "product": "diffuse reflectance",
+    "units": "fraction",
+    "geoRegion": "Sweden"
+  },
+  "input": {
+    "jsonSpectraDataFilePath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/data-visnir_LUCAS_460-1050_10.json",
+    "jsonSpectraParamsFilePath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/params-visnir_LUCAS_460-1050_10.json",
+    "hyperParameterRandomTuning": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-ml-modeling/hyper-param-random-tuning-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json",
+    "hyperParameterExhaustiveTuning": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-ml-modeling/hyper-param-exhaustive-tuning-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json"
+  },
+  "output": {
+    "prefix": "testtg",
+    "setdate": false
+  },
+  "targetFeatures": [
+    "cec_usda.a723_cmolc.kg",
+    "k.ext_usda.a725_cmolc.kg",
+    "n.tot_usda.a623_w.pct",
+    "oc_usda.c729_w.pct"
+  ],
+  "targetFeatureSymbols": {
+    "caco3_usda.a54_w.pct": {
+      "color": "whitesmoke",
+      "label": "CaCo3"
+    },
+    "cec_usda.a723_cmolc.kg": {
+      "color": "seagreen",
+      "label": "Cation Exc. Cap."
+    },
+    "cf_usda.c236_w.pct": {
+      "color": "sienna",
+      "label": "Crane fraction"
+    },
+    "clay.tot_usda.a334_w.pct": {
+      "color": "tan",
+      "label": "Clay cont."
+    },
+    "ec_usda.a364_ds.m": {
+      "color": "dodgerblue",
+      "label": "Electric cond."
+    },
+    "k.ext_usda.a725_cmolc.kg": {
+      "color": "lightcyan",
+      "label": "Potassion (K)"
+    },
+    "n.tot_usda.a623_w.pct": {
+      "color": "darkcyan",
+      "label": "Nitrogen (N) [tot]"
+    },
+    "oc_usda.c729_w.pct": {
+      "color": "dimgray",
+      "label": "Organic carbon (C)"
+    },
+    "p.ext_usda.a274_mg.kg": {
+      "color": "firebrick",
+      "label": "Phosphorus (P)"
+    },
+    "ph.cacl2_usda.a481_index": {
+      "color": "lemonchiffon",
+      "label": "pH (CaCl)"
+    },
+    "ph.h2o_usda.a268_index": {
+      "color": "lightyellow",
+      "label": "pH (H20)"
+    },
+    "sand.tot_usda.c60_w.pct": {
+      "color": "orange",
+      "label": "Sand cont."
+    },
+    "silt.tot_usda.c62_w.pct": {
+      "color": "khaki",
+      "label": "Silt cont."
+    }
+  },
+  "derivatives": {
+    "apply": false,
+    "join": false
+  },
+  "removeOutliers": {
+    "comment": "removes sample outliers based on spectra only - globally applied as preprocess",
+    "apply": true,
+    "detectorMethodList": [
+      "iforest (isolationforest)",
+      "ee (eenvelope,ellipticenvelope)",
+      "lof (lofactor,localoutlierfactor)",
+      "1csvm (1c-svm, oneclasssvm)"
+    ],
+    "detector": "1csvm",
+    "contamination": 0.1
+  },
+  "manualFeatureSelection": {
+    "comment": "Manual feature selection overrides other selection alternatives",
+    "apply": false,
+    "spectra": [
+      "675",
+      "685",
+      "705",
+      "715",
+      "735"
+    ],
+    "derivatives": {
+      "firstWaveLength": [
+        "675"
+      ],
+      "lastWaveLength": [
+        "735"
+      ]
+    }
+  },
+  "globalFeatureSelection": {
+    "comment": [
+      "removes spectra with variance below given thresholds - globally applied as preprocess"
+    ],
+    "apply": false,
+    "scaler": "MinMaxScaler",
+    "varianceThreshold": {
+      "threshold": 0.025
+    }
+  },
+  "targetFeatureSelection": {
+    "comment": [
+      "feature selection using target data"
+    ],
+    "apply": true,
+    "univariateSelection": {
+      "apply": true,
+      "SelectKBest": {
+        "apply": true,
+        "n_features": 25
+      },
+      "selectPercentile": {
+        "implemented": false,
+        "apply": false,
+        "percentile": 10
+      },
+      "genericUnivariateSelect": {
+        "implemented": false,
+        "apply": false,
+        "hyperParameters": {}
+      }
+    }
+  },
+  "modelFeatureSelection": {
+    "comment": [
+      "feature selection using target + regressor"
+    ],
+    "apply": false,
+    "permutationSelector": {
+      "apply": false,
+      "permutationRepeats": 6,
+      "n_features_to_select": 8,
+      "step": 1
+    },
+    "RFE": {
+      "apply": false,
+      "CV": false,
+      "n_features_to_select": 8,
+      "step": 1
+    }
+  },
+  "featureAgglomeration": {
+    "apply": false,
+    "agglomerativeClustering": {
+      "apply": false,
+      "implemented": false
+    },
+    "wardClustering": {
+      "apply": false,
+      "n_clusters": 0,
+      "affinity": "euclidean",
+      "tuneWardClustering": {
+        "apply": true,
+        "kfolds": 3,
+        "clusters": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      }
+    }
+  },
+  "hyperParameterTuning": {
+    "apply": false,
+    "fraction": 0.5,
+    "nIterSearch": 6,
+    "n_best_report": 3,
+    "randomTuning": {
+      "apply": false
+    },
+    "exhaustiveTuning": {
+      "apply": false
+    }
+  },
+  "featureImportance": {
+    "apply": true,
+    "reportMaxFeatures": 8,
+    "permutationRepeats": 10
+  },
+  "modelling": {
+    "apply": true
+  },
+  "regressionModels": {
+    "OLS": {
+      "apply": true,
+      "hyperParams": {
+        "fit_intercept": false
+      }
+    },
+    "TheilSen": {
+      "apply": false,
+      "hyperParams": {}
+    },
+    "Huber": {
+      "apply": false,
+      "hyperParams": {}
+    },
+    "KnnRegr": {
+      "apply": false,
+      "hyperParams": {}
+    },
+    "DecTreeRegr": {
+      "apply": false,
+      "hyperParams": {}
+    },
+    "SVR": {
+      "apply": false,
+      "hyperParams": {
+        "kernel": "linear",
+        "C": 1.5,
+        "epsilon": 0.05
+      }
+    },
+    "RandForRegr": {
+      "apply": true,
+      "hyperParams": {
+        "n_estimators": 30
+      }
+    },
+    "MLP": {
+      "apply": false,
+      "hyperParams": {
+        "hidden_layer_sizes": [
+          100,
+          100
+        ],
+        "max_iter": 200,
+        "tol": 0.001,
+        "epsilon": 1e-8
+      }
+    }
+  },
+  "regressionModelSymbols": {
+    "OLS": {
+      "marker": ".",
+      "size": 100
+    },
+    "TheilSen": {
+      "marker": "v",
+      "size": 50
+    },
+    "Huber": {
+      "marker": "^",
+      "size": 50
+    },
+    "KnnRegr": {
+      "marker": "s",
+      "size": 50
+    },
+    "DecTreeRegr": {
+      "marker": "P",
+      "size": 50
+    },
+    "SVR": {
+      "marker": "*",
+      "size": 50
+    },
+    "RandForRegr": {
+      "marker": "h",
+      "size": 50
+    },
+    "MLP": {
+      "marker": "D",
+      "size": 50
+    }
+  },
+  "modelTests": {
+    "apply": true,
+    "trainTest": {
+      "apply": true,
+      "testSize": 0.3,
+      "plot": true,
+      "marker": "s"
+    },
+    "Kfold": {
+      "apply": true,
+      "folds": 10,
+      "plot": true,
+      "marker": "."
+    }
+  },
+  "plot": {
+    "tightLayout": false,
+    "singles": {
+      "apply": true,
+      "figSize": {
+        "x": 0,
+        "y": 0,
+        "xadd": 0.25,
+        "yadd": 0.25
+      },
+      "screenShow": false,
+      "savePng": true
+    },
+    "rows": {
+      "apply": true,
+      "subFigSize": {
+        "x": 3,
+        "y": 3,
+        "xadd": 0.1,
+        "yadd": 0.1
+      },
+      "screenShow": true,
+      "savePng": true,
+      "targetFeatures": {
+        "apply": true,
+        "figSize": {
+          "x": 0,
+          "y": 0,
+          "xadd": 0,
+          "yadd": 0
+        },
+        "hwspace": {
+          "hspace": 0.25,
+          "wspace": 0.25
+        },
+        "columns": [
+          "permutationImportance",
+          "featureImportance",
+          "Kfold"
+        ]
+      },
+      "regressionModels": {
+        "apply": true,
+        "figSize": {
+          "x": 0,
+          "y": 0,
+          "xadd": 0.25,
+          "yadd": 0.25
+        },
+        "hwspace": {
+          "hspace": 0.25,
+          "wspace": 0.25
+        },
+        "columns": [
+          "permutationImportance",
+          "trainTest",
+          "Kfold"
+        ]
+      }
+    }
+  }
+}
+```
+{% endraw %}
+{% endcapture %}
+{% include widgets/toggle-code.html  toggle-text=text-capture  %}
+</div>
+
+
 
 ### Selecting target features and regressors
 
@@ -111,9 +575,20 @@ In the json command file, each regressor must be given with its abbreviation and
 
 Do not worry about the hyper-parameters yet, just accept the defaults. If you want to try to tune the hyper-parameters, the post [hyper-parameter tuning](../spectrodata-OSSL4ML07-mlmodel03) will guide you.
 
+### Setting the model version
+
+Machine Learning modelling in general becomes an iterative process where you change a few options to tweak the covaraites and the model parameterisation in each loop. To facilitate comparing different results, without having to [import (rearrange)](../spectrodata-OSSL4ML02-arrange) the same data more than once, you can give a prefix with any model setting. All outputs when running the script <span class='module'>OSSL_mlmodel.py</span> will be saved with this prefix. As also the json parameter file is saved as a copy, but with the prefix added, you can edit the original json command file, change the prefix and then run again. All the settings of all previous trials will be saved separelty, as long as you change the prefix. Then you can compare the results before iterating again. The prefix for any model run is set as an output parameter:
+
+```
+"output": {
+  "prefix": "my1stModel",
+  "setdate": false
+},
+```
+
 ### Setting the process steps
 
-The general steps in process-flow are:
+The general steps in the process-flow are:
 
 1. [Global data cleaning and selection](#global-data-cleaning-and-selection)
 - [outlier detection and removal](#outlier-detection-and-removal)
@@ -132,13 +607,13 @@ The general steps in process-flow are:
 - [train/test divided prediction](#traintest-divided-prediction)
 - [cross validated prediction](#cross-validated-prediction)
 
-The next sections go through the general steps oulined above. If you just want to run the <span class='module'>OSSL_mlmodel</span> package and do not need the instructions, just jump to the section [Complete process-flow for Swedish OSSL data](#complete-process-flow-for-swedish-ossl-data). Or go to the post [Run ossl-xspectre modules](../../libspectrosupprt/spectrosupport-OSSL-run).
+The next sections go through the general steps oulined above. If you just want to run the <span class='module'>OSSL_mlmodel</span> package and do not need the instructions, just jump to the section [Complete process-flow for Swedish OSSL data](#complete-process-flow-for-swedish-ossl-data). Or go to the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run).
 
 #### Global data cleaning and selection
 
 The OSSL data contain a large number of samples, each with hundreds or even thousands of recorded wavelength reflectances. The data can contain errors (outliers) and using all the data can lead to over-parameterised models. It is also inevitable that some wavelengths (or bands) contain less information compared to others; a band with no variation (i.e. constant reflection) does not contain any relevant information for ML modelling.
 
-The global data cleaning and selection methods analyse the independent features (the covariates) disregarding both the target and the ML regressor used for estimation of the target variations. It is a more crude method for discarding data compared to the methods that compare the covariates in relation to the target and the estimator (the two following steps in the process-flow). The global methods are, however comparatively fast and applying the global methods means that all subsequent processing in the framework will use the cleaned and reduced dataset and thus also become faster.
+The global data cleaning and selection methods analyse the independent features (the covariates) disregarding both the target and the ML regressor used for estimation of the target variations. It is a more crude method for discarding data compared to the methods that compare the covariates in relation to the target and the estimator (the two following steps in the process-flow). The global methods are, however comparatively fast and applying the global methods means that all subsequent processing in the process-flow will use the cleaned and reduced dataset and thus also become faster.
 
 ##### Outlier detection and removal
 
@@ -157,7 +632,7 @@ In the json command file you turn the outlier detection and removal on by the fo
     },
 ```
 
-The only parameter that can be changed in the present version of the framework is _contamination_ (applying to the parameter _nu_ in the detector _OneClassSVM_).
+The only parameter that can be changed in the present version is _contamination_ (applying to the parameter _nu_ in the detector _OneClassSVM_).
 
 ##### Variance threshold feature selection
 
@@ -177,13 +652,13 @@ Applying the sklearn method [VarianceThreshold](https://scikit-learn.org/stable/
 
 The global feature selection using variance threshold (the section above) is unrelated to the properties that are to be predicted. To select the features (covariates) that relate to a specific target (soil chemical and physical properties in this example) the process-flow implements [univariate feature selection](https://scikit-learn.org/stable/modules/feature_selection.html#univariate-feature-selection). Scikit learn includes several selectors that can be used with the univariate feature selection, but at present only the the [KBest selector](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html#sklearn.feature_selection.SelectKBest) is implemented in the process-flow.
 
-Another route for reducing the number of features is to cluster (agglomerate) them. Features that show similar variations in relation to the target feature are collected to a single feature. For the framework I have written a Ward clustering routine that also includes a tuning function for determining the optimum number of clusters to form as a preprocess to the Ward clustering.
+Another route for reducing the number of features is to cluster (agglomerate) them. Features that show similar variations in relation to the target feature are collected to a single feature. For the process-flow I have written a Ward clustering routine that also includes a tuning function for determining the optimum number of clusters to form as a preprocess to the Ward clustering.
 
-In the framework you can in principle invoke both the univariate feature selection and the clustering, but in normal cases you would only use one for each model building exercise.
+In the process-flow you can in principle invoke both the univariate feature selection and the clustering, but in normal cases you would only use one for each model building exercise.
 
 ##### Univariate feature selection
 
-There are several methods available for univariate feature selection. In the present version of the framework I have included [SelectKBest](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html). The only parameter to set is _n_features_, the number of features to retain from the selection. To invoke the KBest univariate feature selection in the process-flow, edit the json command file like this:
+There are several methods available for univariate feature selection. In the present version of the process-flow I have included [SelectKBest](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html). The only parameter to set is _n_features_, the number of features to retain from the selection. To invoke the KBest univariate feature selection in the process-flow, edit the json command file like this:
 
 ```
 "targetFeatureSelection": {
@@ -202,7 +677,7 @@ The univariate feature selection is set separately for each target feature (soil
 
 ##### Feature clustering
 
-Scikit learn contains a range of methods for clustering, or [feature agglomeration](https://scikit-learn.org/stable/modules/classes.html#module-sklearn.cluster). The Ward clustering implemented in the framework has the advantage that you can tune the number of clusters to request from the main agglomeration. To include the Ward clustering in the framework, edit the json command file thus:
+Scikit learn contains a range of methods for clustering, or [feature agglomeration](https://scikit-learn.org/stable/modules/classes.html#module-sklearn.cluster). The Ward clustering implemented in the process-flow has the advantage that you can tune the number of clusters to request from the main agglomeration. To include the Ward clustering in the process-flow, edit the json command file thus:
 
 ```
   "featureAgglomeration": {
@@ -230,7 +705,7 @@ Scikit learn contains a range of methods for clustering, or [feature agglomerati
   },
 ```
 
-In the example above I have asked the tuning function to evaluate all optional cluster sizes between 4 and 12, and set the tuning process to a kfold strategy of 3 folds. As the framework will seek an optimal number of clusters (for each target feature), I have set the _n_clusers_ parameter for the main _wardClustering_ to _0_. If  _tuneWardClustering_ is not requested, that number must instead be set to the actual number of clusters requested from _wardClustering_.
+In the example above I have asked the tuning function to evaluate all optional cluster sizes between 4 and 12, and set the tuning process to a kfold strategy of 3 folds. As the function will seek an optimal number of clusters (for each target feature), I have set the _n_clusers_ parameter for the main _wardClustering_ to _0_. If  _tuneWardClustering_ is not requested, that number must instead be set to the actual number of clusters requested from _wardClustering_.
 
 #### Model related feature selection
 
@@ -256,7 +731,7 @@ The implemented permutation importance selection methods is also part of the pro
 
 ##### Recursive Feature Elimination
 
-[RFE](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) can be applied it two modes, with and without Cross Validation (CV). While [RFECV](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html) takes a bit longer it is the recommended mode. As noted above RFE does not work with all regressors, and is only applied if the permutation selector is turned off. If RFE/RFECV is invoked, regressors that can not apply RFE/REFCV instead use permutation selection. To use RFE/RFECV as part of your project, edit the following lines of the json command file:
+[RFE](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) can be applied in two modes, with and without Cross Validation (CV). While [RFECV](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html) takes a bit longer it is the recommended mode. As noted above RFE does not work with all regressors, and is only applied if the permutation selector is turned off. If RFE/RFECV is invoked, regressors that can not apply RFE/REFCV instead use permutation selection. To use RFE/RFECV as part of your process-flow, edit the following lines of the json command file:
 
 ```
 "modelFeatureSelection": {
@@ -291,7 +766,7 @@ To include feature importance evaluation edit the json command file:
   "permutationRepeats": 10
 }
 ```
-Except from setting the parameter _apply_ to _true_ to invoke the feature importance evaluation, you also have to give the maximum number of features to include in the reporting, _reportMaxFeatures_ . The reporting will always show the highest ranking features. Then you also have to give the number of _permutationRepeats_ to use in the evaluation. Figure 1 shows the feature importance evaluation for the target feature oc_usda.c729_w.pct (organic carbon). The rows show results for the regressors OLS (Ordinary Least Square) and RandForRegr (Random Forest Regression), while the columns show coefficient(OLS)/estimators(RandForRegr) importance. The error bars shows the standard deviation (see below).
+Except from setting the parameter _apply_ to _true_ to invoke the feature importance evaluation, you also have to give the maximum number of features to include in the reporting, _reportMaxFeatures_ . The reporting will always show the highest ranking features. Then you also have to give the number of _permutationRepeats_ to use in the evaluation. Figure 1 shows the feature importance evaluation for the target feature oc_usda.c729_w.pct (organic carbon). The rows show results for the regressors OLS (Ordinary Least Square) and RandForRegr (Random Forest Regression), while the columns show permutation importance and coefficient(OLS)/estimators(RandForRegr) importance. The error bars show the standard deviation.
 
 <figure class="half">
 
@@ -311,7 +786,7 @@ Except from setting the parameter _apply_ to _true_ to invoke the feature import
   <img src="../../images/oc_usda.c729_w.pct_RandForRegr-model_feat-imp.png" alt="image">
   </a>
 
-	<figcaption>Figure 2. Feature importance evaluation for target feature oc_usda.c729_w.pct; The rows show results for the regressors OLS (Ordinary Least Square) and RandForRegr (Random Forest Regression), while the columns show permutation importance and coefficient(OLS)/estimators(RandForRegr); error bars shows the standard deviation (1 std).</figcaption>
+	<figcaption>Figure 2. Feature importance evaluation for target feature oc_usda.c729_w.pct; The rows show results for the regressors OLS (Ordinary Least Square) and RandForRegr (Random Forest Regression), while the columns show permutation importance and coefficient(OLS)/estimators(RandForRegr); error bars show the standard deviation (1 std).</figcaption>
 </figure>
 
 ##### Permutation importance evaluation
@@ -345,7 +820,7 @@ For this post, I suggest that you leave the hyper-parameter tuning off:
 
 #### Model fitting and evaluation
 
-The last step in the process-flow is to run the selected regressors against selected target features using the defined process-flow. There are two model fitting and testing concepts implemented in the process-flow:
+The last step in the process-flow is to predict the selected target features using the defined process-flow. There are two model fitting and testing concepts implemented in the process-flow:
 
 - Dividing the dataset in train and test subsets, and
 - Cross validated (Kfold) iterative testing.
@@ -780,6 +1255,8 @@ Running the process-flow will generate three different types of results:
 - a json formatted report,
 - conserved model settings ("pickle" files) for all combinations of regressor and target features, and
 - plot of feature importances and model predictions, also for all combinations of regressor and target features (optional).
+
+All output files will have the _prefix_ defined under the _output_ tag, as stated [above](#setting-the-model-version).
 
 #### json report
 
