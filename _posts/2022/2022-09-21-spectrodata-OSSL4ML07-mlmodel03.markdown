@@ -29,7 +29,7 @@ To follow the hands-on instructions, this post requires that you completed the p
 
 ### Regressor hyper-parameters
 
-Each regressor has a different set of hyper-parameters that can be set. The full list of hyper-parameters to be set for each regressor is in the online scikit-learn documentation:
+Each regressor has a different set of hyper-parameters that can be set. The full list of hyper-parameters of each regressor is in the online scikit-learn documentation:
 
 - [Oridnary Least Square (OLS)](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html),
 - [Theil-Sen Regressor (TheilSen)](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html),
@@ -45,18 +45,18 @@ Each regressor has a different set of hyper-parameters that can be set. The full
 Scikit-learn provides two generic approaches for tuning the hyper-parameters of any regressor:
 
 - randomized search (RandomizedSearchCV), and
-- exhaustive tuning (GridSearchCV)
+- exhaustive tuning (GridSearchCV).
 
 Both approaches are implemented in the <span class='module'>OSSL_mlmodel.py</span> module.
 
 ##### Randomized search hyper-parameter tuning
 
-The [randomized search approach](https://scikit-learn.org/stable/modules/grid_search.html#randomized-parameter-optimization) applies a search space for each hyper-parameters as defined by the user. While it has a random element, it has two distinct advantages over an exhaustive search:
+The [randomized search approach](https://scikit-learn.org/stable/modules/grid_search.html#randomized-parameter-optimization) applies a search space for each hyper-parameter as defined by the user. While it has a random element, it has two distinct advantages over an exhaustive search:
 
 - it is more parsimonious if large search spaces are considered, and
-- parameters that do not affect performance does not decrease efficiency
+- parameters that do not affect performance does not decrease efficiency.
 
-To apply a randomized hyper parameter tuning as part of process-flow, edit the json command file:
+To apply a randomized hyper parameter tuning as part of the process-flow, edit the json command file:
 
 ```
 "hyperParameterTuning": {
@@ -73,7 +73,7 @@ To apply a randomized hyper parameter tuning as part of process-flow, edit the j
   }
 ```
 
-The setting above starts the randomized hyper-parameter tuning as part of the process-flow in <span class='module'>OSSL_mlmodel.py</span>. The parameter _fraction_ defines the cross-validation fraction, _nIterSearch_ is the total number of randomized search over the total hyper-parameters space defined (set in a separate file as explained below), the number in _n_best_report_ is the number of the highest ranking tunings that are reported and saved with the results. The tuning is repeated independently for each combination of regressor and target feature.
+The setting above starts the randomized hyper-parameter tuning as part of the process-flow in <span class='module'>OSSL_mlmodel.py</span>. The parameter _fraction_ defines the cross-validation fraction, _nIterSearch_ is the total number of randomized search over the total hyper-parameter space defined (set in a separate file as explained below), the number in _n_best_report_ is the number of the highest ranking tunings that are reported and saved with the results. The tuning is repeated independently for each combination of regressor and target feature.
 
 The parameterizatin of the randomized tuning must be set in a separate json file, linked under the "input" tag of the json command file:
 
@@ -238,9 +238,9 @@ The settings above are fairly restricted. You can use them as a starting point f
 
 ##### Exhaustive hyper-parameter tuning
 
-For the [Exhaustive grid search](https://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) a list (grid) of search alternatives for each hyper-parameters to tune must be given and is then looped over. The search space thus grows exponentially fast when new hyper-parameters are added or the search space for a single parameter expanded. It can rather quickly become untenably large and take hours, even days, to loop over. But it is exhaustive and leaves no stone unturned.
+For the [Exhaustive grid search](https://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) a list (grid) of search alternatives for each hyper-parameter to tune must be given and is then looped over. The search space thus grows exponentially fast when new hyper-parameters are added or the search space for a single parameter expanded. It can rather quickly become untenably large and take hours, even days, to loop over. But it is exhaustive and leaves no stone unturned.
 
-To apply an exhaustive hyper-parameter tuning as part of process-flow, edit the json command file:
+To apply an exhaustive hyper-parameter tuning as part of the process-flow, edit the json command file:
 
 ```
 "hyperParameterTuning": {
@@ -462,4 +462,4 @@ The json command file defining the exhaustive (grid-search) tuning (_hyper-param
 }
 ```
 
-For the linear regressors (OLS, TheilSen, Huber) the exhaustive tuning only lists a few hyper-parameters and looping all combinations will be fast. For the more advanced regressors, however, the search space when considering all possible combinations is large. Consequently the tuning will take a long time, especially if you have a large number of covariates. One way to speed up the exhaustive tuning is thus to reduce the number of covariates by applying any of the suggested methods for feature selection (in the post [Model OSSL data: 1 process-flow](../spectrodata-OSSL4ML05-mlmodel01)).
+For the linear regressors (OLS, TheilSen, Huber) the exhaustive tuning only lists a few hyper-parameters and looping all combinations will be fast. For the more advanced regressors, however, the search space when considering all possible combinations is large. Consequently the tuning will take a long time, especially if you have a large number of covariates. One way to speed up the exhaustive tuning is thus to reduce the number of covariates by applying any of the suggested methods for feature selection (see the post [Model OSSL data: 1 process-flow](../spectrodata-OSSL4ML05-mlmodel01)).
