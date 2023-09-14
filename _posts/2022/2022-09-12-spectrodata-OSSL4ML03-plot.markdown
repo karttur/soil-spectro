@@ -23,15 +23,15 @@ This post is a manual for how to explore, by plotting, the OSSL data downloaded 
 
 ### Prerequisites
 
-This post requires that you followed processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML01-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the <span class='package'>matplotlib</span> package installed. If you want to have an example structure of command files, access the [OSSL-data repo](https://github.com/karttur/OSSL-data/). This post is more of a stand-alone explanation of how to setup processing using the python module <span class='module'>OSSL_plot</span>; the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) instead starts from the structure of a prepared example of [OSSL-data](https://github.com/karttur/OSSL-data/), also accessible from GitHub.
+This post requires that you followed the processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML02-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the <span class='package'>matplotlib</span> package installed. If you want to have an example structure of command files, access the [OSSL-data repo](https://github.com/karttur/OSSL-data/). This post is more of a stand-alone explanation of how to setup processing using the python module <span class='module'>OSSL_plot</span>; the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) instead starts from the structure of a prepared example of [OSSL-data](https://github.com/karttur/OSSL-data/), also accessible from GitHub.
 
 ### Plot OSSL
 
-The python package <span class='package'>matplotlib</span> has almost endless possibilities for designing data plots. Only a few of the functions are predefined in the module <span class='module'>OSSL_plot.py</span>. If you want to develop your own plot functions for OSSL spectral data plots you are free to use the <span class='module'>OSSL_plot.py</span> as a starting point.
+The python package <span class='package'>matplotlib</span> has almost endless possibilities for designing data plots. Only a few of the functions are predefined in the module <span class='module'>OSSL_plot.py</span>. If you want to develop your own plot functions for OSSL data you are free to use the <span class='module'>OSSL_plot.py</span> as a starting point.
 
 #### Spectral plots
 
-You can plot either the raw spectra or the first derivate (change of spectra between sequential wavelengths) or both together as subplots in the same figure (figure 1). In the json command file you can set the number of spectra to show, the colour ramp and the ranges of the plot axis.
+You can plot either the raw spectra or the first derivate (change of spectra between sequential wavelengths) or both together as subplots in the same figure (figure 1). In the json command file you can set the number of spectra to show, the colour ramp and the ranges of the plot axis. You can also set the information text that appear in each plot or subplot.
 
 <figure class="third">
 	<a href="../../images/LUCAS_460-1050_10_spectra.png">
@@ -92,7 +92,7 @@ All of the paths and names listed above must be specified in a json file, and th
 
 The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [download](../spectrodata-OSSL4ML01-download) post. Before you can plot any data you must create 1) a json command file defining how to plot the OSSL data, and 2) a text file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project text file can link to any number of json command files. You can thus run multiple plot designs for one and the same dataset, or run plots for multiple datasets using a single project file and a single run.
 
-The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template change the parameter _createjsonparams_ to _true_.
+The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template set the _rootpath_ and change the parameter _createjsonparams_ to _true_.
 
 ```
 {
@@ -526,7 +526,7 @@ To actually run the rearrangement you need to edit the json command file to fit 
 - _1050_ the upper end wavelength of the output spectra, and
 - _10_ the spectral resolution of the output spectra
 
-The full path to the command file then becomes _/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-plots/plot-OSSL-LUCAS-SE_nir_460-1050_10.json_.
+The full path to the command file on my machine then becomes _/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-plots/plot-OSSL-LUCAS-SE_nir_460-1050_10.json_.
 
 I then create the project file _plot_spectra.txt_ (in the project root folder) and enter the full path to my command file:
 
