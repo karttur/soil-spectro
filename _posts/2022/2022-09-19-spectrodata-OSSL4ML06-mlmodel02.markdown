@@ -35,13 +35,12 @@ To follow the hands-on instructions, this post requires that you completed the p
 
 #### Basic layout options
 
-There are 4 basic plot layout options that can be set for displaying the result of the ML modelling (illustrated in figure 1):
+There are 4 basic plot layout options that can be set for displaying the result of the ML modelling in <span class='module'>OSSL_mlmodel.py</span> (illustrated in figure 1):
 
 1. Single plots showing feature importance for a combination of one feature and one regressor (bar chart)
 2. Single plot showing the predictive power for a combination of one feature and one regressor (scatter plot)
-3. Multi-plot rows and columns for single feature with rows showing the results of different regressors applied for predicting this single feature, and
-4. Multi-plot rows and columns for single regressor with rows showing the results of applying this single regressor to different target features.
-
+3. Multi-plot rows and columns for a target feature with rows showing the results of different regressors applied for predicting a specific target feature, and
+4. Multi-plot rows and columns for a regressor with rows showing the results of applying this specific regressor to different target features.
 
 <figure class="half">
   <a href="../../images/oc_usda.c729_w.pct_RandForRegr-model_permut-imp.png">
@@ -61,7 +60,7 @@ There are 4 basic plot layout options that can be set for displaying the result 
   <img src="../../images/testtg_RandForRegr-multi-results.png" alt="image">
   </a>
 
-	<figcaption>Figure 1. The four basic plot types that can be generated from the module OSSL_mlmodel; top row: single feature permutation importance and feature/coefficient importance; bottom row: multi-column plots for single feature (with each row showing the results of a single regressor) and for regressors (with each row showing the results for a single feature).</figcaption>
+	<figcaption>Figure 1. The four basic plot types that can be generated from the module OSSL_mlmodel; top row: feature importance and model prediction; bottom row: multi-column plots for single feature (with each row showing the results of a single regressor) and multi-column plots for regressors (with each row showing the results for a single feature).</figcaption>
 </figure>
 
 Alternatives 1 (feature importance) and 2 (predictive power) each are available in 2 versions. Feature importance can be both [permutation importance](../spectrodata-OSSL4ML05-mlmodel01#permutation-importance-evaluation) and [coefficient importance](../spectrodata-OSSL4ML05-mlmodel01#coefficient-importance). And predictive power can be both from [train/test divided prediction](../spectrodata-OSSL4ML05-mlmodel01#traintest-divided-prediction) and [cross validated prediction](../spectrodata-OSSL4ML05-mlmodel01#cross-validated-prediction). There are thus in total 4 different kinds of individual plots that can be defined (figure 2).
@@ -93,7 +92,7 @@ That there are 4 options for individual plots leads to the multi-plots having a 
 
 #### Single feature multi-plots
 
-The json coding for creating multi-plots for single features looks like this:
+The json coding for creating multi-plots for target features looks like this:
 
 ```
       "targetFeatures": {
@@ -128,7 +127,7 @@ The example above creates a 3-column multi-plot for each target feature defined 
 
 #### Single regressor multi-plots
 
-The json coding for creating multi-plots for single regressors looks like this:
+The json coding for creating multi-plots for regressors looks like this:
 
 ```
       "regressionModels": {
@@ -158,7 +157,7 @@ The example above creates a 3-column multi-plot for each regressor defined in th
   <img src="../../images/testtg_RandForRegr-multi-results.png" alt="image">
   </a>
 
-	<figcaption>Figure 4. Regression nodel multi-plot, with each row showing the results of a different target feature; columns show 1) permutation importance, 2) traint/test model prediction results and 3) Kfold model prediction results. The figure uses the random forest regressor as an example; the symbolisation of the target features and the varying markers for the different regressors are defined as explained below.</figcaption>
+	<figcaption>Figure 4. Regression model multi-plot, with each row showing the results of a different target feature; columns show 1) permutation importance, 2) train/test model prediction results and 3) Kfold model prediction results. The figure uses the random forest regressor as an example; the symbolisation of the target features and the varying markers for the different regressors are defined as explained below.</figcaption>
 </figure>
 
 #### Target feature symbolisation
@@ -280,7 +279,7 @@ If you look carefully at the multi-row plots in figure 3 (showing the prediction
 
 #### Horisontal and vertical spacing
 
-For the multi-row/multi-column plots it is a bit tricky to get the height and width spacing correct - the axis labels often tend to overlap. Also because different target features have different units and thus different numerical ranges - which leads to different lengths of the tick mark text. Matplotlib does not handle that automatically and thus I have added the possibility of manually setting both figure height and width and the height and width spacing.
+For the multi-row/multi-column plots it is a bit tricky to get the height and width spacing correct - the axis labels often tend to overlap. Also because different target features have different units and thus different numerical ranges - which leads to different sizes of the tick mark text. Matplotlib does not handle that automatically and thus I have added the possibility of manually setting both figure height and width and the height and width spacing.
 
 ```
         "figSize": {
