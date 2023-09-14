@@ -536,6 +536,6 @@ I then create the project file _plot_spectra.txt_ (in the project root folder) a
 
 ###### Running the project file
 
-You can now run the Python script _OSSL_plot.py_ with a single command, the path to the [json specification file](#json-specification-file). The json specification file points to the arranged data and then plot project file (a simple text file) that in turn points the json command file. The project text file can point to any number of json command files and they will be executed in sequence.
+You can now run the Python script _OSSL_plot.py_ with a single command, the path to the [json specification file](#json-specification-file). The json specification file points to the arranged data and the plot project file (a simple text file) that in turn points to the json command file. The project text file can point to any number of json command files and they will be executed in sequence.
 
 The module generates the requested plots, and shows them on screen and/or saves them as a png files as requested in the json command file. For instance [figure 1](#spectral-plots) and [figure 2](#feature-plots) above were generated in this way.
