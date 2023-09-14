@@ -2,7 +2,7 @@
 layout: post
 title: Anaconda
 categories: libspectrosupport
-excerpt: "Setup Anaconda for defining python environment for OSSL spectral data processing"
+excerpt: "Setup Anaconda for defining python environment for the OSSL spectral data processing"
 tags:
   - Anaconda
   - Python
@@ -127,7 +127,7 @@ To create the conda virtual python environment for the OSSL project you can eith
 
 To setup a new virtual environment from using <span class='terminalapp'>conda</span> you can either
 - define default packages in a file called .condarc,
-- direct specification of packages as part of the creation,
+- directly specify packages as part of the creation,
 - use an exported configuration (yml) file, or
 - set up a default environment and add individual packages afterwards
 
@@ -207,7 +207,7 @@ Executing transaction: done
 
 ##### Direct specification
 
-An alternative to setting default packages using <span class='file'>.condarc</span>, is to directly specify the additional packages to bring along the creating the virtual environment:
+An alternative to setting default packages using <span class='file'>.condarc</span>, is to directly specify the additional packages to bring along while creating the virtual environment:
 
 <span class='terminal'>conda create \-n ossl_py38a python=3.8 matplotlib numpy pandas scikit-learn</span>
 

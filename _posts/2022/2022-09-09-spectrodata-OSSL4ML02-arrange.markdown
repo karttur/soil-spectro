@@ -2,7 +2,7 @@
 layout: post
 title: Import OSSL data
 categories: libspectrodata
-excerpt: "Arrange (import) OSSL data over a selected region using a python script to use for Machine Learning modelling"
+excerpt: "Arrange (import) OSSL data over a selected region with a python script"
 tags:
   - OSSL
   - api
@@ -20,7 +20,7 @@ This post is the second in a series on organising and analysing data from the Op
 
 ### Introduction
 
-In this post you will arrange (import) a downloaded OSSL dataset using a python script. The script will combine data on the site, laboratory data and spectral scans. The combined data is saved as a <span class='file'>json</span> file and used for plotting, soil line extraction and Machine Learning analyses and modelling in the following posts.
+In this post you will arrange (import) a downloaded OSSL dataset using a python script. The script will combine data on the site, laboratory data and spectral scans. The combined data is saved as a <span class='file'>json</span> file and used for plotting and Machine Learning analyses and modelling in the following posts. If you do not have any downloaded OSSL data, please go back to the [previous post](../spectrodata-OSSL4ML01-download).
 
 ### Prerequisites
 
@@ -28,19 +28,19 @@ This post requires that you downloaded OSSL as outlined in the [previous](../spe
 
 ### Arrange OSSL
 
-At the end of the [previous](../spectrodata-OSSL4ML01-download) post I suggested how to organise downloaded OSSL files. It is better to put up that structure from the beginning as you will need to state folder paths in the command files that are used to pilot the Python script. The post on hot to [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) contains details about the file and folder structure.
+At the end of the [previous](../spectrodata-OSSL4ML01-download) post I suggested how to organise downloaded OSSL files. It is better to put up that structure from the beginning as you will need to state folder paths in the command files that are used to pilot the Python script. The post on how to [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) contains details about the file and folder structure.
 
 #### Python Module OSSL_imort.py
 
-The rearranging (or importing) of the downloaded OSSL data is done by a single stand-alone python module (script) called <span class='module'>OSSL_import.py</span>. The script is available from [GitHub](https://github.com/karttur/OSSL-pydev) - for details the post on [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+The rearranging (or importing) of the downloaded OSSL data is done by a single stand-alone python module (script) called <span class='module'>OSSL_import.py</span>. The script is available from [GitHub](https://github.com/karttur/OSSL-pydev) - for details on how to access the script see the post on [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
 
 Running the <span class='module'>OSSL_import.py</span> script requires specifications of the paths and names of 1) the OSSL data and 2) the command files that define how to rearrange the data while importing:
 
 - **rootpath**: full path to folder with a downloaded OSSL zip file; parent folder to  "sourcedatafolder", "arrangeddatafolder", and "jsonfolder"
 - **sourcedatafolder**: subfolder under "rootpath" with the exploded content of the OSSL zip file (default = "data")
 - **arrangeddatafolder**: subfolder under "rootpath" where the imported (rearranged) OSSL data will be stored
-- **jsonfolder**: subfolder under "rootpath" where the json parameter file ("projFN") is located
-- **projFN**: the name of an existing txt file that sequentially lists json parameter files to run, must be in the subfolder "jsonfolder"
+- **jsonfolder**: subfolder under "rootpath" where the json import parameter files must be located
+- **projFN**: the name of an existing txt file that sequentially lists json import parameter files to run, must be directly under the "arrangeddatafolder"
 - **createjsonparams**: if set to true the script will create a template json file and exit
 
 ##### json specification file
@@ -58,9 +58,9 @@ All of the paths and names listed above must be specified in a json file, and th
 }
 ```
 
-The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [previous](../spectrodata-OSSL4ML01-download) post. Before you can actually import any data you must create 1) a json command file defining how to arrange the OSSL data, and 2) a text file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project text file can link to any number of json command files. You can thus rearrange and import multiple versions (for instance with different wavelength coverage) using a single project file and a single run.
+The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [previous](../spectrodata-OSSL4ML01-download) post. Before you can actually import any data you must create 1) a json command file defining how to arrange the OSSL data, and 2) a text file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project text file can link to any number of json command files. You can thus rearrange and import multiple versions on an OSSL dataset (for instance with different wavelength coverage) using a single project file and a single run.
 
-The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template change the parameter _createjsonparams_ to _true_.
+The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template set the _rootpath_ and change the parameter _createjsonparams_ to _true_.
 
 ```
 {
@@ -85,6 +85,8 @@ Before you can run the script you probably have to set the script to have execut
 
 <span class='terminal'>python OSSL_import.py \"/local/path/to/import_ossl.json\"</span>
 
+If you are unfamiliar with Python and the <span class='app'>Terminal</span> you can install a Graphical User Interface as described in the post [Eclipse for PyDev](../../libspectrosupport/spectrosupport-OSSL-eclipse).
+
 With the parameter _createjsonparams_ set to _true_ the script will report that a template file was created:
 
 ```
@@ -97,7 +99,7 @@ json parameter file created: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS
 
 ##### json command file
 
-For each set of spectra that you want to work with you need to create a json command file. The full, local path to that file must then be added to the textfile identified with the parameter _projectfilename_ (default: _extract_rawdata.txt_). The json command file itself must be located in the subfolder identified with the parameter _jsonfolder_ (default: _json-import_). This is a bit complicated but just take it easy and follow the steps outlined below.
+For each set of spectra that you want to work with, you need to create a json command file. The full, local path to that file must then be added to the textfile identified with the parameter _projectfilename_ (default: _extract_rawdata.txt_). The json command file itself must be located in the subfolder identified with the parameter _jsonfolder_ (default: _json-import_). This is a bit complicated but just take it easy and follow the steps outlined below.
 
 ###### json command file structure
 
@@ -325,9 +327,9 @@ Rename the file to reflect the rearrangement, in my case to _import_ossl-spectra
 - _1050_ the upper end wavelength of the output spectra, and
 - _10_ the spectral resolution of the output spectra
 
-The full path to the command file then becomes _/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_.
+The full path to the command file on my machine then becomes _/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_.
 
-Create the project file _extract_rawdata.txt_ (in the subfolder _arranged-data_) and enter the full path to the command file (example for my local setup):
+Create the project file _extract_rawdata.txt_ (directly under the _arrangeddatafolder_ [default name: _arranged-data_]) and enter the full path to the command file (example for my local setup):
 
 ```
 /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
@@ -365,7 +367,7 @@ As I defined the rearrangement for the Swedish LUKAS NIR spectra, the output fro
 
 ###### Parameter output file
 
-The parameter output file is simply a replica of the input parameter file. The copy is saved along the rearranged data as a reference to how it was created. If you had set the _id_ and _name_ to auto_ the script sets default _id_ and _name_ and that is changed in saved copy of the parameter (json) file.
+The parameter output file is simply a replica of the input parameter file. The copy is saved along the rearranged data as a reference to how it was created. If you had set the _id_ and _name_ to _auto_ the script sets default _id_ and _name_ and that is changed in the saved copy of the parameter (json) file.
 
 ###### Data output file
 

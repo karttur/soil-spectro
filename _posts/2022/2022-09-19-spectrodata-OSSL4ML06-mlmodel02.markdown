@@ -2,7 +2,7 @@
 layout: post
 title: "Model OSSL data: 2 plot layout"
 categories: libspectrodata
-excerpt: "Symbolisationa and plot layout isn matplotlib for results from Machine Learning modelling of OSSL data."
+excerpt: "Symbolisation and plot layout in matplotlib for Machine Learning modelling of OSSL data."
 tags:
   - OSSL
   - machine learning

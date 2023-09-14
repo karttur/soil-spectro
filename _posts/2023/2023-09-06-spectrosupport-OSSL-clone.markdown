@@ -16,7 +16,6 @@ comments: true
 share: true
 ---
 
-
 The python modules of the OSSL python package are setup for a virtual python environment with the first line of each module pointing towards this environment:
 ```
 #!/Applications/anaconda3/envs/spectraimagine_py38/bin/python3.8
@@ -48,7 +47,7 @@ To download the OSSL-pydev repository to your local machine, open a browser and 
 
 To download the data directly, just click the _Download ZIP_ options.
 
-When the ZIP file is ready, move it to the destination where you want to have it. Unzip it.
+When the ZIP file is completely downloaded, move it to the destination where you want to have it. Unzip it.
 
 If you are conversant with using Python and your system is set up with Python, you can jump straight to the set of posts in this blog on the [Open Soil Spectral Library](../../libspectrodata/spectrodata-OSSL-intro) and how to [explore](../../libspectrodata/spectrodata-OSSL-api-explorer), [download](../../libspectrodata/spectrodata-OSSL4ML01-download), [import](../../libspectrodata/spectrodata-OSSL4ML02-arrange), [plot](../../libspectrodata/spectrodata-OSSL4ML03-plot) and [model](../../libspectrodata/spectrodata-OSSL4ML05-mlmodel01) the OSSL data.
 
@@ -64,4 +63,4 @@ To get started you can use the prepared OSSL example dataset available in the Gi
 
 ### Setup a Python development environment
 
-If you are beginner in Python or want to have a Graphical User Interface (GUI) with support for editing codes, proceed with the next two posts. The first will guide you through installing and setup [<span class='app'>Anaconda</span>](../libspectrosupport/spectrosupport-OSSL-anaconda) for defining your python environemnt. The second is an instruction for how to install and setup the Integrated Development Environment (IDE) [<span class='app'>Eclipse</span>](../libspectrosupport/spectrosupport-OSSL-eclipse). After finishing these two posts you should have a working python environment for running the python package _ossl-xspectre_.
+If you are beginner in Python or want to have a Graphical User Interface (GUI) with support for editing codes, proceed with the next two posts in the "Python package" section. The first will guide you through installing and setup [<span class='app'>Anaconda</span>](../libspectrosupport/spectrosupport-OSSL-anaconda) for defining your python environment. The second is an instruction for how to install and setup the Integrated Development Environment (IDE) [<span class='app'>Eclipse</span>](../libspectrosupport/spectrosupport-OSSL-eclipse). After finishing these two posts you should have a working python environment for running the python package _ossl-xspectre_.

@@ -2,7 +2,7 @@
 layout: post
 title: Plot OSSL data
 categories: libspectrodata
-excerpt: "Plot OSSL data spectra and first derivative."
+excerpt: "Plot OSSL spectra and wet laboratory soil data."
 tags:
   - OSSL
   - api
@@ -71,8 +71,8 @@ Running the <span class='module'>OSSL_plot.py</span> script is similar to runnin
 - **rootpath**: full path to folder with a downloaded OSSL zip file; parent folder to  "sourcedatafolder", "arrangeddatafolder", and "jsonfolder"
 - **sourcedatafolder**: subfolder under "rootpath" with the exploded content of the OSSL zip file (default = "data")
 - **arrangeddatafolder**: subfolder under "rootpath" where the imported (rearranged) OSSL data will be stored
-- **jsonfolder**: subfolder under "rootpath" where the json parameter file ("projFN") is located
-- **projFN**: the name of an existing txt file that sequentially lists json parameter files to run, must be in the subfolder "jsonfolder"
+- **jsonfolder**: subfolder under "rootpath" where the json plot parameter files must be located
+- **projFN**: the name of an existing txt file that sequentially lists json plot parameter files to run, must be directly under the "arrangeddatafolder"
 - **createjsonparams**: if set to true the script will create a template json file and exit
 
 ##### json specification file

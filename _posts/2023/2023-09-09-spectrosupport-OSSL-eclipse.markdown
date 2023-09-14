@@ -2,7 +2,7 @@
 layout: post
 title: Eclipse for PyDev
 categories: libspectrosupport
-excerpt: "Setup Eclipse as python development environment for OSSL spectral data processing"
+excerpt: "Setup Eclipse as python development environment for the OSSL spectral data processing"
 tags:
   - Eclipse
   - Python

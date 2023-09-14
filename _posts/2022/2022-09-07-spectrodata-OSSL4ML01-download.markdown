@@ -16,15 +16,15 @@ comments: true
 share: true
 ---
 
-This post is the first in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). 
+This post is the first in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). You can download OSSL data without any additional tools than a web-browser. To follow the subsequent posts you need to clone or download a set of Python scripts and described in other posts of this blog.
 
 ### Introduction
 
-This post builds on the two previous posts in this blog: [Open Soil Spectral Library (OSSL)](../spectrodata-OSSL-intro) and [OSSL explorer API](../spectrodata-OSSL-api-explorer). In this post you will download selected OSSL data  that will then be used in the following posts for Machine Learning modelling. The data used as an example is Near-InfraRed (NIR) OSSL data over Sweden. You can change the study area by selecting any other geographical region, select via soil textures (attributes) or source dataset as outlined in the [previous](../spectrodata-OSSL-api-explorer) post.  
+This post builds on the two previous posts in this blog: [Open Soil Spectral Library (OSSL)](../spectrodata-OSSL-intro) and [OSSL explorer API](../spectrodata-OSSL-api-explorer). In this post you will download selected OSSL data  that will then be used in the following posts for Machine Learning modelling. The data used as an example is Near-InfraRed (NIR) OSSL data over Sweden. You can change the study area by selecting any other geographical region, select spectral related to certain soil textures (attributes) or source dataset, as outlined in the [previous](../spectrodata-OSSL-api-explorer) post.  
 
 ### Select OSSL data
 
-The [previous](../spectrodata-OSSL-api-explorer) post illustrates how to access OSSL data using the [OSSL API Explorer](https://explorer.soilspectroscopy.org). In this example the selection was set to Sweden as illustrated in the figure below.
+The [previous](../spectrodata-OSSL-api-explorer) post illustrates how to access OSSL data using the [OSSL API Explorer](https://explorer.soilspectroscopy.org). As example for this post, the selection was set to Sweden as illustrated in the figure below.
 
 <figure>
 <img src="../../images/OSSL_explorer_020_select-sweden.png">
@@ -58,7 +58,7 @@ Download your selected OSSL data by clicking the <span class='button'>Download n
 
 ### Arranging OSSL data
 
-In the [next](../spectrodata-OSSL4ML02-arrange/) post you will use a python script to arrange (import) the data from the <span class='file'>csv</span> files into a combined <span class='file'>json</span> file. To keep your data in order I suggest that you create a dedicated folder (directory) under your user where you keep the OSSL data that you download. In my system I have a folder called <span class='file'>OSSL</span> and in that root folder I create subfolders with regional and/or thematic names indicating the OSSL data that I downloaded. I save the downloaded file, that is always called <span class='file'>data.zip</span>, in that folder, then I unzip the file and the 5 <span class='file'>csv</span> files will end up in a subfolder called <span class='file'>data</span>. Do **not** rename the downloaded and unzipped files if you want to use the Pythons scripts in the following posts. My OSSL folder now looks like this:
+In the [next](../spectrodata-OSSL4ML02-arrange/) post you will use a python script to arrange (import) the data from the <span class='file'>csv</span> files into a combined <span class='file'>json</span> file. To keep your data in order I suggest that you create a dedicated folder (directory) under your user where you keep the OSSL data that you download. In my system I have a folder called <span class='file'>OSSL</span> and under that folder I create subfolders with regional and/or thematic names indicating the OSSL data that I downloaded. I save the downloaded file, that is always called <span class='file'>data.zip</span>, in that folder, then I unzip the file and the 5 <span class='file'>csv</span> files will end up in a subfolder called <span class='file'>data</span>. Do **not** rename the downloaded and unzipped files if you want to use the Pythons scripts in the following posts. My OSSL folder now looks like this:
 
 ```
 .

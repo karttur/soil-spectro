@@ -2,7 +2,7 @@
 layout: post
 title: "Model OSSL data: 3 hyper-parameter tuning"
 categories: libspectrodata
-excerpt: "Hyoer-paramter tuning for tweaking Machine Learning models."
+excerpt: "Hyper-parameter tuning for tweaking Machine Learning models."
 tags:
   - OSSL
   - machine learning
@@ -17,7 +17,7 @@ comments: true
 share: true
 ---
 
-This post is part of a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also the thrid post in a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+This post is part of a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also the third post in a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
 
 ### Introduction
 

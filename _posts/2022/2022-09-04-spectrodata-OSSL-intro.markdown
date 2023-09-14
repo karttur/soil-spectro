@@ -2,7 +2,7 @@
 layout: post
 title: Open Soil Spectral Library
 categories: libspectrodata
-excerpt: "Introduction to the Open Soil Spectral Library (OSSL)"
+excerpt: "A short introduction to the Open Soil Spectral Library (OSSL)"
 tags:
   - OSSL
   - soil

@@ -2,7 +2,7 @@
 layout: post
 title: OSSL explorer API
 categories: libspectrodata
-excerpt: "A short introduction to the Open Soil Spectral Library (OSSL)"
+excerpt: "Using the OSSL online explorer"
 tags:
   - OSSL
   - api
@@ -31,7 +31,7 @@ Open the [OSSL Explorer](https://explorer.soilspectroscopy.org). The application
 <figcaption>OSSL loading data on startup.</figcaption>
 </figure>
 
-When loaded, the OSSL explorer opens with the main window showing Geographic distribution of data. The main view is, however, partly covered and you have to option to scroll over the latest set of tweets related to OSSL. Close the tweets window to continue. If you want to see the tweets again, click the little twitter bird in the top menu.
+When loaded, the OSSL explorer opens with the main window showing Geographic distribution of data. The main view is, however, partly covered and you have the option to scroll over the latest set of tweets related to OSSL. Close the tweets window to continue. If you want to see the tweets again, click the little twitter bird in the top menu.
 
 <figure>
 <img src="../../images/OSSL_explorer_002_tweet.png">
