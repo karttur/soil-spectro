@@ -1,10 +1,13 @@
 ---
 layout: page
-title: Blog
-excerpt: "An archive of blog posts sorted by date."
-image: std-trmm-3b43v7-precip_3B43_trmm_2001-2016_A
+title: OSSL spectral library data processing
+excerpt: "OSSL spectral library data processing using python."
 search_omit: true
 ---
+
+## OSSL spectral library data processing
+
+This page links to detailed instructions include a short introduction to OSSL with links to various resources. Then follows a step-by-step manual on retrieving data from OSSL. All the following posts build a continuing series on how to process the OSSL data using the OSSL python package, ending up in Machine Learning (ML) models using spectral data as covariates for prediciting different soil properties.
 
 <ul class="post-list">
 {% for post in site.categories.libspectrodata %}

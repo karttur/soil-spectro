@@ -41,7 +41,7 @@ The source of the Swedish OSSL data used as example is from the European wide sa
 
 #### Import data
 
-Importing (or arranging) data requires that you create a subfolder (default name _arranged-data_) under the root-folder (_LUCAS_ in this example). Directly under folder _arranged-data_ you need to create a project text file that contains links to json import command files that, in turn, contains the parameter defining the import. The default name of the import project file is _extract_rawdata.txt_. Under the folder _arranged-data_ you must also have the subfolder that contains all the json import command files. The default name of this subfolder is _json-import_. The actual json import command files (to be saved under _json-import_) should have names that reflect the arrangement of the import command and do not have any default names. The structure of the json import files are explained in the post [Import OSSL data](../../libspectrodata/spectrodata-OSSL4ML02-arrange). The Swedish example data contains three examples of json import command files:
+Importing (or arranging) data requires that you create a subfolder (default name _arranged-data_) under the root-folder (_LUCAS_ in this example). Directly under folder _arranged-data_ you need to create a project text file that contains links to json import command files that, in turn, contains the parameter defining the import. The default name of the import project file is _extract_rawdata.txt_. Under the folder _arranged-data_ you must also have the subfolder that contains all the json import command files. The default name of this subfolder is _json-import_. The actual json import command files (to be saved under _json-import_) should have names that reflect the arrangement of the import command and do not have any default names. The structure of the json import files are explained in the post [Import OSSL data](../../libspectrodata/spectrodata-OSSL4ML02-arrange):
 
 ```
 |____LUCAS
@@ -55,16 +55,14 @@ Importing (or arranging) data requires that you create a subfolder (default name
 | |____arranged-data
 | | |____extract_rawdata.txt
 | | |____json-import
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_460-2500_2.json
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_460-2500_5.json
+| | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json
 ```
 
 The folder and file organisation above is ready for starting <span class='module'>ossl_import</span>. To run the module, you need one additional json file (default name: _import_ossl.json_) specifying the _rootpath_ and the default folder and file names:
 
 ```
 {
-  "rootpath": "/local/path/to/OSSL/Sweden/LUCAS",
+  "rootpath": "/Local/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
@@ -133,7 +131,7 @@ Run the module from the top menu of <span class='app'>Eclipse</span>;
 
 OSSL comes with three main categories of data 1) visible to near infrared (VISNIR), 2) mid infrared (MIR) and 3) data from the handheld field spectrometer NeoSpectra (NEON). OSSL data imported using the <span class='package'>ossl-xspectre</span> package module <span class='module'>OSSL_import</span> are divided into subfolder called _visnir_, _mir_ and _neon_ along this categorisation. The LUCAS data used in the Swedish example is restricted to VISNIR and running <span class='module'>OSSL_import</span> will generate a _visnir_ subfolder under the _arranged-data_ folder. The output of each import command will be saved in a separate subfolder under _visnir_, with names reflecting the import commands. Each import command generates a parameter file and a data file.
 
-Running the three json import command files listed above leads to the following file and folder structure:
+Running the json import command files listed above leads to the following file and folder structure:
 
 ```
 |____LUCAS
@@ -147,26 +145,18 @@ Running the three json import command files listed above leads to the following 
 | |____arranged-data
 | | |____extract_rawdata.txt
 | | |____json-import
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_460-2500_2.json
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_460-2500_5.json
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
+| | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json
 | | |____visnir
-| | | |____OSSL-LUCAS-SE_460-2500_2
-| | | | |____params-visnir_OSSL-LUCAS-SE_460-2500_2.json
-| | | | |____data-visnir_OSSL-LUCAS-SE_460-2500_2.json
-| | | |____OSSL-LUCAS-SE_460-2500_5
-| | | | |____params-visnir_OSSL-LUCAS-SE_460-2500_5.json
-| | | | |____data-visnir_OSSL-LUCAS-SE_460-2500_5.json
-| | | |____OSSL-LUCAS-SE_640-1050_10
-| | | | |____params-visnir_OSSL-LUCAS-SE_640-1050_10.json
-| | | | |____data-visnir_OSSL-LUCAS-SE_640-1050_10.json
+| | | |____OSSL-LUCAS-SE_460-1050_10
+| | | | |____params-visnir_OSSL-LUCAS-SE_460-1050_10.json
+| | | | |____data-visnir_OSSL-LUCAS-SE_460-1050_10.json
 ```
 
 For details on the parameters you can set for importing data, see the post on [Import OSSL data](../../libspectrodata/spectrodata-OSSL4ML02-arrange).
 
 #### Plot data
 
-The project and json command file and folder structure for plotting spectral and laboratory (wet-chemistry) data follow the same principles as for import. A project file (default name _plot_spectra.txt_) directly under the folder _arranged-data_ and a subfolder (default name:_json-plot_), also directly under _arranged-data_ that contains the json plot command files. If you used the Sweden example, the required folders and files are there. You just have to edit the paths as you did for the importing. Then run the module <span class='module'>OSSL_plot</span> pointing towards the json specification file for plotting (default name: _plot_ossl.json_). Again you can either run via the command line or using <span class='app'>Eclipse</span>.
+The project and json command file and folder structure for plotting spectral and laboratory (wet-chemistry) data follow the same principles as for import. A project file (default name _plot_spectra.txt_) directly under the folder _arranged-data_ and a subfolder (default name:_json-plots_), also directly under _arranged-data_ that contains the json plot command files. If you used the Sweden example, the required folders and files are there. You just have to edit the paths as you did for the importing. Then run the module <span class='module'>OSSL_plot</span> pointing towards the json specification file for plotting (default name: _plot_ossl.json_). Again you can either run via the command line or using <span class='app'>Eclipse</span>.
 
 Details about the options when defining the json command file for plotting is in the post on [Plot OSSL data](../../spectrodata-OSSL4ML03-plot). If requested to be saved, the plots are saved as png files in a subfolder called _plot_ (not all plot output files shown in diagram below).
 
@@ -183,22 +173,13 @@ Details about the options when defining the json command file for plotting is in
 | | |____extract_rawdata.txt
 | | |____plot_spectra.txt
 | | |____json-import
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_460-2500_2.json
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_460-2500_5.json
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
+| | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json
 | | |____json-plots
-| | | |____plot_ossl-spectra_sweden-LUCAS_nir_460-2500_2.json
-| | | |____plot_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
+| | | |____plot_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
 | | |____visnir
-| | | |____OSSL-LUCAS-SE_460-2500_2
-| | | | |____params-visnir_OSSL-LUCAS-SE_460-2500_2.json
-| | | | |____data-visnir_OSSL-LUCAS-SE_460-2500_2.json
-| | | |____OSSL-LUCAS-SE_460-2500_5
-| | | | |____params-visnir_OSSL-LUCAS-SE_460-2500_5.json
-| | | | |____data-visnir_OSSL-LUCAS-SE_460-2500_5.json
-| | | |____OSSL-LUCAS-SE_640-1050_10
-| | | | |____params-visnir_OSSL-LUCAS-SE_640-1050_10.json
-| | | | |____data-visnir_OSSL-LUCAS-SE_640-1050_10.json
+| | | |____OSSL-LUCAS-SE_460-1050_10
+| | | | |____params-visnir_OSSL-LUCAS-SE_460-1050_10.json
+| | | | |____data-visnir_OSSL-LUCAS-SE_460-1050_10.json
 | | | | |____plot
 | | | | | |____spectra+derivative.png
 | | | | | |____boxwhisker_all-features.png
@@ -236,9 +217,9 @@ if you start by editing the modelling files that came with the Swedish example d
 | | | |____plot_ossl-spectra_sweden-LUCAS_nir_460-2500_2.json
 | | | |____plot_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
 | | |____json-ml-modeling
-| | | |____columnplotmodel-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
-| | | |____hyper-param-exhaustive-tuning-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
-| | | |____hyper-param-random-tuning-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
+| | | |____model-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
+| | | |____hyper-param-exhaustive-tuning.json
+| | | |____hyper-param-random-tuning.json
 | | |____visnir
 | | | |____OSSL-LUCAS-SE_640-1050_10
 | | | | |____plot
