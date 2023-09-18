@@ -113,9 +113,15 @@ Before you can run the script you probably have to set the script to have execut
 
  <span class='terminal'>chmod OSSL_plot.py 755</span>
 
- Then you can run the script with the full, local path to the json file [above](#json-specification-file) as the only parameter:
+ Then you can run the script with the full, local path to the json file [above](#json-specification-file) as the only parameter.
 
-<span class='terminal'>python OSSL_plot.py \"/Users/thomasgumbricht/docs-local/OSSL/plot_spectra.json\"</span>
+For MacOS and Linux:
+
+<span class='terminal'>python OSSL_plot.py \"/local/path/to/plot_spectra.json\"</span>
+
+For Windows:
+
+<span class='terminal'>\"X:/Local/path/to/anaconda3/envs/ossl_py38a/python.exe\" OSSL_plot.py \"/local/path/to/plot_ossl.json\"</span>
 
 With the parameter _createjsonparams_ set to _true_ the script will report that a template file was created:
 

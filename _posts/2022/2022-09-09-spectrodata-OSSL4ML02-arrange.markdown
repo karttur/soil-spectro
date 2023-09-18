@@ -30,7 +30,7 @@ This post requires that you downloaded OSSL as outlined in the [previous](../spe
 
 At the end of the [previous](../spectrodata-OSSL4ML01-download) post I suggested how to organise downloaded OSSL files. It is better to put up that structure from the beginning as you will need to state folder paths in the command files that are used to pilot the Python script. The post on how to [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) contains details about the file and folder structure.
 
-#### Python Module OSSL_imort.py
+#### Python Module OSSL_import.py
 
 The rearranging (or importing) of the downloaded OSSL data is done by a single stand-alone python module (script) called <span class='module'>OSSL_import.py</span>. The script is available from [GitHub](https://github.com/karttur/OSSL-pydev) - for details on how to access the script see the post on [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
 
@@ -79,11 +79,17 @@ To run the script, open a <span class='app'>terminal</span> window. Change direc
 
 Before you can run the script you probably have to set the script to have execution rights on your local machine. In MacOS and Linux you do that with the <span class='terminalapp'>chmod</span> (change mode) command:
 
- <span class='terminal'>chmod OSSL_import.py 755</span>
+<span class='terminal'>chmod OSSL_import.py 755</span>
 
- Then you can run the script with the full, local path to the json file [above](#json-specification-file) as the only parameter:
+Then you can run the script with the full, local path to the json file [above](#json-specification-file) as the only parameter.
+
+For MacOS and Linux:
 
 <span class='terminal'>python OSSL_import.py \"/local/path/to/import_ossl.json\"</span>
+
+For Windows:
+
+<span class='terminal'>\"X:/Local/path/to/anaconda3/envs/ossl_py38a/python.exe\" OSSL_import.py \"/local/path/to/import_ossl.json\"</span>
 
 If you are unfamiliar with Python and the <span class='app'>Terminal</span> you can install a Graphical User Interface as described in the post [Eclipse for PyDev](../../libspectrosupport/spectrosupport-OSSL-eclipse).
 
@@ -334,6 +340,7 @@ Create the project file _extract_rawdata.txt_ (directly under the _arrangeddataf
 ```
 /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
 ```
+
 ###### Running the project file
 
 To run the script (<span class='module'>OSSL_import.py</span>) make sure the [json specification file](#json-specification-file) links to both to the correct data folder and project file, and set the parameter _createjsonparams_ to _false_:

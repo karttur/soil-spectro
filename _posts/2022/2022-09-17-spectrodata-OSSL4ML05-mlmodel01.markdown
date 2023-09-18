@@ -89,7 +89,13 @@ Before you can run the script you probably have to set the script to have execut
 
  Then you can run the script with the full, local path to the json file [above](#json-specification-file) as the only parameter:
 
-<span class='terminal'>python OSSL_mlmodel.py \"/Users/thomasgumbricht/docs-local/OSSL/model_ossl.json\"</span>
+ For MacOS and Linux:
+
+ <span class='terminal'>python OSSL_mlmodel.py \"/local/path/to/docs-local/OSSL/model_ossl.json\"</span>
+
+ For Windows:
+
+ <span class='terminal'>\"X:/Local/path/to/anaconda3/envs/ossl_py38a/python.exe\" OSSL_mlmodel.py \"/local/path/to/model_ossl.json\"</span>
 
 With the parameter _createjsonparams_ set to _true_ the script will report that a template file was created:
 
