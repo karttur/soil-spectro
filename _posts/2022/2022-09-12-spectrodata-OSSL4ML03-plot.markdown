@@ -119,7 +119,7 @@ For MacOS and Linux:
 
 <span class='terminal'>python OSSL_plot.py \"/local/path/to/plot_spectra.json\"</span>
 
-For Windows:
+For Windows you need to start with the full path to the [conda virtual environment](../../libspectrosupport/spectrosupport-OSSL-anaconda) (not only "python" as for MacOS and Linux):
 
 <span class='terminal'>\"X:/Local/path/to/anaconda3/envs/ossl_py38a/python.exe\" OSSL_plot.py \"/local/path/to/plot_ossl.json\"</span>
 
