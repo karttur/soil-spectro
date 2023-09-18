@@ -258,6 +258,10 @@ If you look carefully at the multi-row plots in figure 3 (showing the prediction
   "MLP": {
     "marker": "D",
     "size": 50
+  },
+  "Cubist": {
+    "marker": "D",
+    "size": 50
   }
 },
 "modelTests": {

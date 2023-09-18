@@ -9,7 +9,7 @@ tags:
   - OSSL
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
 date: '2023-09-07 11:27'
-modified: '2023-09-07 11:27'
+modified: '2023-09-17 11:27'
 comments: true
 share: true
 ---
@@ -221,7 +221,7 @@ The [GitHub repo OSSL-pydev](https://github.com/karttur/OSSL-pydev) contains an 
 
 The reporting in the terminal will be similar as when installing using default packages defined in <span class='file'>.condarc</span>.
 
-#### Post-instalaltion of individual packages
+#### Post-installation of individual packages
 
 If you need to do a post-installation, this last section describes how to do it. For adding a package to a particular virtual environment you first have to activate it:
 

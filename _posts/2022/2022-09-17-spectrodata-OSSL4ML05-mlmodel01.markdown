@@ -380,6 +380,11 @@ The json command file that defines the plotting of the OSSL data is very long an
         "tol": 0.001,
         "epsilon": 1e-8
       }
+    },
+    "Cubist": {
+      "apply": false,
+      "hyperParams": {
+      }
     }
   },
   "regressionModelSymbols": {
@@ -412,6 +417,10 @@ The json command file that defines the plotting of the OSSL data is very long an
       "size": 50
     },
     "MLP": {
+      "marker": "D",
+      "size": 50
+    },
+    "Cubist": {
       "marker": "D",
       "size": 50
     }
@@ -549,10 +558,11 @@ You need to include at least one (1) regressor to either run a prediction or eva
 - [k-nearest neighbors regressor (KnnRegr)](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html),
 - [decision tree regressor (DecTreeRegr)](https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html),
 - [support vector regressor (SVR)](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html),
-- [random forest regressor (RandForRegr)](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html), and
-- [multi-layer perceptron regressor (MLP)](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html).
+- [random forest regressor (RandForRegr)](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html),
+- [multi-layer perceptron regressor (MLP)](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html), and
+- [Cubist](https://pypi.org/project/cubist/)
 
-Where MLP is a neural network type of regressor.
+Where MLP is a neural network type of regressor and Cubist a rule-based regressor.
 
 In the json command file, each regressor must be given with its abbreviation and  hyper-parameter (_HyperParams_) settings. If no hyper-parameters are give you still have to include the empty curly brackets (_dictionary_ in python terms):
 
@@ -1163,6 +1173,10 @@ The complete process-flow for the Swedish OSSL data (downloaded and arranged in 
       "size": 50
     },
     "MLP": {
+      "marker": "D",
+      "size": 50
+    },
+    "Cubist": {
       "marker": "D",
       "size": 50
     }
