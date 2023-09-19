@@ -16,7 +16,9 @@ share: true
 
 ### Introduction
 
-To run the python scripts for [importing](../../libspectrodata/spectrodata-OSSL4ML02-arrange), [plotting](../../libspectrodata/spectrodata-OSSL4ML03-plot) and [modelling](../../libspectrodata/spectrodata-OSSL4ML05-mlmodel01) OSSL data as described in other posts of this blog you need to have a python environment. This post describes how to setup install and setup [<span class='app'>Anaconda</span>](https://www.eclipse.org) for defining virtual python environments. The instructions are shorthand and written using MacOS. I have also published more detailed instructions for [install Anaconda for MacOS](https://karttur.github.io/setup-ide/setup-ide/install-anaconda/) and a summary for how to [install Eclipse and Anaconda in Ubuntu20](https://karttur.github.io/setup-ide/blog/ubuntu20-setup-spide/).
+To run the python scripts for [importing](../../libspectrodata/spectrodata-OSSL4ML02-arrange), [plotting](../../libspectrodata/spectrodata-OSSL4ML03-plot) and [modelling](../../libspectrodata/spectrodata-OSSL4ML05-mlmodel01) OSSL data as described in other posts of this blog you need to have a python environment. This post describes how to setup install and setup [<span class='app'>Anaconda</span>](https://www.anaconda.org) for defining virtual python environments. The instructions are shorthand and written using MacOS. I have also published more detailed instructions for [install Anaconda for MacOS](https://karttur.github.io/setup-ide/setup-ide/install-anaconda/) and a summary for how to [install Eclipse and Anaconda in Ubuntu20](https://karttur.github.io/setup-ide/blog/ubuntu20-setup-spide/).
+
+[<span class='app'>Anaconda</span>](https://www.anaconda.org) is a cross-platform solution for developing virtual python environments. There are also several other solutions available online. You can simply do a google seach on your operating system (_MacOS_, _Linux_, _Windows_) and _python virtual environment_).
 
 ### Conda, Anaconda and miniconda
 
@@ -24,7 +26,7 @@ Conda is the core python package manager for both Anaconda and miniconda. Conda 
 
 ### Anaconda
 
-[Anaconda](https://anaconda.org) is a free platform for scientific Python. To download Anaconda, visit the [Anaconda homepage](https://www.anaconda.com/download), and look for the download link. In the download page, find the distribution (e.g. Windows, Linux, macOS). For the OSSL python project you need python 3.8, and thus you should chose the latest Anaconda version for python 3. If there are no versions to chose from, the default in September 2023 is 3, so just go ahead and press the <span class='button'>Download</span> button.
+[Anaconda](https://anaconda.org) is a free platform for scientific Python. To download Anaconda, visit the [Anaconda homepage](https://www.anaconda.com/download), and look for the download link. In the download page, find the distribution (e.g. Windows, Linux, MacOS). For the OSSL python project you need python 3.8, and thus you should chose the latest Anaconda version for python 3. If there are no versions to chose from, the default in September 2023 is 3, so just go ahead and press the <span class='button'>Download</span> button.
 
 Once downloaded just start the installer and follow the instructions. You might need to accept some license terms or override some security warnings - dependent on your OS. The default destination of the installation is your local user directory. If you want to change the installation destination you can do that as part of the installation process.
 

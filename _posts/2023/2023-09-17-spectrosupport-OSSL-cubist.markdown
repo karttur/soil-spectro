@@ -16,7 +16,7 @@ share: true
 
 ### Introduction
 
-Tests with applying different regressors for predicting soil properties from spectra with the OSSL data indicate that the [Cubist](https://pypi.org/project/cubist/) rule based regressor perform the best. Cubist is, at time of writing this in September 2023, not implemented in the package [scikit-learn](https://scikit-learn.org/stable/). There is, however a parallel implementation of Cubist that piggy-backs on scikit-learn. In this post you are going to install and fix Cubist by:
+Tests with applying different regressors for predicting soil properties from spectra with the OSSL data indicate that the [Cubist](https://pypi.org/project/cubist/) rule based regressor performs the best. Cubist is, at time of writing this in September 2023, not implemented in the package [scikit-learn](https://scikit-learn.org/stable/). There is, however a parallel implementation of Cubist that piggy-backs on scikit-learn. In this post you are going to install and fix Cubist by:
 
 - adding Cubist to the virtual environment
 - importing the Cubist package to OSSL_mlmodel.py,
@@ -25,7 +25,7 @@ Tests with applying different regressors for predicting soil properties from spe
 
 ### Adding cubist the the virtual environment
 
-Open a terminal <span class='app'>Terminal</span> window. By default the active virtual <span class='app'>Anaconda</spanda> Python environment is "base", indicated by the prompt as:
+Open a terminal <span class='app'>Terminal</span> window. By default the active virtual <span class='app'>Anaconda</span> Python environment is "base", indicated by the prompt as:
 
 ```
 (base)
@@ -51,7 +51,7 @@ You have added the Cubist package to the virtual environment.
 
 With the <span class='package'>Cubist</span> package added to your virtual environment, you can import <span class='package'>Cubist</span> to the <span class='module'>OSSL_mlmodel.py</span> module.
 
-Open the <span class='file'>OSSL_mlmodel.py</file> in a text editor (or in <span class='app'>Eclipse</span>). At row 113 you should see the following (commented with #) line:
+Open the <span class='file'>OSSL_mlmodel.py</span> file in a text editor (or in <span class='app'>Eclipse</span>). At row 113 you should see the following line (commented with #):
 
 ```
 #from cubist import Cubist
@@ -59,7 +59,7 @@ Open the <span class='file'>OSSL_mlmodel.py</file> in a text editor (or in <span
 
 Remove the comment ("#").
 
-Further down, at row 1131, look for the following text:
+Further down, at row 1131, find the following text:
 
 ```
        '''    
@@ -69,13 +69,13 @@ Further down, at row 1131, look for the following text:
        '''
 ```
 
-This is the section that defines the Cubist regressor as part of the suite of regressors. This section is also commented, using the tripe single quote signs (\`\`\`). Remove the triple single quote signs that define the comment.
+This is the section that defines the Cubist regressor as part of the suite of regressors. This section is also commented but using the triple single quote signs (\`\`\`). Remove the triple single quote signs that define the comment.
 
 If you do not find the rows importing and defining the Cubist model, just search for "cubist" in the module file.
 
 ### Add Cubist to the model json command file
 
-To invoke Cubist in a project run you also have to add the Cubist model, and marker layout, to your json model command file.
+To invoke Cubist in a project run you also have to add the Cubist model, and its marker layout, to your json model command file.
 
 ```
     "MLP": {
@@ -117,14 +117,16 @@ To invoke Cubist in a project run you also have to add the Cubist model, and mar
 
 ### Fixing a bug in the Cubist package code
 
-There is "bug" in the <span class='package'>Cubsit</span> - it uses an outdates command and will get stranded if you include it in the process-flow. To fix it, you need to open the <span class='package'>Cubsit</span> package support file <span class='file'>_quinlan_attributes.py</span>, row 68 in that module reads:
+There is "bug" in the <span class='package'>Cubist</span> - it uses an outdates command and will get stranded if you include it in the process-flow. Try running the <span class='module'>OSSL_mlmodel.py</span>. It probably reports an error message. To get the line where the error occurred, click on the reported error site in the text output from running the script. The error probably happened in the file called <span class='file'>_quinlan_attributes.py</span>, find that file in the output text, click it, and you should come to the exact line with the bug; row 68 in the class='package'>Cubist</span> package support file <span class='file'>_quinlan_attributes.py</span>:
 
 ```
 return {col_name: _get_data_format(col_data) for col_name, col_data in df.iteritems()}
 ```
 
-The command _df.iteritems()_ is outdated and must be replaced with _df.items()_:
+The bug is that the command _df.iteritems()_ is outdated and must be replaced with _df.items()_:
 
 ```
 return {col_name: _get_data_format(col_data) for col_name, col_data in df.items()}
 ```
+
+Fix it, save the updated support module and try to run <span class='module')>OSSL_mlmodel.py</span> again.

@@ -88,12 +88,6 @@ With all the paths edited, run the import from the command line by typing:
 ```
 /path/to/json/specification/file.json
 Processing /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/extract_rawdata.txt
-    jsonObj: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-2500_2.json
-        VISNIR extraction parameters saved as: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_460-2500_2/params-visnir_OSSL-LUCAS-SE_460-2500_2.json
-        VISNIR extracted data saved as: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_460-2500_2/data-visnir_OSSL-LUCAS-SE_460-2500_2.json
-    jsonObj: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-2500_5.json
-        VISNIR extraction parameters saved as: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_460-2500_4/params-visnir_OSSL-LUCAS-SE_460-2500_4.json
-        VISNIR extracted data saved as: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_460-2500_4/data-visnir_OSSL-LUCAS-SE_460-2500_4.json
     jsonObj: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
         VISNIR extraction parameters saved as: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_640-1050_10/params-visnir_OSSL-LUCAS-SE_640-1050_10.json
         VISNIR extracted data saved as: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_640-1050_10/data-visnir_OSSL-LUCAS-SE_640-1050_10.json
@@ -190,7 +184,7 @@ Details about the options when defining the json command file for plotting is in
 
 #### Model data
 
-Running the script <span class='module'>OSSL_mlmodel</span> for Machine Learning (ML) based modelling of the OSSL data follows the same principles as when running import and plot. A project file (default name _ml-model_spectra_) directly under the folder _arranged-data_ and a subfolder (default name:_json-ml-modeling_), also directly under _arranged-data_ that contains the json modelling command files. If you used the Sweden example, the required folders and files are there. You just have to edit the paths as you did for the importing. Then run the module <span class='module'>OSSL_mlmodel</span> pointing towards the json specification file for plotting (default name: _model_ossl.json_). Again you can either run via the command line or using <span class='app'>Eclipse</span>.
+Running the script <span class='module'>OSSL_mlmodel</span> for Machine Learning (ML) based modelling of the OSSL data follows the same principles as when running import and plot. A project file (default name _ml-model_spectra.txt_) directly under the folder _arranged-data_ and a subfolder (default name:_json-ml-modeling_), also directly under _arranged-data_ that contains the json modelling command files. If you used the Sweden example, the required folders and files are there. You just have to edit the paths as you did for the importing. Then run the module <span class='module'>OSSL_mlmodel</span> pointing towards the json specification file for plotting (default name: _model_ossl.json_). Again you can either run via the command line or using <span class='app'>Eclipse</span>.
 
 Details for how to parameterise the ML modelling are described in a series of instructions starting with the overview [Model OSSL data: 1 process-flow](../../libspectrodata/spectrodata-OSSL4ML05-mlmodel01/). The script <span class='module'>OSSL_mlmodel</span> and the json parameter file can be set to very simple (e.g. Ordinary Least Square - OLS) modelling of a single soil property. The processing will be fast. It can also be set to include several regressors, including Neural Networks, and more than a dozen soil properties each with an individually fitted tuning of the regressors. Then the processing time can easily expand to hours and even days.
 
@@ -210,14 +204,11 @@ if you start by editing the modelling files that came with the Swedish example d
 | | |____plot_spectra.txt
 | | |____ml-model_spectra.txt
 | | |____json-import
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_460-2500_2.json
 | | | |____import_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
-| | | |____import_ossl-spectra_sweden-LUCAS_nir_460-2500_5.json
 | | |____json-plots
-| | | |____plot_ossl-spectra_sweden-LUCAS_nir_460-2500_2.json
 | | | |____plot_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
 | | |____json-ml-modeling
-| | | |____model-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
+| | | |____model-ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
 | | | |____hyper-param-exhaustive-tuning.json
 | | | |____hyper-param-random-tuning.json
 | | |____visnir
@@ -306,12 +297,4 @@ if you start by editing the modelling files that came with the Swedish example d
 | | | | | | |____testtg_modelid_n.tot_usda.a623_w.pct_RandForRegr_trainTest.xsp
 | | | | |____params-visnir_OSSL-LUCAS-SE_640-1050_10.json
 | | | | |____data-visnir_OSSL-LUCAS-SE_640-1050_10.json
-| | | |____OSSL-LUCAS-SE_460-2500_5
-| | | | |____params-visnir_OSSL-LUCAS-SE_460-2500_5.json
-| | | | |____data-visnir_OSSL-LUCAS-SE_460-2500_5.json
-| | | |____OSSL-LUCAS-SE_460-2500_2
-| | | | |____plot
-| | | | | |____spectra+derivative.png
-| | | | |____params-visnir_OSSL-LUCAS-SE_460-2500_2.json
-| | | | |____data-visnir_OSSL-LUCAS-SE_460-2500_2.json
 ```
