@@ -217,7 +217,7 @@ The reporting in the terminal will be similar as when installing using default p
 
 ##### From an exported configuration (yml) file
 
-The [GitHub repo OSSL-pydev](https://github.com/karttur/OSSL-pydev) contains an exported [conda virtual environment](https://github.com/karttur/OSSL-pydev/tree/main/anaconda) (yml) file. If you [cloned or downloaded the repo](../spectrosupport-OSSL-clone) you should have the file <span class='file'>spectra-ossl_from-history_py38.yml</span> on your local machine. To set up a new virtual environment using an exported environment make sure the yml file is in the active path of the <span class='app'>Terminal</span> and then type:
+The [GitHub repo OSSL-pydev](https://github.com/karttur/OSSL-pydev) contains an exported [conda virtual environment](https://github.com/karttur/OSSL-pydev/tree/main/anaconda) (yml) file. If you [cloned or downloaded the repo](../spectrosupport-OSSL-pydev-clone) you should have the file <span class='file'>spectra-ossl_from-history_py38.yml</span> on your local machine. To set up a new virtual environment using an exported environment make sure the yml file is in the active path of the <span class='app'>Terminal</span> and then type:
 
  <span class='terminal'>conda env create \-f spectra-ossl_from-history_py38.yml</span>
 

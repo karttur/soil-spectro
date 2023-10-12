@@ -16,7 +16,7 @@ share: true
 
 ### Introduction
 
-This post assumes that you have [cloned or downloaded the OSSL-pydev repo](../spectrosupport-OSSL-clone) and setup an environment for running python on your machine. The latter for instance by using [Anaconda](../spectrosupport-OSSL-anaconda) for defining the python environment and [Eclipse](../spectrosupport-OSSL-eclipse) as the IDE. You can also run the python package (<span class='package'>ossl-xspectre</span>) modules from the command line.
+This post assumes that you have [cloned or downloaded the OSSL-pydev repo](../spectrosupport-OSSL-pydev-clone) and setup an environment for running python on your machine. The latter for instance by using [Anaconda](../spectrosupport-OSSL-anaconda) for defining the python environment and [Eclipse](../spectrosupport-OSSL-eclipse) as the IDE. You can also run the python package (<span class='package'>ossl-xspectre</span>) modules from the command line.
 
 Before testing the ossl-xspectre modules you can download an OSSL sample framework over Sweden from [https://github.com/karttur/OSSL-data](https://github.com/karttur/OSSL-data). The framework does not contain the original OSSL data over Sweden (that you have to get directly from [OSSL](../../libspectrodata/spectrodata-OSSL4ML01-download)); but it contains an example of a complete command structure for importing, plotting and modelling OSSL data over Sweden.
 

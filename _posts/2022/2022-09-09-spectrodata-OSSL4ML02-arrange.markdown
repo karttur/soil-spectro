@@ -16,7 +16,7 @@ comments: true
 share: true
 ---
 
-This post is the second in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+This post is the second in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-pydev-clone).
 
 ### Introduction
 
@@ -24,7 +24,7 @@ In this post you will arrange (import) a downloaded OSSL dataset using a python 
 
 ### Prerequisites
 
-This post requires that you downloaded OSSL as outlined in the [previous](../spectrodata-OSSL4ML01-download) post. You must also have access to a Python interpreter. If you know how to use Python you only need to access the python package from the GitHub repo [OSSL-pydev](https://github.com/karttur/OSSL-pydev/), as detailed in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone). If you want to have an example structure of command files, also access the adjoining repo [OSSL-data](https://github.com/karttur/OSSL-data/). This post is more of a stand-alone explanation of how to setup processing using the python module <span class='module'>OSSL_import</span>; the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) instead starts from the structure of a prepared example of [OSSL-data](https://github.com/karttur/OSSL-data/), also accessible from GitHub.
+This post requires that you downloaded OSSL as outlined in the [previous](../spectrodata-OSSL4ML01-download) post. You must also have access to a Python interpreter. If you know how to use Python you only need to access the python package from the GitHub repo [OSSL-pydev](https://github.com/karttur/OSSL-pydev/), as detailed in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-pydev-clone). If you want to have an example structure of command files, also access the adjoining repo [OSSL-data](https://github.com/karttur/OSSL-data/). This post is more of a stand-alone explanation of how to setup processing using the python module <span class='module'>OSSL_import</span>; the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) instead starts from the structure of a prepared example of [OSSL-data](https://github.com/karttur/OSSL-data/), also accessible from GitHub.
 
 ### Arrange OSSL
 
@@ -32,7 +32,7 @@ At the end of the [previous](../spectrodata-OSSL4ML01-download) post I suggested
 
 #### Python Module OSSL_import.py
 
-The rearranging (or importing) of the downloaded OSSL data is done by a single stand-alone python module (script) called <span class='module'>OSSL_import.py</span>. The script is available from [GitHub](https://github.com/karttur/OSSL-pydev) - for details on how to access the script see the post on [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+The rearranging (or importing) of the downloaded OSSL data is done by a single stand-alone python module (script) called <span class='module'>OSSL_import.py</span>. The script is available from [GitHub](https://github.com/karttur/OSSL-pydev) - for details on how to access the script see the post on [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-pydev-clone).
 
 Running the <span class='module'>OSSL_import.py</span> script requires specifications of the paths and names of 1) the OSSL data and 2) the command files that define how to rearrange the data while importing:
 

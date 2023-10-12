@@ -17,7 +17,7 @@ comments: true
 share: true
 ---
 
-This is the last post in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also the last post in a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+This is the last post in a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also the last post in a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-pydev-clone).
 
 ### Introduction
 

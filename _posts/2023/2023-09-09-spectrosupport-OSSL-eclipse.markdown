@@ -129,7 +129,7 @@ An <span class='app'>Eclipse</span> project window opens (figure 15).
 	<figcaption>Figure 15. Eclipse project window.</figcaption>
 </figure>
 
-To continue you must have cloned or downloaded the python OSSL package from GitHub as explained in a [previous post](../spectrosupport-OSSL-clone).
+To continue you must have cloned or downloaded the python OSSL package from GitHub as explained in a [previous post](../spectrosupport-OSSL-pydev-clone).
 
 To import the python OSSL package, either click _Import projects_ in the _Package Explorer_ tab (the left main column), or go via the menu:
 
@@ -142,7 +142,7 @@ In the **Import** window, expand the _General_ folder and then select _Projects 
 	<figcaption>Figure 16. Expand import options to get the alternative "Projects from Folder or Archive".</figcaption>
 </figure>
 
-This should hihglight the (blue) <span class='button'>Next ></span> button, click it to proceed. In the next, **Import Projects** window, select the (white) <span class='button'>Directory...</span> button (figure 17) and navigate to the path where you saved the [clone/download of the OSSL-pydev repo](../spectrosupport-OSSL-clone). Under that path, select the folder <span class='file'>ossl-xspectre</span> (the folder that is also contains the hidden Eclipse files <span class='file'>.project</span> and <span class='file'>.pydevproject</span>) (figure 17).
+This should hihglight the (blue) <span class='button'>Next ></span> button, click it to proceed. In the next, **Import Projects** window, select the (white) <span class='button'>Directory...</span> button (figure 17) and navigate to the path where you saved the [clone/download of the OSSL-pydev repo](../spectrosupport-OSSL-pydev-clone). Under that path, select the folder <span class='file'>ossl-xspectre</span> (the folder that is also contains the hidden Eclipse files <span class='file'>.project</span> and <span class='file'>.pydevproject</span>) (figure 17).
 
 <figure>
   <img src="../../images/Eclipse_project_ossl-xspectre.png" alt="image">

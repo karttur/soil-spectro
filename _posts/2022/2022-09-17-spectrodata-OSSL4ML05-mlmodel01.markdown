@@ -23,7 +23,7 @@ This post is part of a series on organising and analysing data from the Open Soi
 - [hyper-parameter tuning](../spectrodata-OSSL4ML07-mlmodel03), and
 - [manual settings](../spectrodata-OSSL4ML08-mlmodel04).
 
-To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-clone).
+To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-pydev-clone).
 
 ### Introduction
 
