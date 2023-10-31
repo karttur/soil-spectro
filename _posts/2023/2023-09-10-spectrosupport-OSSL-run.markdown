@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Run ossl-xspectre modules
+title: Run OSSL-pydev modules
 categories: libspectrosupport
 excerpt: "How to run the modules in the ossl-xspectre package"
 tags:

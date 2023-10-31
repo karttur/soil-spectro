@@ -20,7 +20,7 @@ This post is the first in a series on organising and analysing data from the Ope
 
 ### Introduction
 
-This post builds on the two previous posts in this blog: [Open Soil Spectral Library (OSSL)](../spectrodata-OSSL-intro) and [OSSL explorer API](../spectrodata-OSSL-api-explorer). In this post you will download selected OSSL data  that will then be used in the following posts for Machine Learning modelling. The data used as an example is Near-InfraRed (NIR) OSSL data over Sweden. You can change the study area by selecting any other geographical region, select spectral related to certain soil textures (attributes) or source dataset, as outlined in the [previous](../spectrodata-OSSL-api-explorer) post.  
+This post builds on the two previous posts in this blog: [Open Soil Spectral Library (OSSL)](../spectrodata-OSSL-intro) and [OSSL explorer API](../spectrodata-OSSL-api-explorer). In this post you will download selected OSSL data  that will then be used in the following posts in this blog on OSSL Machine Learning modelling. The data used as an example is Near-InfraRed (NIR) OSSL data over Sweden. You can change the study area by selecting any other geographical region, select spectral data related to certain soil textures (attributes) or source dataset, as outlined in the [previous](../spectrodata-OSSL-api-explorer) post.  
 
 ### Select OSSL data
 
@@ -35,7 +35,7 @@ For most country searches you can select sub-regions, in the example of Sweden (
 
 ![se-dataset-selection](../../images/OSSL_explorer_021_se-dataset-selection.png)
 {: .pull-left}
-You can also select the dataset(s) to extract from the selected region by clicking the <span class='button'>Dataset</span> button in the Data selection window. The Swedish OSSL data stem from three different datasets, ICRAF-ISRIC, LUCAS-WOODWELL.SSL and LUCAS.SSL. [LUCAS](https://land.copernicus.eu/imagery-in-situ/lucas) is a European wide soil survey that is repeated every three years. The ICRAF-ISRIC dataset focuses on the Mid-Infrared  (MIR) spectral regions and will not be used, also because it only contains 5 sample sites in Sweden. The LUCAS-WOODWELL.SSL only contains a single sample site over Sweden, including or omitting it will not really influence the modelling.
+You can also select the dataset(s) to extract from the selected region by clicking the <span class='button'>Dataset</span> button in the Data selection window. The Swedish OSSL data stem from three different datasets, ICRAF-ISRIC, LUCAS-WOODWELL.SSL and LUCAS.SSL. [LUCAS](https://land.copernicus.eu/imagery-in-situ/lucas) is a European wide soil survey that is repeated every three years. The LUCAS dataset covers the visisble to near infra-red (VIS-NIR) spectral region and is used as the example throghout this blog. The ICRAF-ISRIC dataset focuses on the Mid-Infrared  (MIR) spectral regions and will not be used, also because it only contains 5 sample sites in Sweden. The LUCAS-WOODWELL.SSL only contains a single sample site over Sweden, including or omitting it will not really influence the modelling.
 
 ### Select NeoSpectra data
 
