@@ -25,9 +25,9 @@ In the previous posts you developed models for predicting different soil propert
 
 This last post describes how you can use the knowledge you gained on the combination of covariates, regressor and model parameterisation for a-priori definition of models for the target properties.
 
-You can manually define a set of a-priori covariates and then apply hyper-parameter tuning using only this limited set. Doing so will speed up the hyper-parameter tuning, if you selected a limited set of covariates that is.
+You can manually define a set of a-priori covariates and then apply hyper-parameter tuning using only this limited set. Doing so will speed up the hyper-parameter tuning.
 
-You can also use the manual setting of covariates that have a theoretical or empirical signal relating to the target feature you aim at predicting, and then test the relative performance of the different regressors, with or without hyper-parameter tuning.
+You can also use manual setting to specifically select covariates that theoretically or empirically relate to the target feature you aim at predicting, and then test the relative performance of the different regressors, with or without hyper-parameter tuning.
 
 ### Prerequisites
 

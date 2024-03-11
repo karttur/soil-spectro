@@ -10,7 +10,7 @@ tags:
   - arrange
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
 date: '2022-09-12 11:27'
-modified: '2023-07-05 11:27'
+modified: '2023-11-22 11:27'
 comments: true
 share: true
 ---
@@ -31,7 +31,7 @@ The python package <span class='package'>matplotlib</span> has almost endless po
 
 #### Spectral plots
 
-You can plot either the raw spectra or the first derivate (change of spectra between sequential wavelengths) or both together as subplots in the same figure (figure 1). In the json command file you can set the number of spectra to show, the colour ramp and the ranges of the plot axis. You can also set the information text that appear in each plot or subplot.
+You can plot either the raw spectra or the first derivate (change of spectra between sequential wavelengths) or both together as subplots in the same plot layout (figure 1). In the json command file you can set the number of spectra to show, the colour ramp and the ranges of the plot axis. You can also set the information text that appear in each plot or subplot.
 
 <figure class="third">
 	<a href="../../images/LUCAS_460-1050_10_spectra.png">
@@ -48,7 +48,6 @@ You can plot either the raw spectra or the first derivate (change of spectra bet
 
 	<figcaption>Figure 1. Plots of raw spectral signal, derivates of spectral signals and both raw and derivate signals together (see text).</figcaption>
 </figure>
-
 
 #### Feature plots
 
@@ -72,8 +71,12 @@ Running the <span class='module'>OSSL_plot.py</span> script is similar to runnin
 - **sourcedatafolder**: subfolder under "rootpath" with the exploded content of the OSSL zip file (default = "data")
 - **arrangeddatafolder**: subfolder under "rootpath" where the imported (rearranged) OSSL data will be stored
 - **jsonfolder**: subfolder under "rootpath" where the json plot parameter files must be located
-- **projFN**: the name of an existing txt file that sequentially lists json plot parameter files to run, must be directly under the "arrangeddatafolder"
+- **projFN**: the name of an existing json structured file that lists the json plot parameter files to run, must be directly under the "arrangeddatafolder"
+- **targetfeaturesymbols**: the name of an existing json file that defines the symbolisation of the target features to plot
+- **targetfeaturetransforms**: the name of an existing json file that defines the transformations of the target features
 - **createjsonparams**: if set to true the script will create a template json file and exit
+
+NOTE that in earlier version (before November 2023), the **projFN** was a text (.txt) file but is now changed to a json (.json) file.
 
 ##### json specification file
 
@@ -81,29 +84,39 @@ All of the paths and names listed above must be specified in a json file, and th
 
 ```
 {
-  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "rootpath": "/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-plots",
-  "projFN": "plot_spectra.txt",
+  "projFN": "plot_spectra.json",
+  "targetfeaturesymbols": "/path/to/targetfeaturesymbols.json",
+  "targetfeaturetransforms": "/path/to/targetfeaturetransforms.json",
   "createjsonparams": false
 }
 ```
 
-The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [download](../spectrodata-OSSL4ML01-download) post. Before you can plot any data you must create 1) a json command file defining how to plot the OSSL data, and 2) a text file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project text file can link to any number of json command files. You can thus run multiple plot designs for one and the same dataset, or run plots for multiple datasets using a single project file and a single run.
+The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [download](../spectrodata-OSSL4ML01-download) post. Before you can plot any data you must create 1) a json command file defining how to plot the OSSL data, and 2) a json file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project file can link to any number of json command files. You can thus run multiple plot designs for one and the same dataset, or run plots for multiple datasets using a single project file and a single run.
 
-The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template set the _rootpath_ and change the parameter _createjsonparams_ to _true_.
+The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data).
+
+To generate a template set the _rootpath_ and change the parameter _createjsonparams_ to _true_.
 
 ```
 {
-  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "rootpath": "/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-plots",
-  "projFN": "plot_spectra.txt",
+  "projFN": [
+    "plot-spectra.json"
+  ],
+  "targetfeaturesymbols": "/path/to/targetfeaturesymbols.json",
+  "targetfeaturetransforms": "/path/to/targetfeaturetransforms.json",
   "createjsonparams": true
 }
 ```
+
+You have to edit the template to correspond to your OSSL dataset and the actual spectral bands and band-widths you want to arrange. Details on how to edit command files are given below in the section [json command file structure](#json-command-file-structure).
 
 ##### Run script
 
@@ -119,22 +132,22 @@ For MacOS and Linux:
 
 <span class='terminal'>python OSSL_plot.py \"/local/path/to/plot_spectra.json\"</span>
 
-For Windows you need to state with the full path to the [conda virtual environment](../../libspectrosupport/spectrosupport-OSSL-anaconda) (not only "python" as for MacOS and Linux):
+For Windows you need to state the full path to the [conda virtual environment](../../libspectrosupport/spectrosupport-OSSL-anaconda) (not only "python" as for MacOS and Linux):
 
 <span class='terminal'>\"X:/Local/path/to/anaconda3/envs/ossl_py38a/python.exe\" OSSL_plot.py \"/local/path/to/plot_ossl.json\"</span>
 
 With the parameter _createjsonparams_ set to _true_ the script will report that a template file was created:
 
 ```
-json parameter file created: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-plots/template_plot_ossl-spectra.json
+json parameter file created: /path/to/OSSL/Sweden/LUCAS/arranged-data/json-plots/template_plot_ossl-spectra.json
  Edit the json file for your project and rename it to reflect the commands.
- Add the path of the edited file to your project file (plot_spectra.txt).
+ Add the path of the edited file to your project file (plot_spectra.json).
  Then set createjsonparams to False in the main section and rerun script.
 ```
 
 ###### json command file structure
 
-The json command file that defines the plotting of the OSSL data have the following structure (scroll down to see a commented version):
+The json command files that defines the plotting of the OSSL data have the following structure (scroll down to see a commented version):
 ```
 {
   "verbose": 1,
@@ -445,73 +458,6 @@ Here is the same command file, but with comments (you can not have comments in a
       },
       "ncolumns": 3 # nr of colums to use in mulit-feature plots
     },
-    "targetFeatureSymbols": { # library of symbols, labels and units for the features
-      "caco3_usda.a54_w.pct": {
-        "color": "whitesmoke",
-        "label": "CaCo3",
-        "unit": "percent"
-      },
-      "cec_usda.a723_cmolc.kg": {
-        "color": "seagreen",
-        "label": "Cation Exc. Cap.",
-        "unit": "mol*kg-1"
-      },
-      "cf_usda.c236_w.pct": {
-        "color": "sienna",
-        "label": "Crane fraction",
-        "unit": "percent"
-      },
-      "clay.tot_usda.a334_w.pct": {
-        "color": "tan",
-        "label": "Clay cont.",
-        "unit": "percent"
-      },
-      "ec_usda.a364_ds.m": {
-        "color": "dodgerblue",
-        "label": "Electric cond.",
-        "unit": "ms*m'-1"
-      },
-      "k.ext_usda.a725_cmolc.kg": {
-        "color": "lightcyan",
-        "label": "Potassion (K)",
-        "unit": "mol*kg-1"
-      },
-      "n.tot_usda.a623_w.pct": {
-        "color": "darkcyan",
-        "label": "Nitrogen (N) [tot]",
-        "unit": "percent"
-      },
-      "oc_usda.c729_w.pct": {
-        "color": "dimgray",
-        "label": "Organic carbon (C)",
-        "unit": "percent"
-      },
-      "p.ext_usda.a274_mg.kg": {
-        "color": "firebrick",
-        "label": "Phosphorus (P)",
-        "unit": "mg*kg-1"
-      },
-      "ph.cacl2_usda.a481_index": {
-        "color": "lemonchiffon",
-        "label": "pH (CaCl)",
-        "unit": "pH"
-      },
-      "ph.h2o_usda.a268_index": {
-        "color": "lightyellow",
-        "label": "pH (H20)",
-        "unit": "pH"
-      },
-      "sand.tot_usda.c60_w.pct": {
-        "color": "orange",
-        "label": "Sand cont.",
-        "unit": "percent"
-      },
-      "silt.tot_usda.c62_w.pct": {
-        "color": "khaki",
-        "label": "Silt cont.",
-        "unit": "percent"
-      }
-    },
     "targetFeatures": [ # list of the features to include in the plot
       "n.tot_usda.a623_w.pct",
       "oc_usda.c729_w.pct"
@@ -534,7 +480,7 @@ To actually run the rearrangement you need to edit the json command file to fit 
 
 The full path to the command file on my machine then becomes _/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-plots/plot-OSSL-LUCAS-SE_nir_460-1050_10.json_.
 
-I then create the project file _plot_spectra.txt_ (in the project root folder) and enter the full path to my command file:
+I then created the project file <span class='file'>plot_spectra.json</span> (in the project root folder) and entered the full path to my command file:
 
 ```
 /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-plots/plot-OSSL-LUCAS-SE_nir_460-1050_10.json
@@ -542,6 +488,6 @@ I then create the project file _plot_spectra.txt_ (in the project root folder) a
 
 ###### Running the project file
 
-You can now run the Python script _OSSL_plot.py_ with a single command, the path to the [json specification file](#json-specification-file). The json specification file points to the arranged data and the plot project file (a simple text file) that in turn points to the json command file. The project text file can point to any number of json command files and they will be executed in sequence.
+You can now run the Python script _OSSL_plot.py_ with a single command, the path to the [json specification file](#json-specification-file). The json specification file points to the arranged data and the plot project file that in turn points to the json command file(s). The project text can list any number of json command files and they will be executed in sequence.
 
 The module generates the requested plots, and shows them on screen and/or saves them as a png files as requested in the json command file. For instance [figure 1](#spectral-plots) and [figure 2](#feature-plots) above were generated in this way.

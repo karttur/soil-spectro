@@ -102,14 +102,14 @@ Running the <span class='module'>OSSL_soilline.py</span> script requires between
 1. docpath [the local path to the folder where you saved the downloaded OSSL data],
 2. createjsonparams [boolean variable that if set to _True_ or _1_ will create a json template file]
 3. arrangeddatafolder [defaulted to _arranged-data_]
-4. projectfilename [defaulted to _extract_soillines.txt_]
+4. projFN [defaulted to _extract_soillines.json_]
 5. jsonpath [defaulted to _json-soillines_]
 
 Parameters 3 to 5 define the subfolders to create and use under the root folder (parameter 1) where you saved the original OSSL download (see post on [Download OSSL data](../spectrodata-OSSL4ML01-download)). You can set your own subfolder names if you want to but then you must give all 5 parameters to run the script.
 
 ##### json command file
 
-For extracting the soil lines from a project (or _campaign_) you need to create a json command file. The local path to that file must then be added to the textfile identified with the parameter _projectfilename_ (default: _extract_soilline.txt_). The json command file itself must be located in the subfolder identified with the parameter _jsonpath_ (default: _json-soillines_). You can thus in principle run the script from command files located anywhere, but the default is to keep both the piloting text file, all the json command files, and the input and output data, under one and the same root folder.
+For extracting the soil lines from a project (or _campaign_) you need to create a json command file. The local path to that file must then be added to the textfile identified with the parameter _projectfilename_ (default: _extract_soilline.json_). The json command file itself must be located in the subfolder identified with the parameter _jsonpath_ (default: _json-soillines_). You can thus in principle run the script from command files located anywhere, but the default is to keep both the piloting text file, all the json command files, and the input and output data, under one and the same root folder.
 
 ###### json command file structure
 
@@ -255,7 +255,7 @@ You can create a template file by setting the parameter _createjsonparams_ to _T
 ```
 json parameter file created: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-soillines/template_soilline_ossl-spectra.json
  Edit the json file for your project and rename it to reflect the commands.
- Add the path of the edited file to your project file (extract_soillines.txt).
+ Add the path of the edited file to your project file (extract_soillines.json).
  Then set createjsonparams to False in the main section and rerun script.
 ```
 
@@ -271,7 +271,7 @@ Once you have edited the command line file, rename it to reflect the rearrangeme
 
 The full path to the command file then becomes _/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-soillines/soillines_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_.
 
-I then create the project file _extract_soillines.txt_ (in the subfolder _arranged-data_) and enter the full path to my command file:
+I then create the project file _extract_soillines.json_ (in the subfolder _arranged-data_) and enter the full path to my command file:
 
 ```
 /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-soillines/soillines_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
@@ -279,10 +279,10 @@ I then create the project file _extract_soillines.txt_ (in the subfolder _arrang
 
 ###### Running the project file
 
-You can now run the Python script _OSSL_soilline.py_ with a single command, _docpath_, where _docpath_ points to the folder where you downloaded the OSSL data and that now should contain the project file (_extract_rawdata.txt_) and the json command file (_import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_) linked via the project file. The terminal will report the following:
+You can now run the Python script _OSSL_soilline.py_ with a single command, _docpath_, where _docpath_ points to the folder where you downloaded the OSSL data and that now should contain the project file (_extract_rawdata.json_) and the json command file (_import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_) linked via the project file. The terminal will report the following:
 
 ```
-Processing /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/extract_rawdata.txt
+Processing /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/extract_rawdata.json
     jsonObj: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
         VISNIR extraction parameters saved as: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/params-visnir_LUCAS_460-1050_10.json
         VISNIR extracted data saved as: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/data-visnir_LUCAS_460-1050_10.json
@@ -291,7 +291,7 @@ Processing /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/ext
 As I defined the rearrangement for the Swedish LUKAS NIR spectra, the output from the script includes three json files as reported in the terminal.
 
 ```
-Processing /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/extract_soillines.txt
+Processing /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/extract_soillines.json
     jsonObj: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-soillines/soillines_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
         Reading spectral data file: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/data-visnir_LUCAS_460-1050_10.json
         SoiLline regressions saved as: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/soillines/json/LUCAS_460-1050_10_OLS_soillines.json

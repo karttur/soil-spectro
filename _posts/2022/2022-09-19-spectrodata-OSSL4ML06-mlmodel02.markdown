@@ -14,7 +14,7 @@ tags:
   - matplotlib
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
 date: '2022-09-19 11:27'
-modified: '2023-08-05 11:27'
+modified: '2023-11-22 11:27'
 comments: true
 share: true
 ---
@@ -27,7 +27,7 @@ The [previous post](../spectrodata-OSSL4ML05-mlmodel01) covered the overall proc
 
 ### Prerequisites
 
-To follow the hands-on instructions, this post requires that you completed the processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML02-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the packages [<span class='package'>matplotlib</span>](https://matplotlib.org) and [<span class='package'>scikit learn (sklearn)</span>](https://scikit-learn.org/stable/) installed.  
+To follow the hands-on instructions, this post requires that you completed the processing as outlined in the posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML02-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the packages [<span class='package'>matplotlib</span>](https://matplotlib.org) and [<span class='package'>scikit learn (sklearn)</span>](https://scikit-learn.org/stable/) installed.  
 
 ### Matplotlib
 
@@ -37,8 +37,8 @@ To follow the hands-on instructions, this post requires that you completed the p
 
 There are 4 basic plot layout options that can be set for displaying the result of the ML modelling in <span class='module'>OSSL_mlmodel.py</span> (illustrated in figure 1):
 
-1. Single plots showing feature importance for a combination of one feature and one regressor (bar chart)
-2. Single plot showing the predictive power for a combination of one feature and one regressor (scatter plot)
+1. Single plots showing feature importance for a combination of one feature and one regressor (bar chart),
+2. Single plot showing the predictive power for a combination of one feature and one regressor (scatter plot),
 3. Multi-plot rows and columns for a target feature with rows showing the results of different regressors applied for predicting a specific target feature, and
 4. Multi-plot rows and columns for a regressor with rows showing the results of applying this specific regressor to different target features.
 
@@ -54,7 +54,6 @@ There are 4 basic plot layout options that can be set for displaying the result 
 	<a href="../../images/LUCAS_SE_oc_usda.c729_w.pct-multi-results.png">
   <img src="../../images/LUCAS_SE_oc_usda.c729_w.pct-multi-results.png" alt="image">
   </a>
-
 
 	<a href="../../images/testtg_RandForRegr-multi-results.png">
   <img src="../../images/testtg_RandForRegr-multi-results.png" alt="image">
@@ -72,18 +71,16 @@ Alternatives 1 (feature importance) and 2 (predictive power) each are available 
 	<a href="../../images/oc_usda.c729_w.pct_RandForRegr-model_feat-imp.png">
   <img src="../../images/oc_usda.c729_w.pct_RandForRegr-model_feat-imp.png" alt="image">
   </a>
-
   <a href="../../images/oc_usda.c729_w.pct_RandForRegr-model_tt-result.png">
   <img src="../../images/oc_usda.c729_w.pct_RandForRegr-model_tt-result.png" alt="image">
   </a>  
 	<a href="../../images/oc_usda.c729_w.pct_RandForRegr-model_kfold-result.png">
   <img src="../../images/oc_usda.c729_w.pct_RandForRegr-model_kfold-result.png" alt="image">
   </a>
-
 	<figcaption>Figure 2. The four single plot types that can be generated from the module OSSL_mlmodel; top row: permutation importance and feature/coefficient importance; bottom row: train-test prediction evaluation and kfold prediction evaluation.</figcaption>
 </figure>
 
-That there are 4 options for individual plots leads to the multi-plots having a maximum of 4 columns - being the 4 possible individual plots. The rows in a multi-plot are defined by the input items of the modelling; for single feature multi-plots the number of rows equals the number of regressors to be tested; for single regressor multi-plots the number of rows equals the number of target features to be modelled. The columns to include in the multi-plots are then defined using the following code words:
+That there are 4 options for individual plots lead to the multi-plots having a maximum of 4 columns - being the 4 possible individual plots. The rows in a multi-plot are defined by the input items of the modelling; for single feature multi-plots the number of rows equals the number of regressors to be tested; for single regressor multi-plots the number of rows equals the number of target features to be modelled. The columns to include in the multi-plots are then defined using the following code words:
 
 - permutationImportance
 - featureInportance

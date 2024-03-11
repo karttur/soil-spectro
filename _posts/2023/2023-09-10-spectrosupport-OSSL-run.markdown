@@ -41,7 +41,7 @@ The source of the Swedish OSSL data used as example is from the European wide sa
 
 #### Import data
 
-Importing (or arranging) data requires that you create a subfolder (default name _arranged-data_) under the root-folder (_LUCAS_ in this example). Directly under folder _arranged-data_ you need to create a project text file that contains links to json import command files that, in turn, contains the parameter defining the import. The default name of the import project file is _extract_rawdata.txt_. Under the folder _arranged-data_ you must also have the subfolder that contains all the json import command files. The default name of this subfolder is _json-import_. The actual json import command files (to be saved under _json-import_) should have names that reflect the arrangement of the import command and do not have any default names. The structure of the json import files are explained in the post [Import OSSL data](../../libspectrodata/spectrodata-OSSL4ML02-arrange):
+Importing (or arranging) data requires that you create a subfolder (default name _arranged-data_) under the root-folder (_LUCAS_ in this example). Directly under folder _arranged-data_ you need to create a project text file that contains links to json import command files that, in turn, contains the parameter defining the import. The default name of the import project file is <span class='file'>extract_rawdata.json</span>. Under the folder _arranged-data_ you must also have the subfolder that contains all the json import command files. The default name of this subfolder is <span class='file'>json-import</span>. The actual json import command files (to be saved under <span class='file'>json-import</span>) should have names that reflect the arrangement of the import command and do not have any default names. The structure of the json import files are explained in the post [Import OSSL data](../../libspectrodata/spectrodata-OSSL4ML02-arrange):
 
 ```
 |____LUCAS
@@ -53,12 +53,12 @@ Importing (or arranging) data requires that you create a subfolder (default name
 | | |____mir.data.csv
 | | |____soilsite.data.csv
 | |____arranged-data
-| | |____extract_rawdata.txt
+| | |____extract_rawdata.json
 | | |____json-import
 | | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json
 ```
 
-The folder and file organisation above is ready for starting <span class='module'>ossl_import</span>. To run the module, you need one additional json file (default name: _import_ossl.json_) specifying the _rootpath_ and the default folder and file names:
+The folder and file organisation above is ready for starting <span class='module'>ossl_import</span>. To run the module, you need one additional json file (default name: <span class='file'>import_ossl.json</span>) specifying the _rootpath_ and the default folder and file names:
 
 ```
 {
@@ -66,7 +66,7 @@ The folder and file organisation above is ready for starting <span class='module
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
-  "projFN": "extract_rawdata.txt",
+  "projFN": "extract_rawdata.json",
   "createjsonparams": false
 }
 ```
@@ -78,16 +78,18 @@ This file can reside anywhere on your machine and is not related to the folder a
 The example data for Sweden includes the structure outlined above, you only need to download the OSSL data as described in the post [Download OSSL data](../../libspectrodata/spectrodata-OSSL4ML01-download). Move the received zip file to the folder _LUCAS_ and unzip it. Then you need to edit the following local paths to reflect your machine and setup:
 
 - _rootpath_ in the json specification file (_import_ossl.json_)
-- all the paths in the project file (_extract_rawdata.txt_)
+- all the paths in the project file (_extract_rawdata.json_)
 - _rootFP_ in each of the json command files (under the folder _json-import_)
 
 With all the paths edited, run the import from the command line by typing:
 
 <span class='terminal'>ossl_import /path/to/json/specification/file.json</span>
 
+The response should look similar to the example below, but reflecting the local paths and names on your machine:
+
 ```
 /path/to/json/specification/file.json
-Processing /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/extract_rawdata.txt
+Processing /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/extract_rawdata.json
     jsonObj: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
         VISNIR extraction parameters saved as: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_640-1050_10/params-visnir_OSSL-LUCAS-SE_640-1050_10.json
         VISNIR extracted data saved as: /Users/thomasgumbricht/docs-local/OSSLtest/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_640-1050_10/data-visnir_OSSL-LUCAS-SE_640-1050_10.json
@@ -137,7 +139,7 @@ Running the json import command files listed above leads to the following file a
 | | |____mir.data.csv
 | | |____soilsite.data.csv
 | |____arranged-data
-| | |____extract_rawdata.txt
+| | |____extract_rawdata.json
 | | |____json-import
 | | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json
 | | |____visnir
@@ -150,9 +152,9 @@ For details on the parameters you can set for importing data, see the post on [I
 
 #### Plot data
 
-The project and json command file and folder structure for plotting spectral and laboratory (wet-chemistry) data follow the same principles as for import. A project file (default name _plot_spectra.txt_) directly under the folder _arranged-data_ and a subfolder (default name:_json-plots_), also directly under _arranged-data_ that contains the json plot command files. If you used the Sweden example, the required folders and files are there. You just have to edit the paths as you did for the importing. Then run the module <span class='module'>OSSL_plot</span> pointing towards the json specification file for plotting (default name: _plot_ossl.json_). Again you can either run via the command line or using <span class='app'>Eclipse</span>.
+The project and json command file and folder structure for plotting spectral and laboratory (wet-chemistry) data follow the same principles as for import. A project file (default name <span class='file'>plot_spectra.json</span>) directly under the folder _arranged-data_ and a subfolder (default name: <span class='file'>json-plots</span>), also directly under _arranged-data_ that contains the json plot command files. If you used the Sweden example, the required folders and files are there. You just have to edit the paths as you did for the importing. Then run the module <span class='module'>OSSL_plot</span> pointing towards the json specification file for plotting (default name: <span class='file'>plot_ossl.json</span>). Again you can either run via the command line or using <span class='app'>Eclipse</span>.
 
-Details about the options when defining the json command file for plotting is in the post on [Plot OSSL data](../../spectrodata-OSSL4ML03-plot). If requested to be saved, the plots are saved as png files in a subfolder called _plot_ (not all plot output files shown in diagram below).
+Details about the options when defining the json command file for plotting is in the post on [Plot OSSL data](../../spectrodata-OSSL4ML03-plot). If requested to be saved, the plots are saved as png files in a subfolder called <span class='plot'>plot</span> (not all plot output files shown in diagram below).
 
 ```
 |____LUCAS
@@ -164,8 +166,8 @@ Details about the options when defining the json command file for plotting is in
 | | |____mir.data.csv
 | | |____soilsite.data.csv
 | |____arranged-data
-| | |____extract_rawdata.txt
-| | |____plot_spectra.txt
+| | |____extract_rawdata.json
+| | |____plot_spectra.json
 | | |____json-import
 | | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json
 | | |____json-plots
@@ -184,7 +186,7 @@ Details about the options when defining the json command file for plotting is in
 
 #### Model data
 
-Running the script <span class='module'>OSSL_mlmodel</span> for Machine Learning (ML) based modelling of the OSSL data follows the same principles as when running import and plot. A project file (default name _ml-model_spectra.txt_) directly under the folder _arranged-data_ and a subfolder (default name:_json-ml-modeling_), also directly under _arranged-data_ that contains the json modelling command files. If you used the Sweden example, the required folders and files are there. You just have to edit the paths as you did for the importing. Then run the module <span class='module'>OSSL_mlmodel</span> pointing towards the json specification file for plotting (default name: _model_ossl.json_). Again you can either run via the command line or using <span class='app'>Eclipse</span>.
+Running the script <span class='module'>OSSL_mlmodel</span> for Machine Learning (ML) based modelling of the OSSL data follows the same principles as when running import and plot. A project file (default name <span class='file'>ml-model_spectra.json</span>) directly under the folder _arranged-data_ and a subfolder (default name: <span class='file'>json-ml-modeling</span>), also directly under _arranged-data_ that contains the json modelling command files. If you used the Sweden example, the required folders and files are there. You just have to edit the paths as you did for the importing. Then run the module <span class='module'>OSSL_mlmodel</span> pointing towards the json specification file for plotting (default name: <span class='file'>model_ossl.json</span>). Again you can either run via the command line or using <span class='app'>Eclipse</span>.
 
 Details for how to parameterise the ML modelling are described in a series of instructions starting with the overview [Model OSSL data: 1 process-flow](../../libspectrodata/spectrodata-OSSL4ML05-mlmodel01/). The script <span class='module'>OSSL_mlmodel</span> and the json parameter file can be set to very simple (e.g. Ordinary Least Square - OLS) modelling of a single soil property. The processing will be fast. It can also be set to include several regressors, including Neural Networks, and more than a dozen soil properties each with an individually fitted tuning of the regressors. Then the processing time can easily expand to hours and even days.
 
@@ -200,9 +202,9 @@ if you start by editing the modelling files that came with the Swedish example d
 | | |____mir.data.csv
 | | |____soilsite.data.csv
 | |____arranged-data
-| | |____extract_rawdata.txt
-| | |____plot_spectra.txt
-| | |____ml-model_spectra.txt
+| | |____extract_rawdata.json
+| | |____plot_spectra.json
+| | |____ml-model_spectra.json
 | | |____json-import
 | | | |____import_ossl-spectra_sweden-LUCAS_nir_640-1050_10.json
 | | |____json-plots

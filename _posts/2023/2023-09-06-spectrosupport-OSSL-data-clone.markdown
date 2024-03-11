@@ -38,9 +38,9 @@ Once accessed the tree of directories and files (with GitHub related files remov
 | |____hyper-param-random-tuning-ossl.json
 | |____LUCAS
 | | |____arranged-data
-| | | |____extract_rawdata.txt
-| | | |____plot_spectra.txt
-| | | |____ml-model_spectra.txt
+| | | |____extract_rawdata.json
+| | | |____plot_spectra.json
+| | | |____ml-model_spectra.json
 | | | |____json-import
 | | | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json
 | | | |____json-plots
@@ -62,9 +62,9 @@ The same structure, but this time with comments (#):
 | |____hyper-param-random-tuning-ossl.json # Random tuning settings
 | |____LUCAS # Spectral source or range identiry - user defined
 | | |____arranged-data # Directory for all output (results) - default naming that can be changed
-| | | |____extract_rawdata.txt # Project file for importing (extracting) OSSL data - default naming that can be changed
-| | | |____plot_spectra.txt # Project file for plotting imported OSSL data - default naming that can be changed
-| | | |____ml-model_spectra.txt  # Project file for modelling imported OSSL data - default naming that can be changed
+| | | |____extract_rawdata.json # Project file for importing (extracting) OSSL data - default naming that can be changed
+| | | |____plot_spectra.json # Project file for plotting imported OSSL data - default naming that can be changed
+| | | |____ml-model_spectra.json  # Project file for modelling imported OSSL data - default naming that can be changed
 | | | |____json-import # Directory with json parameter files for importing OSSL data - default naming that can be changed
 | | | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json # json parameter file for importing OSSL data
 | | | |____json-plots # Directory with json parameter files for plotting OSSL data - default naming that can be changed
@@ -75,7 +75,7 @@ The same structure, but this time with comments (#):
 
 #### Root argument files - not part of the hierarchy
 
-The files directly under the top folder (<span class='file'>Sweden</span>) are **not** part of the strict hierarchical strucure. These root argument files rather define the names of the directories and fiels in the hierarchical structure, but are not themselves part of the hierarchy. This is also the case for the two hyper-parameter parameter files. Thus you can safely move the following files and folders to any location you prefer:
+The files directly under the top folder (<span class='file'>Sweden</span>) are **not** part of the strict hierarchical strucure. These root argument files rather define the names of the directories and files in the hierarchical structure, but are not themselves part of the hierarchy. This is also the case for the two hyper-parameter parameter files. Thus you can safely move the following files and folders to any location you prefer:
 
 - import_ossl.json
 - plot_ossl.json
@@ -92,9 +92,9 @@ The core structure when starting a project using the <span class='package'>OSSL-
 |____Sweden # Regional identity - user defined
 | |____LUCAS # Spectral source or range identiry - user defined
 | | |____arranged-data # Directory for all output (results) - default naming that can be changed
-| | | |____extract_rawdata.txt # Project file for importing (extracting) OSSL data - default naming that can be changed
-| | | |____plot_spectra.txt # Project file for plotting imported OSSL data - default naming that can be changed
-| | | |____ml-model_spectra.txt  # Project file for modelling imported OSSL data - default naming that can be changed
+| | | |____extract_rawdata.json # Project file for importing (extracting) OSSL data - default naming that can be changed
+| | | |____plot_spectra.json # Project file for plotting imported OSSL data - default naming that can be changed
+| | | |____ml-model_spectra.json  # Project file for modelling imported OSSL data - default naming that can be changed
 | | | |____json-import # Directory with json parameter files for importing OSSL data - default naming that can be changed
 | | | | |____import_OSSL-LUCAS-SE_nir_460-1050_10.json # json parameter file for importing OSSL data
 | | | |____json-plots # Directory with json parameter files for plotting OSSL data - default naming that can be changed
@@ -105,7 +105,7 @@ The core structure when starting a project using the <span class='package'>OSSL-
 
 #### Adding the OSSL data to the hierarchical structure
 
-To actually run the project you also have to add the OSSL data. As explained above, you have to [download the OSSL data](../../libspectrodata/spectrodata-OSSL4ML01-download/) separately. All downloads from OSSL are called <span class='file'>data.zip</span>. Move the zip file to the root folder of yur project (<span class='file'>LUCAS</span> in the example), and unzip it. The following content should be added to your project root folder:
+To actually run the project you also have to add the OSSL data. As explained above, you have to [download the OSSL data](../../libspectrodata/spectrodata-OSSL4ML01-download/) separately. All downloads from OSSL are named <span class='file'>data.zip</span>. Move the zip file to the root folder of your project (<span class='file'>LUCAS</span> in the example), and unzip it. The following content should be added to your project root folder:
 
 ```
 |____LUCAS
@@ -139,7 +139,7 @@ The content of the root json argument file for importing (synonyms: extracting o
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
-  "projFN": "extract_rawdata.txt",
+  "projFN": "extract_rawdata.json",
   "createjsonparams": false
 }
 ```
@@ -163,7 +163,7 @@ The content of the json root argument file for plotting imported OSSL data has t
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-plots",
-  "projFN": "plot_spectra.txt",
+  "projFN": "plot_spectra.json",
   "targetfeaturesymbols" :"/Local/path/to/targetfeaturesymbols.json",
   "createjsonparams": false
 }
@@ -180,29 +180,31 @@ The root argument file can be located anywhere, while the interal structure of t
 
 #### Model OSSL data
 
-The content of the json root argument file for modeling imported OSSL data has the following content:
+The content of the json root argument file for modelling imported OSSL differs slightly. The _projFN_ argument is changed from a single text file (.txt) to a list of json formatted files (.json):
 
 ```
 {
   "rootpath": "/Local/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
-  "projFN": "ml-model_spectra.txt",
+  "projFN": [
+    "ml-model_spectra_tar-feat-pretransfrom_comp.json"
+  ],
   "jsonfolder": "json-ml-modeling",
   "targetfeaturesymbols" :"/Local/path/to/targetfeaturesymbols.json",
   "createjsonparams": false
 }
 ```
 
-Also the root argument file for modeling can be located anywhere, while the interal structure of the directory and file structure must be consistent. Again you can change the file and directory names, but not their relative hierarchical organisation, figur 4. The two json files defining (optional) hyper-parameter tuning are also universal and can be used with any OSSL data. You can move them to any location and give the full path in the json modelling parameter file (e.g. _model_ID0_xlx0-wly0_wl.json_ in figure 4) when you want to apply hyper-parameter tuning. Details for how to apply hyper-parameter tuning is in the post [hyper-parameter tuning](../../libspectrodata/spectrodata-OSSL4ML07-mlmodel03/).
+Also the root argument file for modelling can be located anywhere, while the internal structure of the directory and file structure must be consistent. Again you can change the file and directory names, but not their relative hierarchical organisation, figur 4. The two json files defining (optional) hyper-parameter tuning are also universal and can be used with any OSSL data. You can move them to any location and give the full path in the json modelling parameter file (e.g. _model_ID0_xlx0-wly0_wl.json_ in figure 4) when you want to apply hyper-parameter tuning. Details for how to apply hyper-parameter tuning is in the post [hyper-parameter tuning](../../libspectrodata/spectrodata-OSSL4ML07-mlmodel03/).
 
 <figure>
   <a href="../../images/model_json_docs.png">
   <img src="../../images/model_json_docs.png" alt="image">
   </a>
-	<figcaption>Figure 4. Hierarchical structure of OSSL data directories and files used by the OSSL-model module. Users can change the naming of all directories and files but the internal structure must remain.</figcaption>
+	<figcaption>Figure 4. Hierarchical structure of OSSL data directories and files used by the OSSL-model module. Users can change the naming of all directories and files but the internal structure must remain. NOTE that the file _plot_spectra.txt_ in the figure is replaced with one or more json files.</figcaption>
 </figure>
 
 #### Universal parameters for symbols and hyper parameter tuning
 
-Symbolisation of target features (i.e. soil properties) and [hyper-parameter tuning](../../libspectrodata/spectrodata-OSSL4ML07-mlmodel03/) of the Machine Learning regressors are not specific for any particular OSSL dataset. They are preferable regarded as universal for any soil data. The three json files that define symbolisation, random and exhaustive hyper-parameter tuning are thus better kept in a separate directory. In the downloaded example dataset, the three json files are included with the Swedish dataset for convinience. 
+Symbolisation of target features (i.e. soil properties) and [hyper-parameter tuning](../../libspectrodata/spectrodata-OSSL4ML07-mlmodel03/) of the Machine Learning regressors are not specific for any particular OSSL dataset. They are preferable regarded as universal for any soil data. The three json files that define symbolisation, random and exhaustive hyper-parameter tuning are thus better kept in a separate directory. In the downloaded example dataset, the three json files are included with the Swedish dataset for convinience.

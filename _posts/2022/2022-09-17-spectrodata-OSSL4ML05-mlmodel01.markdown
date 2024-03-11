@@ -11,17 +11,19 @@ tags:
   - sklearn
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
 date: '2022-09-17 11:27'
-modified: '2023-07-30 11:27'
+modified: '2024-03-10 11:27'
 comments: true
 share: true
 ---
+
 <script src="https://karttur.github.io/common/assets/js/karttur/togglediv.js"></script>
 
-This post is part of a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also the first post in a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. The following posts deals with different detailed aspects of data mining applying ML:
+This post is part of a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also the first post in a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. The following posts deal with different aspects of data mining applying ML:
 
 - [plot layout](../spectrodata-OSSL4ML06-mlmodel02),
-- [hyper-parameter tuning](../spectrodata-OSSL4ML07-mlmodel03), and
-- [manual settings](../spectrodata-OSSL4ML08-mlmodel04).
+- [hyper-parameter tuning](../spectrodata-OSSL4ML07-mlmodel03),
+- [manual settings](../spectrodata-OSSL4ML08-mlmodel04), and
+- [multi project comparison](../spectrodata-OSSL-multicomp).
 
 To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-pydev-clone).
 
@@ -31,7 +33,7 @@ As the Open Soil Spectral Library (OSSL) contains thousands of individual sample
 
 ### Prerequisites
 
-To follow the hands-on instructions, this post requires that you completed the processing as outlined in the  posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML02-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the packages [<span class='package'>matplotlib</span>](https://matplotlib.org) and [<span class='package'>scikit learn (sklearn)</span>](https://scikit-learn.org/stable/) installed.  
+To follow the hands-on instructions, this post requires that you completed the processing as outlined in the posts on [downloading](../spectrodata-OSSL4ML01-download) and [importing](../spectrodata-OSSL4ML02-arrange) the OSSL spectral data. You must also have access to a Python interpreter with the packages [<span class='package'>matplotlib</span>](https://matplotlib.org) and [<span class='package'>scikit learn (sklearn)</span>](https://scikit-learn.org/stable/) installed.  
 
 This post is more of a stand-alone explanation of how to setup processing using the python module <span class='module'>OSSL_mlmodel</span>; the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run) instead starts from the structure of a prepared example of [OSSL-data](https://github.com/karttur/OSSL-data/), also accessible from GitHub.
 
@@ -47,41 +49,56 @@ Running the <span class='module'>OSSL_plot.py</span> script is similar to runnin
 - **sourcedatafolder**: subfolder under "rootpath" with the exploded content of the OSSL zip file (default = "data")
 - **arrangeddatafolder**: subfolder under "rootpath" where the imported (rearranged) OSSL data will be stored
 - **jsonfolder**: subfolder under "rootpath" where the json model parameter files must be located
-- **projFN**: the name of an existing txt file that sequentially lists json model parameter files to run, must be directly under the "arrangeddatafolder"
+- **projFN**: the name of an existing json file that sequentially lists json model parameter files to run, must be directly under the "arrangeddatafolder"
+- **targetfeaturesymbols**: the name of an existing json file that defines the symbolisation of the target features to plot
+- **targetfeaturetransforms**: the name of an existing json file that defines the transformations of the target features
 - **createjsonparams**: if set to true the script will create a template json file and exit
+
+NOTE that in earlier version (before November 2023), the _projFN_ argument was a text (.txt) file but is now changed to a json (.json) file.
 
 ##### json specification file
 
-All of the paths and names listed above must be specified in a json file, and the local path to this json file is the only parameter that is required when running the <span class='module'>OSSL_mlmodel.py</span> script. The json file for modelling the data over Sweden that were [downloaded](../spectrodata-OSSL4ML01-download) and then [imported](../spectrodata-OSSL4ML02-arrange) looks like this:
+All of the paths and names listed above must be specified in a json file, and the local path to this json file is the only parameter that is required when running the <span class='module'>OSSL_mlmodel.py</span> script. The json specifiction file for modelling the data over Sweden that were [downloaded](../spectrodata-OSSL4ML01-download) and then [imported](../spectrodata-OSSL4ML02-arrange) looks like this:
 
 ```
 {
-  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "rootpath": "/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-ml-modeling",
-  "projFN": "ml-model_spectra.txt",
+  "projFN": [
+    "ml-model.json"
+  ],
+  "targetfeaturesymbols": "/path/to/targetfeaturesymbols.json",
+  "targetfeaturetransforms": "/path/to/targetfeaturetransforms.json",
   "createjsonparams": false
 }
 ```
 
-The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [download](../spectrodata-OSSL4ML01-download) post. Before you can plot any data you must create 1) a json command file defining how to model the OSSL data, and 2) a text file that specifies the name of this json command file. The reason that the direct link to the command file is not given is that the project text file can link to any number of json command files. You can thus run multiple models for one and the same dataset, or run models for multiple datasets using a single project file and a single run.
+The paths/names of the OSSL data are those that you set when you downloaded and exploded in the [download](../spectrodata-OSSL4ML01-download) post. Before you can model any data you must create 1) a json command file (or files) defining how to model the OSSL data, and 2) a json project file that specifies the name of this json command file (or files). The reason that the direct link to the command file(s) is not given is that the intermediate project file can link to any number of json command files. You can thus run multiple models for one and the same dataset, or run models for multiple datasets using a single project file and a single run. This setup also allows you to create a [multi project comparison](../spectrodata-OSSL-multicomp).
 
-The first time you use the script you must copy or create and then edit the json command files. The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data). To generate a template set the _rootpath_ and change the parameter _createjsonparams_ to _true_.
+The first time you use the script you must copy or create and then edit the json command file(s). The script can generate a template command file for you, or you can download an example (the data over Sweden used in the previous posts) from a [GitHub repo](https://github.com/karttur/OSSL-data).
+
+To generate a template set the _rootpath_ and change the parameter _createjsonparams_ to _true_.
 
 ```
 {
-  "rootpath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS",
+  "rootpath": "/path/to/OSSL/Sweden/LUCAS",
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-ml-modeling",
-  "projFN": "ml-model_spectra.txt",
+  "projFN": [
+    "ml-model.json"
+  ],
+  "targetfeaturesymbols": "/path/to/targetfeaturesymbols.json",
+  "targetfeaturetransforms": "/path/to/targetfeaturetransforms.json",
   "createjsonparams": true
 }
 ```
+
 ##### Run script
 
-To run the script, open a <span class='app'>terminal</span> window. Change directory (<span class='terminalapp'>cd</span>) to where you downloaded the <span class='module'>OSSL_mlmodel.py</span> script (or give the full path).
+To run a script, open a <span class='app'>terminal</span> window. Change directory (<span class='terminalapp'>cd</span>) to where you downloaded the <span class='module'>OSSL_mlmodel.py</span> script (or give the full path).
 
 Before you can run the script you probably have to set the script to have execution rights on your local machine. In MacOS and Linux you do that with the <span class='terminalapp'>chmod</span> (change mode) command:
 
@@ -93,7 +110,7 @@ Before you can run the script you probably have to set the script to have execut
 
  <span class='terminal'>python OSSL_mlmodel.py \"/local/path/to/docs-local/OSSL/model_ossl.json\"</span>
 
- For Windows you need to state with the full path to the [conda virtual environment](../../libspectrosupport/spectrosupport-OSSL-anaconda) (not only "python" as for MacOS and Linux):
+ For Windows you need to state the full path to the [conda virtual environment](../../libspectrosupport/spectrosupport-OSSL-anaconda) (not only "python" as for MacOS and Linux):
 
  <span class='terminal'>\"X:/Local/path/to/anaconda3/envs/ossl_py38a/python.exe\" OSSL_mlmodel.py \"/local/path/to/model_ossl.json\"</span>
 
@@ -514,7 +531,7 @@ The json command file that defines the plotting of the OSSL data is very long an
 {% include widgets/toggle-code.html  toggle-text=text-capture  %}
 </div>
 
-
+You have to edit the template to correspond to your OSSL dataset and your ideas on how to model the data. Details on how to edit command files are given in the posts on [Import OSSL data](../spectrodata-OSSL4ML02-arrange/index.html#json-command-file-structure) and [Plot OSSL data](../spectrodata-OSSL4ML03-plot/index.html#json-command-file-structure).
 
 ### Selecting target features and regressors
 
@@ -593,7 +610,7 @@ Do not worry about the hyper-parameters yet, just accept the defaults. If you wa
 
 ### Setting the model version
 
-Machine Learning modelling in general becomes an iterative process where you change a few options to tweak the covaraites and the model parameterisation in each loop. To facilitate comparing different results, without having to [import (rearrange)](../spectrodata-OSSL4ML02-arrange) the same data more than once, you can give a prefix with any model setting. All outputs when running the script <span class='module'>OSSL_mlmodel.py</span> will be saved with this prefix. As also the json parameter file is saved as a copy, but with the prefix added, you can edit the original json command file, change the prefix and then run again. All the settings of all previous trials will be saved separelty, as long as you change the prefix. Then you can compare the results before iterating again. The prefix for any model run is set as an output parameter:
+Machine Learning modelling in general becomes an iterative process where you change a few options to tweak the covariates and the model parameterisation in each loop. To facilitate comparing different results, without having to [import (rearrange)](../spectrodata-OSSL4ML02-arrange) the same data more than once, you can give a prefix with any model setting. All outputs when running the script <span class='module'>OSSL_mlmodel.py</span> will be saved with this prefix. As also the json parameter file is saved as a copy, but with the prefix added, you can edit the original json command file, change the prefix and then run again. All the settings of all previous trials will be saved separelty, as long as you change the prefix. Then you can compare the results before iterating again. The prefix for any model run is set as an output parameter:
 
 ```
 "output": {
@@ -602,28 +619,224 @@ Machine Learning modelling in general becomes an iterative process where you cha
 },
 ```
 
+### Spectral data preprocessing and fitting
+
+In March 2024 I started adding preprocessing steps for improving the spectral input data. The objective for applying preprocessing is to remove noise and bias and other signal artefacts that are unrelated to the properties we want to predict, for instance:
+- light scatter,
+- baseline drift, or
+- background effects.
+
+In other words, to refine the spectral signals to variations that are important for your prediction.
+
+Getting rid of irrelevant information and make sure the data is representate in a way that is feasible for identifying the properties we are interested in.
+
+Much of the inspiration for the development of the preprocessing steps comes from the youtube series [Chemometrics & Machne Learning in Copenhagen](https://www.youtube.com/@QualityAndTechnology):
+
+- [Preprocessing 1. Centering & Scaling](https://www.youtube.com/watch?v=hOZfAFIQ4sg),
+- [Preprocessing 2. Normalization, SNV and MSC](https://www.youtube.com/watch?v=7PA7z1L7KmU)
+- [Preprocessing 3. Derivatives and baseline](https://www.youtube.com/watch?v=cQ8eHyPodjs&t=26s), and
+- [Preprocessing 4. Warping data](https://www.youtube.com/watch?v=R4O-TVrG9H4&t=99s)
+
+In the xSpectre process flow, the spectra preprocessing steps are divided in two broad groups:
+
+1. Preparatory (unsupervised) preprocessing; processes that are applied equally during model formulation and independent predictions, and
+2. Fitted (supervised) preprocessing; processes that require parameter values surviving from the model formulation to the independent predictions.
+
+#### Preparatory preprocessing
+
+The preparatory preprocessing steps include:
+
+- scatter correction (_scattercorrectioncode_),
+- moving average (_movingaverage_),
+- moving average clusters (_movingaveragecluster_),
+- average clusters (_averageclusters_), and
+- band ranging (_bandranging_).
+
+The methods can be used in sequence, but only one of the three averaging/clustering processes (_movingaverage_, _movingaverageclusters_ and _averageclusters_) can be applied in any particular model.
+
+These processes are not yet implemented in process-flow.
+
+#### Fitted preprocessing
+
+The fitted preprocessing steps include:
+
+- splice correction (_splicecorrection_),
+- derivates including different smoothing functions (_derivatives_),
+- standardisation including different autoscaling algorithms and meancentring (_standardise_), and
+- principal component analysis (_pca_).
+
+The fitting steps can be used in sequence.
+
+In March 2024 only _standardise_ and _pca_ are implemented. Derivatives is part of modeling process chain (see below) but will be transformed to a fitting preprocessing step.
+
+##### Standardisation
+
+_standardisation_ can be parameterised to achieve the following data preparations:
+
+- mean centring,
+- auto-scaling (z-score normalisation),
+- pareto scaling, and
+- poisson scaling.
+
+##### mean centring
+
+In the model formulation, _meancentring_ calculates an average spectrum for all the spectra belonging to a campaign. For each wavelength the average spectrum signal is then subtracted from each original spectra. This in effect removes any offset in the original spectra and forces an average signal of zero at each wavelength. This has several advantages, and few, if any, drawbacks, especially if you apply a principal component analysis (pca) as part of the spectra preprocessing.
+
+Meancentring is applied by setting the parameters for standardisation accordingly:
+
+```
+  "standardisation": {
+    "apply": true,
+    "paretoscaling": false,
+    "poissonscaling":false,
+    "meancentring": true,
+    "unitscaling": false
+  },
+```
+
+##### Auto-scaling (Z-score normalization)
+
+Auto-scaling (or z-score normalisation, sometimes also just called standardisation) first applies meancentring and then rescales the standard deviation (std) to unity. To do an ordinary auto-scaling set the _standardisation_ parameters:
+
+```
+  "standardisation": {
+    "apply": true,
+    "paretoscaling": false,
+    "poissonscaling":false,
+    "meancentring": true,
+    "unitscaling": true
+  },
+```
+
+https://www.kdnuggets.com/2020/04/data-transformation-standardization-normalization.html
+
+##### Pareto scaling
+
+[Pareto scaling](https://wiki.eigenvector.com/index.php?title=Advanced_Preprocessing:_Variable_Scaling) scales each variable by the square root of the standard deviation without applying any meancentring.
+
+To do a Pareto scaling set the _standardisation_ parameters:
+
+```
+  "standardisation": {
+    "apply": true,
+    "paretoscaling": true,
+    "poissonscaling":false,
+    "meancentring": false,
+    "unitscaling": false
+  },
+```
+
+Actually, Pareto scaling has precedence over the other options and if _paretoscaling_ is set to _true_ the other alterantives are forced to _false_.
+
+##### Poisson scaling
+
+[Poisson scaling](https://wiki.eigenvector.com/index.php?title=Advanced_Preprocessing:_Variable_Scaling) (also known as square root mean scaling or "sqrt mean scale") scales each variable by the square root of the mean without applying meancentring. An offset is sometimes used for adjusting variables with near-zero values. The offset option is not implemented in the present version of the xSpectre process-flow.
+
+To do a Poisson scaling set the _standardisation_ parameters:
+
+```
+  "standardisation": {
+    "apply": true,
+    "paretoscaling": false,
+    "poissonscaling": true,
+    "meancentring": false,
+    "unitscaling": false
+  },
+```
+
+Poisson scaling has precedence over meancentring and unitscaling and if _poissonscaling_ is set to _true_ the latter are forced to _false_.
+
+##### pca
+
+Principal component analysis (pca) converts the input bands to vectors sequentially capturing the remaining variation in the source band data. When applying pca the user needs to define the number of components to retain.
+
+In most cases pca is by default applied following autoscaling. In the xSpectre process-flow the user needs to set autoscaling manually in the previous step for the pca to calculate the reprojected components from normalised data.
+
+```
+  "pcaPreproc": {
+    "apply": true,
+    "n_components": 8
+  },
+```
+
 ### Setting the process steps
 
 The general steps in the process-flow are:
 
-1. [Global data cleaning and selection](#global-data-cleaning-and-selection)
+1. [Target feature modifications](#target-feature-modifications)
+- [mathematical transformations](#mathematical-transformations)
+- [statistical standardisation](#statistical-standardisation)
+2. [Global data cleaning and selection](#global-data-cleaning-and-selection)
 - [outlier detection and removal](#outlier-detection-and-removal)
 - [variance threshold feature selection](#variance-threshold-feature-selection)
-2. [Target property related feature selection](#target-property-related-feature-selection)
+3. [Target property related feature selection](#target-property-related-feature-selection)
 - [univariate feature selection](#univariate-feature-selection)
 - [feature clustering](#feature-clustering)
-3. [Model related feature selection](#model-related-feature-selection)
+4. [Model related feature selection](#model-related-feature-selection)
 - [permutation importance selection](#permutation-importance-selection)
 - [Recursive Feature Elimination (RFE)](#recursive-feature-elimination)
-4. [Feature importance evaluation](#feature-importance-evaluation)
+5. [Feature importance evaluation](#feature-importance-evaluation)
 - [permutation importance evaluation](#permutation-importance-evaluation)
 - [coefficient importance](#coefficient-importance)
-5. [Hyper-parameter tuning](#hyper-parameter-tuning)
-6. [Model fitting and evaluation](#model-fitting-and-evaluation)
+6. [Hyper-parameter tuning](#hyper-parameter-tuning)
+7. [Model fitting and evaluation](#model-fitting-and-evaluation)
 - [train/test divided prediction](#traintest-divided-prediction)
 - [cross validated prediction](#cross-validated-prediction)
 
-The next sections go through the general steps oulined above. If you just want to run the <span class='module'>OSSL_mlmodel</span> package and do not need the instructions, just jump to the section [Complete process-flow for Swedish OSSL data](#complete-process-flow-for-swedish-ossl-data). Or go to the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run).
+The next sections go through the general steps outlined above. If you just want to run the <span class='module'>OSSL_mlmodel</span> package and do not need the instructions, just jump to the section [Complete process-flow for Swedish OSSL data](#complete-process-flow-for-swedish-ossl-data). Or go to the post [Run ossl-xspectre modules](../../libspectrosupport/spectrosupport-OSSL-run).
+
+#### Target feature modifications
+
+Classical regressions, like Ordinary Least Square (OLS) perform best with data that is normally distributed (Gaussian). Many soil properties are far from normally distributes, as evident from [figure 2 in the previous post on plotting](../spectrodata-OSSL4ML03-plot/index.html#feature-plots). Mathematical transformation of datasets with skewed distributions and statistical standardisation of data with deviating kurtosis can improve model performance.
+
+The process-flow can apply both mathematical transformation and statistical standardisation of target features as a pre-process. The setting of target feature modifications is done in a separate json file "targetfeaturetransforms", defined under the _input_ tag in each modelling command file:
+
+```
+"input": {
+  ...
+  ...
+  "targetfeaturetransforms": "/path/to/targetfeaturetransforms.json",
+}
+```
+
+As the modification of target features is likely to be similar across different regions and datasets, the json file defining these transformations is not part of a particular project. You can use the same definitions, and file, across different projects.
+
+##### Mathematical transformations
+
+The following mathematical transformations of the target features are implemented in the present version of the process-flow:
+
+- logarithmic (log),
+- square root (sqrt),
+- reciprocal,
+- Box-Cox (boxcox), and
+- Yeo-Johnson (yeojohnson).
+
+If none of the above transformation is set, the data will be modelled in its original ("linear") form. The command file lists all the possible mathematical transformations for each target feature, and uses a Boolean (true/false) argument:
+
+```
+"targetFeatureTransform": {
+    "caco3_usda.a54_w.pct": {
+      "log": false,
+      "sqrt": false,
+      "reciprocal": false,
+      "boxcox": false,
+      "yeojohnson": false
+    },
+```
+
+In the above example all transformations are set to _false_ which results in no transformation and the original data will be used as the target to predict in the modelling. If more than one transformation is set to _true_, the first in the order above (log - sqrt - reciprocal - boxcox - yeojohnson) will be applied.
+
+The log and sqrt transformations have the widest application. Reciprocal (1/x) is less used. Box-Cox and Yeo-Johnson are [power transfomers](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.power_transform.html) where the Yeo-Johnsson is a more general solution making Box-Cox redundant (Box-Cox only applies to positive data whereas Yeo-Johnson supports both positive and negative data). The Box-Cox is still included as it is more widely known.
+
+##### Statistical standardisation
+
+Z-score standardisation transforms a dataset to zero mean and then assigns each value a score that relates to its deviation from the mean expressed in terms of variance. You can apply this statistical standardisation to any data, inlcuding data that has been transformed mathematically. In the json command file you apply the Z-score standardisation by setting the Boolean argument for that target feature to _true_:
+
+```
+  "targetFeatureStandardise": {
+    "caco3_usda.a54_w.pct": true
+  },
+```
 
 #### Global data cleaning and selection
 
@@ -782,7 +995,7 @@ To include feature importance evaluation edit the json command file:
   "permutationRepeats": 10
 }
 ```
-Except from setting the parameter _apply_ to _true_ to invoke the feature importance evaluation, you also have to give the maximum number of features to include in the reporting, _reportMaxFeatures_ . The reporting will always show the highest ranking features. Then you also have to give the number of _permutationRepeats_ to use in the evaluation. Figure 1 shows the feature importance evaluation for the target feature oc_usda.c729_w.pct (organic carbon). The rows show results for the regressors OLS (Ordinary Least Square) and RandForRegr (Random Forest Regression), while the columns show permutation importance and coefficient(OLS)/estimators(RandForRegr) importance. The error bars show the standard deviation.
+Except from setting the parameter _apply_ to _true_ to invoke the feature importance evaluation, you also have to give the maximum number of features to include in the reporting, _reportMaxFeatures_. The reporting will always show the highest ranking features. Then you also have to give the number of _permutationRepeats_ to use in the evaluation. Figure 1 shows the feature importance evaluation for the target feature oc_usda.c729_w.pct (organic carbon). The rows show results for the regressors OLS (Ordinary Least Square) and RandForRegr (Random Forest Regression), while the columns show permutation importance and coefficient(OLS)/estimators(RandForRegr) importance. The error bars show the standard deviation.
 
 <figure class="half">
 
@@ -802,7 +1015,7 @@ Except from setting the parameter _apply_ to _true_ to invoke the feature import
   <img src="../../images/oc_usda.c729_w.pct_RandForRegr-model_feat-imp.png" alt="image">
   </a>
 
-	<figcaption>Figure 2. Feature importance evaluation for target feature oc_usda.c729_w.pct; The rows show results for the regressors OLS (Ordinary Least Square) and RandForRegr (Random Forest Regression), while the columns show permutation importance and coefficient(OLS)/estimators(RandForRegr); error bars show the standard deviation (1 std).</figcaption>
+<figcaption>Figure 2. Feature importance evaluation for target feature oc_usda.c729_w.pct; The rows show results for the regressors OLS (Ordinary Least Square) and RandForRegr (Random Forest Regression), while the columns show permutation importance and coefficient(OLS)/estimators(RandForRegr); error bars show the standard deviation (1 std).</figcaption>
 </figure>
 
 ##### Permutation importance evaluation
@@ -821,16 +1034,16 @@ For this post, I suggest that you leave the hyper-parameter tuning off:
 
 ```
 "hyperParameterTuning": {
-  "apply": false,
-  "fraction": 0.5,
-  "nIterSearch": 6,
-  "n_best_report": 3,
-  "randomTuning": {
-    "apply": false
-  },
-  "exhaustiveTuning": {
-    "apply": false
-  }
+"apply": false,
+"fraction": 0.5,
+"nIterSearch": 6,
+"n_best_report": 3,
+"randomTuning": {
+  "apply": false
+},
+"exhaustiveTuning": {
+  "apply": false
+}
 }
 ```
 
@@ -845,16 +1058,16 @@ You can chose to skip Model fitting and evaluation all together, for instance if
 
 ```
 "modelTests": {
+  "apply": true,
+  "trainTest": {
     "apply": true,
-    "trainTest": {
-      "apply": true,
-      "testSize": 0.3,
-    },
-    "Kfold": {
-      "apply": true,
-      "folds": 10,
-    }
+    "testSize": 0.3,
+  },
+  "Kfold": {
+    "apply": true,
+    "folds": 10,
   }
+}
 ```
 
 For the _trainTest_ method you need to give the fraction of the input data to use for testing, as the parameter _testSize_. For the _Kfold_ method you must give the number of _folds_.
@@ -880,331 +1093,384 @@ The complete process-flow for the Swedish OSSL data (downloaded and arranged in 
 
 ```
 {
-  "verbose": 1,
-  "id": "Sweden_LUCAS_460-1050_10_20230808",
-  "name": "Sweden_LUCAS_460-1050_10",
-  "userId": "thomasg",
-  "importVersion": "OSSL-202308",
-  "campaign": {
-    "campaignId": "OSSL-LUCAS-SE",
-    "campaignShortId": "OSSL-LUCAS-SE",
-    "campaignType": "laboratory",
-    "theme": "soil",
-    "product": "diffuse reflectance",
-    "units": "fraction",
-    "geoRegion": "Sweden"
+"verbose": 1,
+"id": "Sweden_LUCAS_460-1050_10_20230808",
+"name": "Sweden_LUCAS_460-1050_10",
+"userId": "thomasg",
+"importVersion": "OSSL-202308",
+"campaign": {
+  "campaignId": "OSSL-LUCAS-SE",
+  "campaignShortId": "OSSL-LUCAS-SE",
+  "campaignType": "laboratory",
+  "theme": "soil",
+  "product": "diffuse reflectance",
+  "units": "fraction",
+  "geoRegion": "Sweden"
+},
+"input": {
+  "jsonSpectraDataFilePath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/data-visnir_LUCAS_460-1050_10.json",
+  "jsonSpectraParamsFilePath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/params-visnir_LUCAS_460-1050_10.json",
+  "hyperParameterRandomTuning": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-ml-modeling/hyper-param-random-tuning-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json",
+  "hyperParameterExhaustiveTuning": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-ml-modeling/hyper-param-exhaustive-tuning-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json"
+},
+"output": {
+  "prefix": "testtg",
+  "setdate": false
+},
+"targetFeatures": [
+  "cec_usda.a723_cmolc.kg",
+  "k.ext_usda.a725_cmolc.kg",
+  "n.tot_usda.a623_w.pct",
+  "oc_usda.c729_w.pct"
+],
+"targetFeatureSymbols": {
+  "caco3_usda.a54_w.pct": {
+    "color": "whitesmoke",
+    "label": "CaCo3"
   },
-  "input": {
-    "jsonSpectraDataFilePath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/data-visnir_LUCAS_460-1050_10.json",
-    "jsonSpectraParamsFilePath": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/params-visnir_LUCAS_460-1050_10.json",
-    "hyperParameterRandomTuning": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-ml-modeling/hyper-param-random-tuning-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json",
-    "hyperParameterExhaustiveTuning": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-ml-modeling/hyper-param-exhaustive-tuning-ossl-spectra_sweden-LUCAS_nir_460-1050_10.json"
+  "cec_usda.a723_cmolc.kg": {
+    "color": "seagreen",
+    "label": "Cation Exc. Cap."
   },
-  "output": {
-    "prefix": "testtg",
-    "setdate": false
+  "cf_usda.c236_w.pct": {
+    "color": "sienna",
+    "label": "Crane fraction"
   },
-  "targetFeatures": [
-    "cec_usda.a723_cmolc.kg",
-    "k.ext_usda.a725_cmolc.kg",
-    "n.tot_usda.a623_w.pct",
-    "oc_usda.c729_w.pct"
-  ],
-  "targetFeatureSymbols": {
-    "caco3_usda.a54_w.pct": {
-      "color": "whitesmoke",
-      "label": "CaCo3"
-    },
-    "cec_usda.a723_cmolc.kg": {
-      "color": "seagreen",
-      "label": "Cation Exc. Cap."
-    },
-    "cf_usda.c236_w.pct": {
-      "color": "sienna",
-      "label": "Crane fraction"
-    },
-    "clay.tot_usda.a334_w.pct": {
-      "color": "tan",
-      "label": "Clay cont."
-    },
-    "ec_usda.a364_ds.m": {
-      "color": "dodgerblue",
-      "label": "Electric cond."
-    },
-    "k.ext_usda.a725_cmolc.kg": {
-      "color": "lightcyan",
-      "label": "Potassion (K)"
-    },
-    "n.tot_usda.a623_w.pct": {
-      "color": "darkcyan",
-      "label": "Nitrogen (N) [tot]"
-    },
-    "oc_usda.c729_w.pct": {
-      "color": "dimgray",
-      "label": "Organic carbon (C)"
-    },
-    "p.ext_usda.a274_mg.kg": {
-      "color": "firebrick",
-      "label": "Phosphorus (P)"
-    },
-    "ph.cacl2_usda.a481_index": {
-      "color": "lemonchiffon",
-      "label": "pH (CaCl)"
-    },
-    "ph.h2o_usda.a268_index": {
-      "color": "lightyellow",
-      "label": "pH (H20)"
-    },
-    "sand.tot_usda.c60_w.pct": {
-      "color": "orange",
-      "label": "Sand cont."
-    },
-    "silt.tot_usda.c62_w.pct": {
-      "color": "khaki",
-      "label": "Silt cont."
-    }
+  "clay.tot_usda.a334_w.pct": {
+    "color": "tan",
+    "label": "Clay cont."
   },
-  "derivatives": {
-    "apply": false,
-    "join": false
+  "ec_usda.a364_ds.m": {
+    "color": "dodgerblue",
+    "label": "Electric cond."
   },
-  "removeOutliers": {
-    "comment": "removes sample outliers based on spectra only - globally applied as preprocess",
+  "k.ext_usda.a725_cmolc.kg": {
+    "color": "lightcyan",
+    "label": "Potassion (K)"
+  },
+  "n.tot_usda.a623_w.pct": {
+    "color": "darkcyan",
+    "label": "Nitrogen (N) [tot]"
+  },
+  "oc_usda.c729_w.pct": {
+    "color": "dimgray",
+    "label": "Organic carbon (C)"
+  },
+  "p.ext_usda.a274_mg.kg": {
+    "color": "firebrick",
+    "label": "Phosphorus (P)"
+  },
+  "ph.cacl2_usda.a481_index": {
+    "color": "lemonchiffon",
+    "label": "pH (CaCl)"
+  },
+  "ph.h2o_usda.a268_index": {
+    "color": "lightyellow",
+    "label": "pH (H20)"
+  },
+  "sand.tot_usda.c60_w.pct": {
+    "color": "orange",
+    "label": "Sand cont."
+  },
+  "silt.tot_usda.c62_w.pct": {
+    "color": "khaki",
+    "label": "Silt cont."
+  }
+},
+"derivatives": {
+  "apply": false,
+  "join": false
+},
+"standardisation": {
+    "comment": "remove mean spectral signal and optionallay scale using standard deviation for each band",
     "apply": true,
-    "detectorMethodList": [
-      "iforest (isolationforest)",
-      "ee (eenvelope,ellipticenvelope)",
-      "lof (lofactor,localoutlierfactor)",
-      "1csvm (1c-svm, oneclasssvm)"
-    ],
-    "detector": "1csvm",
-    "contamination": 0.1
+    "paretoscaling": true,
+    "poissonscaling":false,
+    "meancentring": true,
+    "unitscaling": false
   },
-  "manualFeatureSelection": {
-    "comment": "Manual feature selection overrides other selection alternatives",
-    "apply": false,
-    "spectra": [
-      "675",
-      "685",
-      "705",
-      "715",
-      "735"
+
+  "pcaPreproc": {
+    "comment": "Principal Component Analysis as a spectralpreparation process",
+    "apply": true,
+    "n_components": 8
+  },
+"removeOutliers": {
+  "comment": "removes sample outliers based on spectra only - globally applied as preprocess",
+  "apply": true,
+  "detectorMethodList": [
+    "iforest (isolationforest)",
+    "ee (eenvelope,ellipticenvelope)",
+    "lof (lofactor,localoutlierfactor)",
+    "1csvm (1c-svm, oneclasssvm)"
+  ],
+  "detector": "1csvm",
+  "contamination": 0.1
+},
+"manualFeatureSelection": {
+  "comment": "Manual feature selection overrides other selection alternatives",
+  "apply": false,
+  "spectra": [
+    "675",
+    "685",
+    "705",
+    "715",
+    "735"
+  ],
+  "derivatives": {
+    "firstWaveLength": [
+      "675"
     ],
-    "derivatives": {
-      "firstWaveLength": [
-        "675"
-      ],
-      "lastWaveLength": [
-        "735"
+    "lastWaveLength": [
+      "735"
+    ]
+  }
+},
+"globalFeatureSelection": {
+  "comment": [
+    "removes spectra with variance below given thresholds - globally applied as preprocess"
+  ],
+  "apply": false,
+  "scaler": "MinMaxScaler",
+  "varianceThreshold": {
+    "threshold": 0.025
+  }
+},
+"targetFeatureSelection": {
+  "comment": [
+    "feature selection using target data"
+  ],
+  "apply": true,
+  "univariateSelection": {
+    "apply": true,
+    "SelectKBest": {
+      "apply": true,
+      "n_features": 25
+    },
+    "selectPercentile": {
+      "implemented": false,
+      "apply": false,
+      "percentile": 10
+    },
+    "genericUnivariateSelect": {
+      "implemented": false,
+      "apply": false,
+      "hyperParameters": {}
+    }
+  }
+},
+"modelFeatureSelection": {
+  "comment": [
+    "feature selection using target + regressor"
+  ],
+  "apply": false,
+  "permutationSelector": {
+    "apply": false,
+    "permutationRepeats": 6,
+    "n_features_to_select": 8,
+    "step": 1
+  },
+  "RFE": {
+    "apply": false,
+    "CV": false,
+    "n_features_to_select": 8,
+    "step": 1
+  }
+},
+"featureAgglomeration": {
+  "apply": false,
+  "agglomerativeClustering": {
+    "apply": false,
+    "implemented": false
+  },
+  "wardClustering": {
+    "apply": false,
+    "n_clusters": 0,
+    "affinity": "euclidean",
+    "tuneWardClustering": {
+      "apply": true,
+      "kfolds": 3,
+      "clusters": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
       ]
     }
+  }
+},
+"hyperParameterTuning": {
+  "apply": false,
+  "fraction": 0.5,
+  "nIterSearch": 6,
+  "n_best_report": 3,
+  "randomTuning": {
+    "apply": false
   },
-  "globalFeatureSelection": {
-    "comment": [
-      "removes spectra with variance below given thresholds - globally applied as preprocess"
-    ],
-    "apply": false,
-    "scaler": "MinMaxScaler",
-    "varianceThreshold": {
-      "threshold": 0.025
+  "exhaustiveTuning": {
+    "apply": false
+  }
+},
+"featureImportance": {
+  "apply": true,
+  "reportMaxFeatures": 8,
+  "permutationRepeats": 10
+},
+"modelling": {
+  "apply": true
+},
+"regressionModels": {
+  "OLS": {
+    "apply": true,
+    "hyperParams": {
+      "fit_intercept": false
     }
   },
-  "targetFeatureSelection": {
-    "comment": [
-      "feature selection using target data"
-    ],
+  "TheilSen": {
+    "apply": false,
+    "hyperParams": {}
+  },
+  "Huber": {
+    "apply": false,
+    "hyperParams": {}
+  },
+  "KnnRegr": {
+    "apply": false,
+    "hyperParams": {}
+  },
+  "DecTreeRegr": {
+    "apply": false,
+    "hyperParams": {}
+  },
+  "SVR": {
+    "apply": false,
+    "hyperParams": {
+      "kernel": "linear",
+      "C": 1.5,
+      "epsilon": 0.05
+    }
+  },
+  "RandForRegr": {
     "apply": true,
-    "univariateSelection": {
+    "hyperParams": {
+      "n_estimators": 30
+    }
+  },
+  "MLP": {
+    "apply": false,
+    "hyperParams": {
+      "hidden_layer_sizes": [
+        100,
+        100
+      ],
+      "max_iter": 200,
+      "tol": 0.001,
+      "epsilon": 1e-8
+    }
+  }
+},
+"regressionModelSymbols": {
+  "OLS": {
+    "marker": ".",
+    "size": 100
+  },
+  "TheilSen": {
+    "marker": "v",
+    "size": 50
+  },
+  "Huber": {
+    "marker": "^",
+    "size": 50
+  },
+  "KnnRegr": {
+    "marker": "s",
+    "size": 50
+  },
+  "DecTreeRegr": {
+    "marker": "P",
+    "size": 50
+  },
+  "SVR": {
+    "marker": "*",
+    "size": 50
+  },
+  "RandForRegr": {
+    "marker": "h",
+    "size": 50
+  },
+  "MLP": {
+    "marker": "D",
+    "size": 50
+  },
+  "Cubist": {
+    "marker": "D",
+    "size": 50
+  }
+},
+"modelTests": {
+  "apply": true,
+  "trainTest": {
+    "apply": true,
+    "testSize": 0.3,
+    "plot": true,
+    "marker": "s"
+  },
+  "Kfold": {
+    "apply": true,
+    "folds": 10,
+    "plot": true,
+    "marker": "."
+  }
+},
+"plot": {
+  "tightLayout": false,
+  "singles": {
+    "apply": true,
+    "figSize": {
+      "x": 0,
+      "y": 0,
+      "xadd": 0.25,
+      "yadd": 0.25
+    },
+    "screenShow": false,
+    "savePng": true
+  },
+  "rows": {
+    "apply": true,
+    "subFigSize": {
+      "x": 3,
+      "y": 3,
+      "xadd": 0.1,
+      "yadd": 0.1
+    },
+    "screenShow": true,
+    "savePng": true,
+    "targetFeatures": {
       "apply": true,
-      "SelectKBest": {
-        "apply": true,
-        "n_features": 25
+      "figSize": {
+        "x": 0,
+        "y": 0,
+        "xadd": 0,
+        "yadd": 0
       },
-      "selectPercentile": {
-        "implemented": false,
-        "apply": false,
-        "percentile": 10
+      "hwspace": {
+        "hspace": 0.25,
+        "wspace": 0.25
       },
-      "genericUnivariateSelect": {
-        "implemented": false,
-        "apply": false,
-        "hyperParameters": {}
-      }
-    }
-  },
-  "modelFeatureSelection": {
-    "comment": [
-      "feature selection using target + regressor"
-    ],
-    "apply": false,
-    "permutationSelector": {
-      "apply": false,
-      "permutationRepeats": 6,
-      "n_features_to_select": 8,
-      "step": 1
+      "columns": [
+        "permutationImportance",
+        "featureImportance",
+        "Kfold"
+      ]
     },
-    "RFE": {
-      "apply": false,
-      "CV": false,
-      "n_features_to_select": 8,
-      "step": 1
-    }
-  },
-  "featureAgglomeration": {
-    "apply": false,
-    "agglomerativeClustering": {
-      "apply": false,
-      "implemented": false
-    },
-    "wardClustering": {
-      "apply": false,
-      "n_clusters": 0,
-      "affinity": "euclidean",
-      "tuneWardClustering": {
-        "apply": true,
-        "kfolds": 3,
-        "clusters": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12
-        ]
-      }
-    }
-  },
-  "hyperParameterTuning": {
-    "apply": false,
-    "fraction": 0.5,
-    "nIterSearch": 6,
-    "n_best_report": 3,
-    "randomTuning": {
-      "apply": false
-    },
-    "exhaustiveTuning": {
-      "apply": false
-    }
-  },
-  "featureImportance": {
-    "apply": true,
-    "reportMaxFeatures": 8,
-    "permutationRepeats": 10
-  },
-  "modelling": {
-    "apply": true
-  },
-  "regressionModels": {
-    "OLS": {
-      "apply": true,
-      "hyperParams": {
-        "fit_intercept": false
-      }
-    },
-    "TheilSen": {
-      "apply": false,
-      "hyperParams": {}
-    },
-    "Huber": {
-      "apply": false,
-      "hyperParams": {}
-    },
-    "KnnRegr": {
-      "apply": false,
-      "hyperParams": {}
-    },
-    "DecTreeRegr": {
-      "apply": false,
-      "hyperParams": {}
-    },
-    "SVR": {
-      "apply": false,
-      "hyperParams": {
-        "kernel": "linear",
-        "C": 1.5,
-        "epsilon": 0.05
-      }
-    },
-    "RandForRegr": {
-      "apply": true,
-      "hyperParams": {
-        "n_estimators": 30
-      }
-    },
-    "MLP": {
-      "apply": false,
-      "hyperParams": {
-        "hidden_layer_sizes": [
-          100,
-          100
-        ],
-        "max_iter": 200,
-        "tol": 0.001,
-        "epsilon": 1e-8
-      }
-    }
-  },
-  "regressionModelSymbols": {
-    "OLS": {
-      "marker": ".",
-      "size": 100
-    },
-    "TheilSen": {
-      "marker": "v",
-      "size": 50
-    },
-    "Huber": {
-      "marker": "^",
-      "size": 50
-    },
-    "KnnRegr": {
-      "marker": "s",
-      "size": 50
-    },
-    "DecTreeRegr": {
-      "marker": "P",
-      "size": 50
-    },
-    "SVR": {
-      "marker": "*",
-      "size": 50
-    },
-    "RandForRegr": {
-      "marker": "h",
-      "size": 50
-    },
-    "MLP": {
-      "marker": "D",
-      "size": 50
-    },
-    "Cubist": {
-      "marker": "D",
-      "size": 50
-    }
-  },
-  "modelTests": {
-    "apply": true,
-    "trainTest": {
-      "apply": true,
-      "testSize": 0.3,
-      "plot": true,
-      "marker": "s"
-    },
-    "Kfold": {
-      "apply": true,
-      "folds": 10,
-      "plot": true,
-      "marker": "."
-    }
-  },
-  "plot": {
-    "tightLayout": false,
-    "singles": {
+    "regressionModels": {
       "apply": true,
       "figSize": {
         "x": 0,
@@ -1212,57 +1478,18 @@ The complete process-flow for the Swedish OSSL data (downloaded and arranged in 
         "xadd": 0.25,
         "yadd": 0.25
       },
-      "screenShow": false,
-      "savePng": true
-    },
-    "rows": {
-      "apply": true,
-      "subFigSize": {
-        "x": 3,
-        "y": 3,
-        "xadd": 0.1,
-        "yadd": 0.1
+      "hwspace": {
+        "hspace": 0.25,
+        "wspace": 0.25
       },
-      "screenShow": true,
-      "savePng": true,
-      "targetFeatures": {
-        "apply": true,
-        "figSize": {
-          "x": 0,
-          "y": 0,
-          "xadd": 0,
-          "yadd": 0
-        },
-        "hwspace": {
-          "hspace": 0.25,
-          "wspace": 0.25
-        },
-        "columns": [
-          "permutationImportance",
-          "featureImportance",
-          "Kfold"
-        ]
-      },
-      "regressionModels": {
-        "apply": true,
-        "figSize": {
-          "x": 0,
-          "y": 0,
-          "xadd": 0.25,
-          "yadd": 0.25
-        },
-        "hwspace": {
-          "hspace": 0.25,
-          "wspace": 0.25
-        },
-        "columns": [
-          "permutationImportance",
-          "trainTest",
-          "Kfold"
-        ]
-      }
+      "columns": [
+        "permutationImportance",
+        "trainTest",
+        "Kfold"
+      ]
     }
   }
+}
 }
 ```
 {% endraw %}
@@ -1293,945 +1520,945 @@ The json result file for the Swedish OSSL data and the process-flow defined abov
 
 ```
 {
-  "originalInputColumns": 59,
-  "globalTweaks": {
-    "removeOutliers": {
-      "method": "1csvm",
-      "nOutliersRemoved": 411
-    }
+"originalInputColumns": 59,
+"globalTweaks": {
+  "removeOutliers": {
+    "method": "1csvm",
+    "nOutliersRemoved": 411
+  }
+},
+"targetFeatureSelection": {
+  "cec_usda.a723_cmolc.kg": {
+    "method": "SelectKBest",
+    "nFeaturesRemoved": 34
   },
-  "targetFeatureSelection": {
-    "cec_usda.a723_cmolc.kg": {
-      "method": "SelectKBest",
-      "nFeaturesRemoved": 34
-    },
-    "k.ext_usda.a725_cmolc.kg": {
-      "method": "SelectKBest",
-      "nFeaturesRemoved": 34
-    },
-    "n.tot_usda.a623_w.pct": {
-      "method": "SelectKBest",
-      "nFeaturesRemoved": 34
-    },
-    "oc_usda.c729_w.pct": {
-      "method": "SelectKBest",
-      "nFeaturesRemoved": 34
-    }
+  "k.ext_usda.a725_cmolc.kg": {
+    "method": "SelectKBest",
+    "nFeaturesRemoved": 34
   },
-  "featureImportance": {
-    "cec_usda.a723_cmolc.kg": {
-      "OLS": {
-        "permutationsImportance": {
-          "645": {
-            "mean_accuracy_decrease": 2142325.127543466,
-            "std": 71254.03285367714
-          },
-          "635": {
-            "mean_accuracy_decrease": 1986723.276198183,
-            "std": 65805.04455308293
-          },
-          "725": {
-            "mean_accuracy_decrease": 812465.2256568633,
-            "std": 27993.302591305855
-          },
-          "685": {
-            "mean_accuracy_decrease": 559712.1737331812,
-            "std": 19007.595742512323
-          },
-          "695": {
-            "mean_accuracy_decrease": 485390.73162536195,
-            "std": 16542.88395393226
-          },
-          "715": {
-            "mean_accuracy_decrease": 367926.49454165966,
-            "std": 12629.93241658395
-          },
-          "675": {
-            "mean_accuracy_decrease": 285914.19691024564,
-            "std": 9652.344061260414
-          },
-          "735": {
-            "mean_accuracy_decrease": 213051.77139050717,
-            "std": 7349.228558815168
-          }
+  "n.tot_usda.a623_w.pct": {
+    "method": "SelectKBest",
+    "nFeaturesRemoved": 34
+  },
+  "oc_usda.c729_w.pct": {
+    "method": "SelectKBest",
+    "nFeaturesRemoved": 34
+  }
+},
+"featureImportance": {
+  "cec_usda.a723_cmolc.kg": {
+    "OLS": {
+      "permutationsImportance": {
+        "645": {
+          "mean_accuracy_decrease": 2142325.127543466,
+          "std": 71254.03285367714
         },
-        "featureImportance": {
-          "645": {
-            "linearCoefficient": 246973.4674020558
-          },
-          "635": {
-            "linearCoefficient": -240624.92151107272
-          },
-          "725": {
-            "linearCoefficient": -145198.55334763447
-          },
-          "685": {
-            "linearCoefficient": -121876.21646876815
-          },
-          "695": {
-            "linearCoefficient": 112968.33844896617
-          },
-          "715": {
-            "linearCoefficient": 97817.32364734416
-          },
-          "675": {
-            "linearCoefficient": 87685.58324521426
-          },
-          "595": {
-            "linearCoefficient": -78080.77592492555
-          }
+        "635": {
+          "mean_accuracy_decrease": 1986723.276198183,
+          "std": 65805.04455308293
+        },
+        "725": {
+          "mean_accuracy_decrease": 812465.2256568633,
+          "std": 27993.302591305855
+        },
+        "685": {
+          "mean_accuracy_decrease": 559712.1737331812,
+          "std": 19007.595742512323
+        },
+        "695": {
+          "mean_accuracy_decrease": 485390.73162536195,
+          "std": 16542.88395393226
+        },
+        "715": {
+          "mean_accuracy_decrease": 367926.49454165966,
+          "std": 12629.93241658395
+        },
+        "675": {
+          "mean_accuracy_decrease": 285914.19691024564,
+          "std": 9652.344061260414
+        },
+        "735": {
+          "mean_accuracy_decrease": 213051.77139050717,
+          "std": 7349.228558815168
         }
       },
-      "RandForRegr": {
-        "permutationsImportance": {
-          "565": {
-            "mean_accuracy_decrease": 0.28635039209315927,
-            "std": 0.012483381951013114
-          },
-          "585": {
-            "mean_accuracy_decrease": 0.25867593274872813,
-            "std": 0.014171282671730068
-          },
-          "555": {
-            "mean_accuracy_decrease": 0.18065845854126056,
-            "std": 0.020943323392986605
-          },
-          "755": {
-            "mean_accuracy_decrease": 0.07846801190884165,
-            "std": 0.009686268879793979
-          },
-          "735": {
-            "mean_accuracy_decrease": 0.025329555431646868,
-            "std": 0.007652292258404499
-          },
-          "595": {
-            "mean_accuracy_decrease": 0.020348502600112027,
-            "std": 0.003332552424145211
-          },
-          "545": {
-            "mean_accuracy_decrease": 0.019069121284108436,
-            "std": 0.00655696422147034
-          },
-          "575": {
-            "mean_accuracy_decrease": 0.018350720058689964,
-            "std": 0.005767818451422918
-          }
+      "featureImportance": {
+        "645": {
+          "linearCoefficient": 246973.4674020558
         },
-        "featureImportance": {
-          "555": {
-            "MDI": 0.1587611298869648,
-            "std": 0.2029025944491511
-          },
-          "565": {
-            "MDI": 0.13355195437917838,
-            "std": 0.1875616912025412
-          },
-          "585": {
-            "MDI": 0.10933669833987764,
-            "std": 0.17090068008136722
-          },
-          "515": {
-            "MDI": 0.06092444236866471,
-            "std": 0.10450428235261014
-          },
-          "755": {
-            "MDI": 0.052787445712253994,
-            "std": 0.029502503508809227
-          },
-          "525": {
-            "MDI": 0.04188563775825373,
-            "std": 0.0760597569209434
-          },
-          "705": {
-            "MDI": 0.03847681267368939,
-            "std": 0.047619087108398614
-          },
-          "535": {
-            "MDI": 0.03335813794726748,
-            "std": 0.08261382394115557
-          }
+        "635": {
+          "linearCoefficient": -240624.92151107272
+        },
+        "725": {
+          "linearCoefficient": -145198.55334763447
+        },
+        "685": {
+          "linearCoefficient": -121876.21646876815
+        },
+        "695": {
+          "linearCoefficient": 112968.33844896617
+        },
+        "715": {
+          "linearCoefficient": 97817.32364734416
+        },
+        "675": {
+          "linearCoefficient": 87685.58324521426
+        },
+        "595": {
+          "linearCoefficient": -78080.77592492555
         }
       }
     },
-    "k.ext_usda.a725_cmolc.kg": {
-      "OLS": {
-        "permutationsImportance": {
-          "645": {
-            "mean_accuracy_decrease": 2468278.2776789167,
-            "std": 60637.63790521384
-          },
-          "635": {
-            "mean_accuracy_decrease": 1385040.6509942084,
-            "std": 34398.55009249118
-          },
-          "615": {
-            "mean_accuracy_decrease": 1050463.096359942,
-            "std": 26566.69401616157
-          },
-          "655": {
-            "mean_accuracy_decrease": 572575.826310299,
-            "std": 13904.153978193413
-          },
-          "725": {
-            "mean_accuracy_decrease": 557615.3387913108,
-            "std": 12630.848187832913
-          },
-          "695": {
-            "mean_accuracy_decrease": 486811.02869416645,
-            "std": 11307.888341467928
-          },
-          "715": {
-            "mean_accuracy_decrease": 477303.46509368607,
-            "std": 10893.685987614375
-          },
-          "575": {
-            "mean_accuracy_decrease": 443762.00158378173,
-            "std": 11459.045682438042
-          }
+    "RandForRegr": {
+      "permutationsImportance": {
+        "565": {
+          "mean_accuracy_decrease": 0.28635039209315927,
+          "std": 0.012483381951013114
         },
-        "featureImportance": {
-          "645": {
-            "linearCoefficient": 9729.286445723226
-          },
-          "635": {
-            "linearCoefficient": -7369.65938464753
-          },
-          "615": {
-            "linearCoefficient": 6590.453464002772
-          },
-          "575": {
-            "linearCoefficient": 4663.995284953057
-          },
-          "655": {
-            "linearCoefficient": -4637.551432853138
-          },
-          "725": {
-            "linearCoefficient": -4427.259531860341
-          },
-          "695": {
-            "linearCoefficient": -4161.08232855299
-          },
-          "715": {
-            "linearCoefficient": 4100.110963964124
-          }
+        "585": {
+          "mean_accuracy_decrease": 0.25867593274872813,
+          "std": 0.014171282671730068
+        },
+        "555": {
+          "mean_accuracy_decrease": 0.18065845854126056,
+          "std": 0.020943323392986605
+        },
+        "755": {
+          "mean_accuracy_decrease": 0.07846801190884165,
+          "std": 0.009686268879793979
+        },
+        "735": {
+          "mean_accuracy_decrease": 0.025329555431646868,
+          "std": 0.007652292258404499
+        },
+        "595": {
+          "mean_accuracy_decrease": 0.020348502600112027,
+          "std": 0.003332552424145211
+        },
+        "545": {
+          "mean_accuracy_decrease": 0.019069121284108436,
+          "std": 0.00655696422147034
+        },
+        "575": {
+          "mean_accuracy_decrease": 0.018350720058689964,
+          "std": 0.005767818451422918
         }
       },
-      "RandForRegr": {
-        "permutationsImportance": {
-          "765": {
-            "mean_accuracy_decrease": 0.31790518919360894,
-            "std": 0.01918789580008025
-          },
-          "565": {
-            "mean_accuracy_decrease": 0.18043111360139816,
-            "std": 0.017919254752159684
-          },
-          "575": {
-            "mean_accuracy_decrease": 0.13385176662211573,
-            "std": 0.011424711055254734
-          },
-          "535": {
-            "mean_accuracy_decrease": 0.08110276336223315,
-            "std": 0.0112708596659814
-          },
-          "525": {
-            "mean_accuracy_decrease": 0.06489451793278703,
-            "std": 0.009798149193829183
-          },
-          "555": {
-            "mean_accuracy_decrease": 0.05173227680768873,
-            "std": 0.007039639265452218
-          },
-          "755": {
-            "mean_accuracy_decrease": 0.04648801142831831,
-            "std": 0.004982234258063359
-          },
-          "735": {
-            "mean_accuracy_decrease": 0.04059370794750774,
-            "std": 0.0072975351377627205
-          }
+      "featureImportance": {
+        "555": {
+          "MDI": 0.1587611298869648,
+          "std": 0.2029025944491511
         },
-        "featureImportance": {
-          "565": {
-            "MDI": 0.12659487216256524,
-            "std": 0.12935752609135287
-          },
-          "575": {
-            "MDI": 0.09286225721922374,
-            "std": 0.11602534384034562
-          },
-          "525": {
-            "MDI": 0.0738140442616421,
-            "std": 0.05575835660374327
-          },
-          "555": {
-            "MDI": 0.06817066220399984,
-            "std": 0.10328842789394192
-          },
-          "545": {
-            "MDI": 0.06811959965400934,
-            "std": 0.09959251627671926
-          },
-          "765": {
-            "MDI": 0.059457595096362156,
-            "std": 0.025447857707465316
-          },
-          "595": {
-            "MDI": 0.0408413478622239,
-            "std": 0.07183792056899006
-          },
-          "585": {
-            "MDI": 0.04041500800779009,
-            "std": 0.04889526983127451
-          }
-        }
-      }
-    },
-    "n.tot_usda.a623_w.pct": {
-      "OLS": {
-        "permutationsImportance": {
-          "685": {
-            "mean_accuracy_decrease": 1847875.7383914646,
-            "std": 43705.744845748704
-          },
-          "675": {
-            "mean_accuracy_decrease": 1014269.4260904057,
-            "std": 24051.309975302433
-          },
-          "695": {
-            "mean_accuracy_decrease": 349380.75671949383,
-            "std": 8256.015007291719
-          },
-          "585": {
-            "mean_accuracy_decrease": 213745.11438477496,
-            "std": 5275.9865578542685
-          },
-          "635": {
-            "mean_accuracy_decrease": 211822.29312264238,
-            "std": 5094.95117417782
-          },
-          "595": {
-            "mean_accuracy_decrease": 194431.5309977783,
-            "std": 4796.669035816178
-          },
-          "555": {
-            "mean_accuracy_decrease": 165948.3559744564,
-            "std": 4057.895244600783
-          },
-          "705": {
-            "mean_accuracy_decrease": 160009.84042061635,
-            "std": 3775.82521672814
-          }
+        "565": {
+          "MDI": 0.13355195437917838,
+          "std": 0.1875616912025412
         },
-        "featureImportance": {
-          "685": {
-            "linearCoefficient": 6515.49216732041
-          },
-          "675": {
-            "linearCoefficient": -4857.1395135108605
-          },
-          "695": {
-            "linearCoefficient": -2818.5745760560194
-          },
-          "585": {
-            "linearCoefficient": 2527.1233295341885
-          },
-          "555": {
-            "linearCoefficient": 2446.659469925014
-          },
-          "595": {
-            "linearCoefficient": -2354.0393966709057
-          },
-          "525": {
-            "linearCoefficient": 2333.9685624908725
-          },
-          "635": {
-            "linearCoefficient": -2308.734776110277
-          }
-        }
-      },
-      "RandForRegr": {
-        "permutationsImportance": {
-          "715": {
-            "mean_accuracy_decrease": 0.12718266925316374,
-            "std": 0.012518502892438414
-          },
-          "615": {
-            "mean_accuracy_decrease": 0.041354265546978096,
-            "std": 0.004703069796240487
-          },
-          "485": {
-            "mean_accuracy_decrease": 0.0369928944970095,
-            "std": 0.005991249644123221
-          },
-          "495": {
-            "mean_accuracy_decrease": 0.022403747853120947,
-            "std": 0.005563191826291091
-          },
-          "705": {
-            "mean_accuracy_decrease": 0.016873274230714542,
-            "std": 0.002762928688617482
-          },
-          "625": {
-            "mean_accuracy_decrease": 0.01393536711315766,
-            "std": 0.0023989080228772265
-          },
-          "575": {
-            "mean_accuracy_decrease": 0.013177571786896259,
-            "std": 0.0022914715244820366
-          },
-          "555": {
-            "mean_accuracy_decrease": 0.012570744064369843,
-            "std": 0.0036388195812096127
-          }
+        "585": {
+          "MDI": 0.10933669833987764,
+          "std": 0.17090068008136722
         },
-        "featureImportance": {
-          "485": {
-            "MDI": 0.1917881740585853,
-            "std": 0.2826202681023468
-          },
-          "495": {
-            "MDI": 0.18020322244893458,
-            "std": 0.27323239812847133
-          },
-          "475": {
-            "MDI": 0.06225452172718376,
-            "std": 0.15542552574180532
-          },
-          "525": {
-            "MDI": 0.05646124691772123,
-            "std": 0.15498289591531023
-          },
-          "555": {
-            "MDI": 0.056233123547062544,
-            "std": 0.15352144405603435
-          },
-          "545": {
-            "MDI": 0.052754992069279374,
-            "std": 0.15684438576743176
-          },
-          "565": {
-            "MDI": 0.05094059741913668,
-            "std": 0.15150598253872188
-          },
-          "575": {
-            "MDI": 0.042057732655273,
-            "std": 0.11463697383675055
-          }
-        }
-      }
-    },
-    "oc_usda.c729_w.pct": {
-      "OLS": {
-        "permutationsImportance": {
-          "695": {
-            "mean_accuracy_decrease": 970571.336906384,
-            "std": 27224.882985307522
-          },
-          "685": {
-            "mean_accuracy_decrease": 770870.6124462709,
-            "std": 21537.687800556472
-          },
-          "635": {
-            "mean_accuracy_decrease": 643445.954748732,
-            "std": 17604.850705061457
-          },
-          "675": {
-            "mean_accuracy_decrease": 520696.98314973305,
-            "std": 14480.672446557044
-          },
-          "645": {
-            "mean_accuracy_decrease": 461680.34591451817,
-            "std": 12682.169928875799
-          },
-          "705": {
-            "mean_accuracy_decrease": 199855.52092998085,
-            "std": 5638.842492174508
-          },
-          "615": {
-            "mean_accuracy_decrease": 189474.14311856672,
-            "std": 5170.755226663838
-          },
-          "525": {
-            "mean_accuracy_decrease": 189315.1678876113,
-            "std": 6012.288853457256
-          }
+        "515": {
+          "MDI": 0.06092444236866471,
+          "std": 0.10450428235261014
         },
-        "featureImportance": {
-          "695": {
-            "linearCoefficient": -120748.49956575861
-          },
-          "685": {
-            "linearCoefficient": 108120.50777816672
-          },
-          "635": {
-            "linearCoefficient": -103309.25070591885
-          },
-          "675": {
-            "linearCoefficient": -89395.42596497189
-          },
-          "645": {
-            "linearCoefficient": 86523.89503289931
-          },
-          "525": {
-            "linearCoefficient": 76141.64247004794
-          },
-          "505": {
-            "linearCoefficient": -75424.71810712792
-          },
-          "495": {
-            "linearCoefficient": 74680.13960052058
-          }
-        }
-      },
-      "RandForRegr": {
-        "permutationsImportance": {
-          "705": {
-            "mean_accuracy_decrease": 0.10658572864150333,
-            "std": 0.009112261756806362
-          },
-          "465": {
-            "mean_accuracy_decrease": 0.07114947264859019,
-            "std": 0.0033296932407242317
-          },
-          "585": {
-            "mean_accuracy_decrease": 0.05759236394811764,
-            "std": 0.0067261304328874805
-          },
-          "595": {
-            "mean_accuracy_decrease": 0.05074744814728965,
-            "std": 0.00374615350635183
-          },
-          "695": {
-            "mean_accuracy_decrease": 0.04191765567980597,
-            "std": 0.004456993977490808
-          },
-          "605": {
-            "mean_accuracy_decrease": 0.0414918981045954,
-            "std": 0.0026014831930515595
-          },
-          "485": {
-            "mean_accuracy_decrease": 0.03784337922726858,
-            "std": 0.002189142096614051
-          },
-          "635": {
-            "mean_accuracy_decrease": 0.035657269366898135,
-            "std": 0.0028216919409234866
-          }
+        "755": {
+          "MDI": 0.052787445712253994,
+          "std": 0.029502503508809227
         },
-        "featureImportance": {
-          "465": {
-            "MDI": 0.15958612674457212,
-            "std": 0.26134373689444296
-          },
-          "485": {
-            "MDI": 0.14204045818809566,
-            "std": 0.2623343887108612
-          },
-          "555": {
-            "MDI": 0.0827676272727553,
-            "std": 0.2001239693825927
-          },
-          "475": {
-            "MDI": 0.08204928387922038,
-            "std": 0.20011643698838572
-          },
-          "545": {
-            "MDI": 0.07583302192791327,
-            "std": 0.20007209392201802
-          },
-          "525": {
-            "MDI": 0.07326114796037066,
-            "std": 0.19626020689606302
-          },
-          "495": {
-            "MDI": 0.05632074377531513,
-            "std": 0.16571899296764434
-          },
-          "565": {
-            "MDI": 0.05188653124959077,
-            "std": 0.1639998510681376
-          }
+        "525": {
+          "MDI": 0.04188563775825373,
+          "std": 0.0760597569209434
+        },
+        "705": {
+          "MDI": 0.03847681267368939,
+          "std": 0.047619087108398614
+        },
+        "535": {
+          "MDI": 0.03335813794726748,
+          "std": 0.08261382394115557
         }
       }
     }
   },
-  "appliedModelingFeatures": {
-    "cec_usda.a723_cmolc.kg": {
-      "OLS": [
-        "515",
-        "525",
-        "535",
-        "545",
-        "555",
-        "565",
-        "575",
-        "585",
-        "595",
-        "605",
-        "615",
-        "625",
-        "635",
-        "645",
-        "655",
-        "665",
-        "675",
-        "685",
-        "695",
-        "705",
-        "715",
-        "725",
-        "735",
-        "745",
-        "755"
-      ],
-      "RandForRegr": [
-        "515",
-        "525",
-        "535",
-        "545",
-        "555",
-        "565",
-        "575",
-        "585",
-        "595",
-        "605",
-        "615",
-        "625",
-        "635",
-        "645",
-        "655",
-        "665",
-        "675",
-        "685",
-        "695",
-        "705",
-        "715",
-        "725",
-        "735",
-        "745",
-        "755"
-      ]
-    },
-    "k.ext_usda.a725_cmolc.kg": {
-      "OLS": [
-        "525",
-        "535",
-        "545",
-        "555",
-        "565",
-        "575",
-        "585",
-        "595",
-        "605",
-        "615",
-        "625",
-        "635",
-        "645",
-        "655",
-        "665",
-        "675",
-        "685",
-        "695",
-        "705",
-        "715",
-        "725",
-        "735",
-        "745",
-        "755",
-        "765"
-      ],
-      "RandForRegr": [
-        "525",
-        "535",
-        "545",
-        "555",
-        "565",
-        "575",
-        "585",
-        "595",
-        "605",
-        "615",
-        "625",
-        "635",
-        "645",
-        "655",
-        "665",
-        "675",
-        "685",
-        "695",
-        "705",
-        "715",
-        "725",
-        "735",
-        "745",
-        "755",
-        "765"
-      ]
-    },
-    "n.tot_usda.a623_w.pct": {
-      "OLS": [
-        "475",
-        "485",
-        "495",
-        "505",
-        "515",
-        "525",
-        "535",
-        "545",
-        "555",
-        "565",
-        "575",
-        "585",
-        "595",
-        "605",
-        "615",
-        "625",
-        "635",
-        "645",
-        "655",
-        "665",
-        "675",
-        "685",
-        "695",
-        "705",
-        "715"
-      ],
-      "RandForRegr": [
-        "475",
-        "485",
-        "495",
-        "505",
-        "515",
-        "525",
-        "535",
-        "545",
-        "555",
-        "565",
-        "575",
-        "585",
-        "595",
-        "605",
-        "615",
-        "625",
-        "635",
-        "645",
-        "655",
-        "665",
-        "675",
-        "685",
-        "695",
-        "705",
-        "715"
-      ]
-    },
-    "oc_usda.c729_w.pct": {
-      "OLS": [
-        "465",
-        "475",
-        "485",
-        "495",
-        "505",
-        "515",
-        "525",
-        "535",
-        "545",
-        "555",
-        "565",
-        "575",
-        "585",
-        "595",
-        "605",
-        "615",
-        "625",
-        "635",
-        "645",
-        "655",
-        "665",
-        "675",
-        "685",
-        "695",
-        "705"
-      ],
-      "RandForRegr": [
-        "465",
-        "475",
-        "485",
-        "495",
-        "505",
-        "515",
-        "525",
-        "535",
-        "545",
-        "555",
-        "565",
-        "575",
-        "585",
-        "595",
-        "605",
-        "615",
-        "625",
-        "635",
-        "645",
-        "655",
-        "665",
-        "675",
-        "685",
-        "695",
-        "705"
-      ]
-    }
-  },
-  "modelResults": {
-    "trainTest": {
-      "cec_usda.a723_cmolc.kg": {
-        "OLS": {
-          "mse": 122.27242211906663,
-          "r2": 0.48831121615177386,
-          "hyperParameterSetting": {
-            "fit_intercept": false
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_cec_usda.a723_cmolc.kg_OLS_trainTest.xsp"
+  "k.ext_usda.a725_cmolc.kg": {
+    "OLS": {
+      "permutationsImportance": {
+        "645": {
+          "mean_accuracy_decrease": 2468278.2776789167,
+          "std": 60637.63790521384
         },
-        "RandForRegr": {
-          "mse": 101.49516677833613,
-          "r2": 0.3500832852351041,
-          "hyperParameterSetting": {
-            "n_estimators": 30
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_cec_usda.a723_cmolc.kg_RandForRegr_trainTest.xsp"
+        "635": {
+          "mean_accuracy_decrease": 1385040.6509942084,
+          "std": 34398.55009249118
+        },
+        "615": {
+          "mean_accuracy_decrease": 1050463.096359942,
+          "std": 26566.69401616157
+        },
+        "655": {
+          "mean_accuracy_decrease": 572575.826310299,
+          "std": 13904.153978193413
+        },
+        "725": {
+          "mean_accuracy_decrease": 557615.3387913108,
+          "std": 12630.848187832913
+        },
+        "695": {
+          "mean_accuracy_decrease": 486811.02869416645,
+          "std": 11307.888341467928
+        },
+        "715": {
+          "mean_accuracy_decrease": 477303.46509368607,
+          "std": 10893.685987614375
+        },
+        "575": {
+          "mean_accuracy_decrease": 443762.00158378173,
+          "std": 11459.045682438042
         }
       },
-      "k.ext_usda.a725_cmolc.kg": {
-        "OLS": {
-          "mse": 0.2779824590499334,
-          "r2": 0.3610021531760156,
-          "hyperParameterSetting": {
-            "fit_intercept": false
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_k.ext_usda.a725_cmolc.kg_OLS_trainTest.xsp"
+      "featureImportance": {
+        "645": {
+          "linearCoefficient": 9729.286445723226
         },
-        "RandForRegr": {
-          "mse": 0.4405139695443757,
-          "r2": 0.1718104392766573,
-          "hyperParameterSetting": {
-            "n_estimators": 30
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_k.ext_usda.a725_cmolc.kg_RandForRegr_trainTest.xsp"
-        }
-      },
-      "n.tot_usda.a623_w.pct": {
-        "OLS": {
-          "mse": 0.09086518001601741,
-          "r2": 0.6945887693867323,
-          "hyperParameterSetting": {
-            "fit_intercept": false
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_n.tot_usda.a623_w.pct_OLS_trainTest.xsp"
+        "635": {
+          "linearCoefficient": -7369.65938464753
         },
-        "RandForRegr": {
-          "mse": 0.08079380450450449,
-          "r2": 0.7492747761176939,
-          "hyperParameterSetting": {
-            "n_estimators": 30
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_n.tot_usda.a623_w.pct_RandForRegr_trainTest.xsp"
-        }
-      },
-      "oc_usda.c729_w.pct": {
-        "OLS": {
-          "mse": 52.18931396991764,
-          "r2": 0.7550853892931986,
-          "hyperParameterSetting": {
-            "fit_intercept": false
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_oc_usda.c729_w.pct_OLS_trainTest.xsp"
+        "615": {
+          "linearCoefficient": 6590.453464002772
         },
-        "RandForRegr": {
-          "mse": 46.61687906446446,
-          "r2": 0.7828779159834647,
-          "hyperParameterSetting": {
-            "n_estimators": 30
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_oc_usda.c729_w.pct_RandForRegr_trainTest.xsp"
+        "575": {
+          "linearCoefficient": 4663.995284953057
+        },
+        "655": {
+          "linearCoefficient": -4637.551432853138
+        },
+        "725": {
+          "linearCoefficient": -4427.259531860341
+        },
+        "695": {
+          "linearCoefficient": -4161.08232855299
+        },
+        "715": {
+          "linearCoefficient": 4100.110963964124
         }
       }
     },
-    "Kfold": {
-      "cec_usda.a723_cmolc.kg": {
-        "OLS": {
-          "mse": 155.5368753095911,
-          "r2": 0.4488238965732262,
-          "hyperParameterSetting": {
-            "fit_intercept": false
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_cec_usda.a723_cmolc.kg_OLS_Kfold.xsp"
+    "RandForRegr": {
+      "permutationsImportance": {
+        "765": {
+          "mean_accuracy_decrease": 0.31790518919360894,
+          "std": 0.01918789580008025
         },
-        "RandForRegr": {
-          "mse": 164.82000332383666,
-          "r2": 0.4159272711503528,
-          "hyperParameterSetting": {
-            "n_estimators": 30
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_cec_usda.a723_cmolc.kg_RandForRegr_Kfold.xsp"
+        "565": {
+          "mean_accuracy_decrease": 0.18043111360139816,
+          "std": 0.017919254752159684
+        },
+        "575": {
+          "mean_accuracy_decrease": 0.13385176662211573,
+          "std": 0.011424711055254734
+        },
+        "535": {
+          "mean_accuracy_decrease": 0.08110276336223315,
+          "std": 0.0112708596659814
+        },
+        "525": {
+          "mean_accuracy_decrease": 0.06489451793278703,
+          "std": 0.009798149193829183
+        },
+        "555": {
+          "mean_accuracy_decrease": 0.05173227680768873,
+          "std": 0.007039639265452218
+        },
+        "755": {
+          "mean_accuracy_decrease": 0.04648801142831831,
+          "std": 0.004982234258063359
+        },
+        "735": {
+          "mean_accuracy_decrease": 0.04059370794750774,
+          "std": 0.0072975351377627205
         }
       },
-      "k.ext_usda.a725_cmolc.kg": {
-        "OLS": {
-          "mse": 0.3350638398714068,
-          "r2": 0.3495948891400069,
-          "hyperParameterSetting": {
-            "fit_intercept": false
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_k.ext_usda.a725_cmolc.kg_OLS_Kfold.xsp"
+      "featureImportance": {
+        "565": {
+          "MDI": 0.12659487216256524,
+          "std": 0.12935752609135287
         },
-        "RandForRegr": {
-          "mse": 0.4055360560422809,
-          "r2": 0.2127986010393339,
-          "hyperParameterSetting": {
-            "n_estimators": 30
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_k.ext_usda.a725_cmolc.kg_RandForRegr_Kfold.xsp"
+        "575": {
+          "MDI": 0.09286225721922374,
+          "std": 0.11602534384034562
+        },
+        "525": {
+          "MDI": 0.0738140442616421,
+          "std": 0.05575835660374327
+        },
+        "555": {
+          "MDI": 0.06817066220399984,
+          "std": 0.10328842789394192
+        },
+        "545": {
+          "MDI": 0.06811959965400934,
+          "std": 0.09959251627671926
+        },
+        "765": {
+          "MDI": 0.059457595096362156,
+          "std": 0.025447857707465316
+        },
+        "595": {
+          "MDI": 0.0408413478622239,
+          "std": 0.07183792056899006
+        },
+        "585": {
+          "MDI": 0.04041500800779009,
+          "std": 0.04889526983127451
+        }
+      }
+    }
+  },
+  "n.tot_usda.a623_w.pct": {
+    "OLS": {
+      "permutationsImportance": {
+        "685": {
+          "mean_accuracy_decrease": 1847875.7383914646,
+          "std": 43705.744845748704
+        },
+        "675": {
+          "mean_accuracy_decrease": 1014269.4260904057,
+          "std": 24051.309975302433
+        },
+        "695": {
+          "mean_accuracy_decrease": 349380.75671949383,
+          "std": 8256.015007291719
+        },
+        "585": {
+          "mean_accuracy_decrease": 213745.11438477496,
+          "std": 5275.9865578542685
+        },
+        "635": {
+          "mean_accuracy_decrease": 211822.29312264238,
+          "std": 5094.95117417782
+        },
+        "595": {
+          "mean_accuracy_decrease": 194431.5309977783,
+          "std": 4796.669035816178
+        },
+        "555": {
+          "mean_accuracy_decrease": 165948.3559744564,
+          "std": 4057.895244600783
+        },
+        "705": {
+          "mean_accuracy_decrease": 160009.84042061635,
+          "std": 3775.82521672814
         }
       },
-      "n.tot_usda.a623_w.pct": {
-        "OLS": {
-          "mse": 0.10409364182580515,
-          "r2": 0.6627269506188842,
-          "hyperParameterSetting": {
-            "fit_intercept": false
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_n.tot_usda.a623_w.pct_OLS_Kfold.xsp"
+      "featureImportance": {
+        "685": {
+          "linearCoefficient": 6515.49216732041
         },
-        "RandForRegr": {
-          "mse": 0.07815435003454388,
-          "r2": 0.7467726606908363,
-          "hyperParameterSetting": {
-            "n_estimators": 30
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_n.tot_usda.a623_w.pct_RandForRegr_Kfold.xsp"
+        "675": {
+          "linearCoefficient": -4857.1395135108605
+        },
+        "695": {
+          "linearCoefficient": -2818.5745760560194
+        },
+        "585": {
+          "linearCoefficient": 2527.1233295341885
+        },
+        "555": {
+          "linearCoefficient": 2446.659469925014
+        },
+        "595": {
+          "linearCoefficient": -2354.0393966709057
+        },
+        "525": {
+          "linearCoefficient": 2333.9685624908725
+        },
+        "635": {
+          "linearCoefficient": -2308.734776110277
+        }
+      }
+    },
+    "RandForRegr": {
+      "permutationsImportance": {
+        "715": {
+          "mean_accuracy_decrease": 0.12718266925316374,
+          "std": 0.012518502892438414
+        },
+        "615": {
+          "mean_accuracy_decrease": 0.041354265546978096,
+          "std": 0.004703069796240487
+        },
+        "485": {
+          "mean_accuracy_decrease": 0.0369928944970095,
+          "std": 0.005991249644123221
+        },
+        "495": {
+          "mean_accuracy_decrease": 0.022403747853120947,
+          "std": 0.005563191826291091
+        },
+        "705": {
+          "mean_accuracy_decrease": 0.016873274230714542,
+          "std": 0.002762928688617482
+        },
+        "625": {
+          "mean_accuracy_decrease": 0.01393536711315766,
+          "std": 0.0023989080228772265
+        },
+        "575": {
+          "mean_accuracy_decrease": 0.013177571786896259,
+          "std": 0.0022914715244820366
+        },
+        "555": {
+          "mean_accuracy_decrease": 0.012570744064369843,
+          "std": 0.0036388195812096127
         }
       },
-      "oc_usda.c729_w.pct": {
-        "OLS": {
-          "mse": 60.53643178256006,
-          "r2": 0.7176343354830652,
-          "hyperParameterSetting": {
-            "fit_intercept": false
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_oc_usda.c729_w.pct_OLS_Kfold.xsp"
+      "featureImportance": {
+        "485": {
+          "MDI": 0.1917881740585853,
+          "std": 0.2826202681023468
         },
-        "RandForRegr": {
-          "mse": 41.94697233180138,
-          "r2": 0.8043428664661596,
-          "hyperParameterSetting": {
-            "n_estimators": 30
-          },
-          "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_oc_usda.c729_w.pct_RandForRegr_Kfold.xsp"
+        "495": {
+          "MDI": 0.18020322244893458,
+          "std": 0.27323239812847133
+        },
+        "475": {
+          "MDI": 0.06225452172718376,
+          "std": 0.15542552574180532
+        },
+        "525": {
+          "MDI": 0.05646124691772123,
+          "std": 0.15498289591531023
+        },
+        "555": {
+          "MDI": 0.056233123547062544,
+          "std": 0.15352144405603435
+        },
+        "545": {
+          "MDI": 0.052754992069279374,
+          "std": 0.15684438576743176
+        },
+        "565": {
+          "MDI": 0.05094059741913668,
+          "std": 0.15150598253872188
+        },
+        "575": {
+          "MDI": 0.042057732655273,
+          "std": 0.11463697383675055
+        }
+      }
+    }
+  },
+  "oc_usda.c729_w.pct": {
+    "OLS": {
+      "permutationsImportance": {
+        "695": {
+          "mean_accuracy_decrease": 970571.336906384,
+          "std": 27224.882985307522
+        },
+        "685": {
+          "mean_accuracy_decrease": 770870.6124462709,
+          "std": 21537.687800556472
+        },
+        "635": {
+          "mean_accuracy_decrease": 643445.954748732,
+          "std": 17604.850705061457
+        },
+        "675": {
+          "mean_accuracy_decrease": 520696.98314973305,
+          "std": 14480.672446557044
+        },
+        "645": {
+          "mean_accuracy_decrease": 461680.34591451817,
+          "std": 12682.169928875799
+        },
+        "705": {
+          "mean_accuracy_decrease": 199855.52092998085,
+          "std": 5638.842492174508
+        },
+        "615": {
+          "mean_accuracy_decrease": 189474.14311856672,
+          "std": 5170.755226663838
+        },
+        "525": {
+          "mean_accuracy_decrease": 189315.1678876113,
+          "std": 6012.288853457256
+        }
+      },
+      "featureImportance": {
+        "695": {
+          "linearCoefficient": -120748.49956575861
+        },
+        "685": {
+          "linearCoefficient": 108120.50777816672
+        },
+        "635": {
+          "linearCoefficient": -103309.25070591885
+        },
+        "675": {
+          "linearCoefficient": -89395.42596497189
+        },
+        "645": {
+          "linearCoefficient": 86523.89503289931
+        },
+        "525": {
+          "linearCoefficient": 76141.64247004794
+        },
+        "505": {
+          "linearCoefficient": -75424.71810712792
+        },
+        "495": {
+          "linearCoefficient": 74680.13960052058
+        }
+      }
+    },
+    "RandForRegr": {
+      "permutationsImportance": {
+        "705": {
+          "mean_accuracy_decrease": 0.10658572864150333,
+          "std": 0.009112261756806362
+        },
+        "465": {
+          "mean_accuracy_decrease": 0.07114947264859019,
+          "std": 0.0033296932407242317
+        },
+        "585": {
+          "mean_accuracy_decrease": 0.05759236394811764,
+          "std": 0.0067261304328874805
+        },
+        "595": {
+          "mean_accuracy_decrease": 0.05074744814728965,
+          "std": 0.00374615350635183
+        },
+        "695": {
+          "mean_accuracy_decrease": 0.04191765567980597,
+          "std": 0.004456993977490808
+        },
+        "605": {
+          "mean_accuracy_decrease": 0.0414918981045954,
+          "std": 0.0026014831930515595
+        },
+        "485": {
+          "mean_accuracy_decrease": 0.03784337922726858,
+          "std": 0.002189142096614051
+        },
+        "635": {
+          "mean_accuracy_decrease": 0.035657269366898135,
+          "std": 0.0028216919409234866
+        }
+      },
+      "featureImportance": {
+        "465": {
+          "MDI": 0.15958612674457212,
+          "std": 0.26134373689444296
+        },
+        "485": {
+          "MDI": 0.14204045818809566,
+          "std": 0.2623343887108612
+        },
+        "555": {
+          "MDI": 0.0827676272727553,
+          "std": 0.2001239693825927
+        },
+        "475": {
+          "MDI": 0.08204928387922038,
+          "std": 0.20011643698838572
+        },
+        "545": {
+          "MDI": 0.07583302192791327,
+          "std": 0.20007209392201802
+        },
+        "525": {
+          "MDI": 0.07326114796037066,
+          "std": 0.19626020689606302
+        },
+        "495": {
+          "MDI": 0.05632074377531513,
+          "std": 0.16571899296764434
+        },
+        "565": {
+          "MDI": 0.05188653124959077,
+          "std": 0.1639998510681376
         }
       }
     }
   }
+},
+"appliedModelingFeatures": {
+  "cec_usda.a723_cmolc.kg": {
+    "OLS": [
+      "515",
+      "525",
+      "535",
+      "545",
+      "555",
+      "565",
+      "575",
+      "585",
+      "595",
+      "605",
+      "615",
+      "625",
+      "635",
+      "645",
+      "655",
+      "665",
+      "675",
+      "685",
+      "695",
+      "705",
+      "715",
+      "725",
+      "735",
+      "745",
+      "755"
+    ],
+    "RandForRegr": [
+      "515",
+      "525",
+      "535",
+      "545",
+      "555",
+      "565",
+      "575",
+      "585",
+      "595",
+      "605",
+      "615",
+      "625",
+      "635",
+      "645",
+      "655",
+      "665",
+      "675",
+      "685",
+      "695",
+      "705",
+      "715",
+      "725",
+      "735",
+      "745",
+      "755"
+    ]
+  },
+  "k.ext_usda.a725_cmolc.kg": {
+    "OLS": [
+      "525",
+      "535",
+      "545",
+      "555",
+      "565",
+      "575",
+      "585",
+      "595",
+      "605",
+      "615",
+      "625",
+      "635",
+      "645",
+      "655",
+      "665",
+      "675",
+      "685",
+      "695",
+      "705",
+      "715",
+      "725",
+      "735",
+      "745",
+      "755",
+      "765"
+    ],
+    "RandForRegr": [
+      "525",
+      "535",
+      "545",
+      "555",
+      "565",
+      "575",
+      "585",
+      "595",
+      "605",
+      "615",
+      "625",
+      "635",
+      "645",
+      "655",
+      "665",
+      "675",
+      "685",
+      "695",
+      "705",
+      "715",
+      "725",
+      "735",
+      "745",
+      "755",
+      "765"
+    ]
+  },
+  "n.tot_usda.a623_w.pct": {
+    "OLS": [
+      "475",
+      "485",
+      "495",
+      "505",
+      "515",
+      "525",
+      "535",
+      "545",
+      "555",
+      "565",
+      "575",
+      "585",
+      "595",
+      "605",
+      "615",
+      "625",
+      "635",
+      "645",
+      "655",
+      "665",
+      "675",
+      "685",
+      "695",
+      "705",
+      "715"
+    ],
+    "RandForRegr": [
+      "475",
+      "485",
+      "495",
+      "505",
+      "515",
+      "525",
+      "535",
+      "545",
+      "555",
+      "565",
+      "575",
+      "585",
+      "595",
+      "605",
+      "615",
+      "625",
+      "635",
+      "645",
+      "655",
+      "665",
+      "675",
+      "685",
+      "695",
+      "705",
+      "715"
+    ]
+  },
+  "oc_usda.c729_w.pct": {
+    "OLS": [
+      "465",
+      "475",
+      "485",
+      "495",
+      "505",
+      "515",
+      "525",
+      "535",
+      "545",
+      "555",
+      "565",
+      "575",
+      "585",
+      "595",
+      "605",
+      "615",
+      "625",
+      "635",
+      "645",
+      "655",
+      "665",
+      "675",
+      "685",
+      "695",
+      "705"
+    ],
+    "RandForRegr": [
+      "465",
+      "475",
+      "485",
+      "495",
+      "505",
+      "515",
+      "525",
+      "535",
+      "545",
+      "555",
+      "565",
+      "575",
+      "585",
+      "595",
+      "605",
+      "615",
+      "625",
+      "635",
+      "645",
+      "655",
+      "665",
+      "675",
+      "685",
+      "695",
+      "705"
+    ]
+  }
+},
+"modelResults": {
+  "trainTest": {
+    "cec_usda.a723_cmolc.kg": {
+      "OLS": {
+        "mse": 122.27242211906663,
+        "r2": 0.48831121615177386,
+        "hyperParameterSetting": {
+          "fit_intercept": false
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_cec_usda.a723_cmolc.kg_OLS_trainTest.xsp"
+      },
+      "RandForRegr": {
+        "mse": 101.49516677833613,
+        "r2": 0.3500832852351041,
+        "hyperParameterSetting": {
+          "n_estimators": 30
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_cec_usda.a723_cmolc.kg_RandForRegr_trainTest.xsp"
+      }
+    },
+    "k.ext_usda.a725_cmolc.kg": {
+      "OLS": {
+        "mse": 0.2779824590499334,
+        "r2": 0.3610021531760156,
+        "hyperParameterSetting": {
+          "fit_intercept": false
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_k.ext_usda.a725_cmolc.kg_OLS_trainTest.xsp"
+      },
+      "RandForRegr": {
+        "mse": 0.4405139695443757,
+        "r2": 0.1718104392766573,
+        "hyperParameterSetting": {
+          "n_estimators": 30
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_k.ext_usda.a725_cmolc.kg_RandForRegr_trainTest.xsp"
+      }
+    },
+    "n.tot_usda.a623_w.pct": {
+      "OLS": {
+        "mse": 0.09086518001601741,
+        "r2": 0.6945887693867323,
+        "hyperParameterSetting": {
+          "fit_intercept": false
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_n.tot_usda.a623_w.pct_OLS_trainTest.xsp"
+      },
+      "RandForRegr": {
+        "mse": 0.08079380450450449,
+        "r2": 0.7492747761176939,
+        "hyperParameterSetting": {
+          "n_estimators": 30
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_n.tot_usda.a623_w.pct_RandForRegr_trainTest.xsp"
+      }
+    },
+    "oc_usda.c729_w.pct": {
+      "OLS": {
+        "mse": 52.18931396991764,
+        "r2": 0.7550853892931986,
+        "hyperParameterSetting": {
+          "fit_intercept": false
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_oc_usda.c729_w.pct_OLS_trainTest.xsp"
+      },
+      "RandForRegr": {
+        "mse": 46.61687906446446,
+        "r2": 0.7828779159834647,
+        "hyperParameterSetting": {
+          "n_estimators": 30
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_oc_usda.c729_w.pct_RandForRegr_trainTest.xsp"
+      }
+    }
+  },
+  "Kfold": {
+    "cec_usda.a723_cmolc.kg": {
+      "OLS": {
+        "mse": 155.5368753095911,
+        "r2": 0.4488238965732262,
+        "hyperParameterSetting": {
+          "fit_intercept": false
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_cec_usda.a723_cmolc.kg_OLS_Kfold.xsp"
+      },
+      "RandForRegr": {
+        "mse": 164.82000332383666,
+        "r2": 0.4159272711503528,
+        "hyperParameterSetting": {
+          "n_estimators": 30
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_cec_usda.a723_cmolc.kg_RandForRegr_Kfold.xsp"
+      }
+    },
+    "k.ext_usda.a725_cmolc.kg": {
+      "OLS": {
+        "mse": 0.3350638398714068,
+        "r2": 0.3495948891400069,
+        "hyperParameterSetting": {
+          "fit_intercept": false
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_k.ext_usda.a725_cmolc.kg_OLS_Kfold.xsp"
+      },
+      "RandForRegr": {
+        "mse": 0.4055360560422809,
+        "r2": 0.2127986010393339,
+        "hyperParameterSetting": {
+          "n_estimators": 30
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_k.ext_usda.a725_cmolc.kg_RandForRegr_Kfold.xsp"
+      }
+    },
+    "n.tot_usda.a623_w.pct": {
+      "OLS": {
+        "mse": 0.10409364182580515,
+        "r2": 0.6627269506188842,
+        "hyperParameterSetting": {
+          "fit_intercept": false
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_n.tot_usda.a623_w.pct_OLS_Kfold.xsp"
+      },
+      "RandForRegr": {
+        "mse": 0.07815435003454388,
+        "r2": 0.7467726606908363,
+        "hyperParameterSetting": {
+          "n_estimators": 30
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_n.tot_usda.a623_w.pct_RandForRegr_Kfold.xsp"
+      }
+    },
+    "oc_usda.c729_w.pct": {
+      "OLS": {
+        "mse": 60.53643178256006,
+        "r2": 0.7176343354830652,
+        "hyperParameterSetting": {
+          "fit_intercept": false
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_oc_usda.c729_w.pct_OLS_Kfold.xsp"
+      },
+      "RandForRegr": {
+        "mse": 41.94697233180138,
+        "r2": 0.8043428664661596,
+        "hyperParameterSetting": {
+          "n_estimators": 30
+        },
+        "pickle": "/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/mlmodel/Sweden_LUCAS_460-1050_10/pickle/testtg_modelid_oc_usda.c729_w.pct_RandForRegr_Kfold.xsp"
+      }
+    }
+  }
+}
 }
 ```
 {% endraw %}
@@ -2272,32 +2499,32 @@ The columns to include are listed in the json command file using the compact tex
 
 ```
 "columns": [
-  "permutationImportance",
-  "featureImportance",
-  "Kfold"
+"permutationImportance",
+"featureImportance",
+"Kfold"
 ]
 ```
 The individual panels of the multi-row plots are identical to the single panel plots, thus the examples in figures 3 to 5 illustrate the layout of most plots.
 
 <figure>
-  <a href="../../images/testtg_oc_usda.c729_w.pct-multi-results.png">
-  <img src="../../images/testtg_oc_usda.c729_w.pct-multi-results.png" alt="image">
-  </a>
-  <figcaption>Figure 3. Plots for the result of modelling soil organic carbon (oc). showing permutation importance, train/test and Kfold model results as columns and the regressors ordinary least square and Random Forest as rows. </figcaption>
+<a href="../../images/testtg_oc_usda.c729_w.pct-multi-results.png">
+<img src="../../images/testtg_oc_usda.c729_w.pct-multi-results.png" alt="image">
+</a>
+<figcaption>Figure 3. Plots for the result of modelling soil organic carbon (oc). showing permutation importance, train/test and Kfold model results as columns and the regressors ordinary least square and Random Forest as rows. </figcaption>
 </figure>
 
 <figure>
-  <a href="../../images/testtg_n.tot_usda.a623_w.pct-multi-results.png">
-  <img src="../../images/testtg_n.tot_usda.a623_w.pct-multi-results.png" alt="image">
-  </a>
-  <figcaption>Figure 4. Plots for the result of modelling soil nitrogen (N) showing permutation importance, train/test and Kfold model results as columns and the regressors ordinary least square and Random Forest as rows. </figcaption>
+<a href="../../images/testtg_n.tot_usda.a623_w.pct-multi-results.png">
+<img src="../../images/testtg_n.tot_usda.a623_w.pct-multi-results.png" alt="image">
+</a>
+<figcaption>Figure 4. Plots for the result of modelling soil nitrogen (N) showing permutation importance, train/test and Kfold model results as columns and the regressors ordinary least square and Random Forest as rows. </figcaption>
 </figure>
 
 <figure>
-  <a href="../../images/testtg_RandForRegr-multi-results.png">
-  <img src="../../images/testtg_RandForRegr-multi-results.png" alt="image">
-  </a>
-  <figcaption>Figure 5. Plots for the result of applying the Random Forest regressor to 5 different target features (rows); with the columns showing permutation importance, feature importance and the Kfold model result. </figcaption>
+<a href="../../images/testtg_RandForRegr-multi-results.png">
+<img src="../../images/testtg_RandForRegr-multi-results.png" alt="image">
+</a>
+<figcaption>Figure 5. Plots for the result of applying the Random Forest regressor to 4 different target features (rows); with the columns showing permutation importance, feature importance and the Kfold model result. </figcaption>
 </figure>
 
 ### Symbolisation and plot layout

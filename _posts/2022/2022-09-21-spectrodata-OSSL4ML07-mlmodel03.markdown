@@ -12,16 +12,16 @@ tags:
   - hyper-parameter tuning
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
 date: '2022-09-21 11:27'
-modified: '2023-08-05 11:27'
+modified: '2023-11-22 11:27'
 comments: true
 share: true
 ---
 
-This post is part of a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also the third post in a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-pydev-clone).
+This post is part of a series on organising and analysing data from the Open Soil Spectral Library (OSSL). It is also part of a sub-series on how to apply Machine Learning (ML) for predicting soil properties from spectral data. To run the scripts used in this post you need to setup a Python environment, and clone or download the python scripts from a [GitHub repository (repo)](https://github.com/karttur/OSSL-pydev/), as explained in the post [Clone the OSSL python package](../../libspectrosupport/spectrosupport-OSSL-pydev-clone).
 
 ### Introduction
 
-A hyper-parameter controls the learning process and is not itself trained. Some hyper-parameters does not affect the training as such, only the speed or efficiency of the learning. Among the latter are for instance the number of kernels that are employed when running a regressor. In this post you will have the option of tuning some hyper-parameters that affect the learning. With the aim of further improving the performance of a regressor.
+A hyper-parameter controls the learning process and is not itself trained. Some hyper-parameters do not affect the training as such, only the speed or efficiency of the learning. Among the latter are for instance the number of kernels that are employed when running a regressor. In this post you will have the option of tuning some hyper-parameters that affect the learning. With the aim of further improving the performance of a regressor.
 
 ### Prerequisites
 
@@ -44,19 +44,19 @@ Each regressor has a different set of hyper-parameters that can be set. The full
 
 Scikit-learn provides two generic approaches for tuning the hyper-parameters of any regressor:
 
-- randomized search (RandomizedSearchCV), and
+- randomised search (RandomisedSearchCV), and
 - exhaustive tuning (GridSearchCV).
 
 Both approaches are implemented in the <span class='module'>OSSL_mlmodel.py</span> module.
 
-##### Randomized search hyper-parameter tuning
+##### Randomised search hyper-parameter tuning
 
-The [randomized search approach](https://scikit-learn.org/stable/modules/grid_search.html#randomized-parameter-optimization) applies a search space for each hyper-parameter as defined by the user. While it has a random element, it has two distinct advantages over an exhaustive search:
+The [randomised search approach](https://scikit-learn.org/stable/modules/grid_search.html#randomised-parameter-optimisation) applies a search space for each hyper-parameter as defined by the user. While it has a random element, it has two distinct advantages over an exhaustive search:
 
 - it is more parsimonious if large search spaces are considered, and
-- parameters that do not affect performance does not decrease efficiency.
+- parameters that do not affect performance do not decrease efficiency.
 
-To apply a randomized hyper parameter tuning as part of the process-flow, edit the json command file:
+To apply a randomised hyper parameter tuning as part of the process-flow, edit the json command file:
 
 ```
 "hyperParameterTuning": {
@@ -73,20 +73,20 @@ To apply a randomized hyper parameter tuning as part of the process-flow, edit t
   }
 ```
 
-The setting above starts the randomized hyper-parameter tuning as part of the process-flow in <span class='module'>OSSL_mlmodel.py</span>. The parameter _fraction_ defines the cross-validation fraction, _nIterSearch_ is the total number of randomized search over the total hyper-parameter space defined (set in a separate file as explained below), the number in _n_best_report_ is the number of the highest ranking tunings that are reported and saved with the results. The tuning is repeated independently for each combination of regressor and target feature.
+The setting above starts the randomised hyper-parameter tuning as part of the process-flow in <span class='module'>OSSL_mlmodel.py</span>. The parameter _fraction_ defines the cross-validation fraction, _nIterSearch_ is the total number of randomised search over the total hyper-parameter space defined (set in a separate file as explained below), the number _n_best_report_ is the number of the highest ranking tunings that are reported and saved with the results. The tuning is repeated independently for each combination of regressor and target feature.
 
-The parameterizatin of the randomized tuning must be set in a separate json file, linked under the "input" tag of the json command file:
+The parameterisation of the randomised tuning must be set in a separate json file, linked under the "input" tag of the json command file:
 
 ```
 "input": {
-    "jsonSpectraDataFilePath": "/path/to/arranged-data/visnir/project/data-visnir_source_b0-b1_bw.json",
-    "jsonSpectraParamsFilePath": "/path/to/arranged-data/visnir/project/params-visnir_source_b0-b1_bw.json",
+    ...
+    ...
     "hyperParameterRandomTuning": "/path/to/hyper-param-random-tuning.json",
     "hyperParameterExhaustiveTuning": "/path/to/hyper-param-exhaustive-tuning.json"
   }
 ```
 
-The json command file defining the randomized tuning (_hyper-param-random-tuning.json_) can be located anywhere on your machine and can be used across different projects. The default randomised search command file looks like this:
+The json command file defining the randomised tuning (_hyper-param-random-tuning.json_) can be located anywhere on your machine and can be used across different projects. The default randomised search command file looks like this:
 
 ```
 {
@@ -259,12 +259,12 @@ To apply an exhaustive hyper-parameter tuning as part of the process-flow, edit 
 
 The setting above starts the exhaustive hyper-parameter tuning as part of the process-flow in <span class='module'>OSSL_mlmodel.py</span>. The parameter _fraction_ defines the cross-validation fraction, the number in _n_best_report_ is the number of the highest ranking tunings that are reported and saved with the results. The tuning is repeated independently for each combination of regressor and target feature.
 
-The parameterizatin of the exhaustive tuning must be set in a separate json file, linked under the "input" tag of the json command file:
+The parameterisation of the exhaustive tuning must be set in a separate json file, linked under the "input" tag of the json command file:
 
 ```
 "input": {
-    "jsonSpectraDataFilePath": "/path/to/arranged-data/visnir/project/data-visnir_source_b0-b1_bw.json",
-    "jsonSpectraParamsFilePath": "/path/to/arranged-data/visnir/project/params-visnir_source_b0-b1_bw.json",
+    ...
+    ...
     "hyperParameterRandomTuning": "/path/to/hyper-param-random-tuning.json",
     "hyperParameterExhaustiveTuning": "/path/to/hyper-param-exhaustive-tuning.json"
   }

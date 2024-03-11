@@ -11,7 +11,7 @@ tags:
   - import
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
 date: '2022-09-09 11:27'
-modified: '2023-07-03 11:27'
+modified: '2023-11-22 11:27'
 comments: true
 share: true
 ---
@@ -42,7 +42,7 @@ Running the <span class='module'>OSSL_import.py</span> script requires specifica
 - **sourcedatafolder**: subfolder under "rootpath" with the exploded content of the OSSL zip file (default = "data")
 - **arrangeddatafolder**: subfolder under "rootpath" where the imported (rearranged) OSSL data will be stored (default = "arranged-data")
 - **jsonfolder**: subfolder under "rootpath" where the json import parameter files must be located (default = "json-import")
-- **projFN**: the name of an existing txt file that sequentially lists json import parameter files to run, must be directly under the "arrangeddatafolder" (default = "extract_rawdata.txt")
+- **projFN**: the name of an existing json file that sequentially lists json import parameter files to run, must be directly under the "arrangeddatafolder" (default = "extract_rawdata.json")
 - **createjsonparams**: if set to true the script will create a template json file and exit
 
 ##### json specification file
@@ -55,7 +55,7 @@ All of the paths and names listed above must be specified in a json file, and th
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
-  "projFN": "extract_rawdata.txt"
+  "projFN": "extract_rawdata.json"
   "createjsonparams": false
 }
 ```
@@ -70,10 +70,12 @@ The first time you use the script you must copy or create and then edit the json
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
-  "projFN": "extract_rawdata.txt",
+  "projFN": "extract_rawdata.json",
   "createjsonparams": true
 }
 ```
+
+You have to edit the template to correspond to your OSSL dataset and the actual spectral bands and band-widths you want to arrange. Details on how to edit command files are given below in the section [json command file structure](#json-command-file-structure).
 
 ##### Run script
 
@@ -101,13 +103,13 @@ With the parameter _createjsonparams_ set to _true_ the script will report that 
 % python OSSL_import.py "/Users/thomasgumbricht/docs-local/OSSL/import_ossl.json"
 json parameter file created: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/template_import_ossl-spectra.json
  Edit the json file for your project and rename it to reflect the commands.
- Add the path of the edited file to your project file (extract_rawdata.txt).
+ Add the path of the edited file to your project file (extract_rawdata.json).
  Then set createjsonparams to false and rerun script.
 ```
 
 ##### json command file
 
-For each set of spectra that you want to work with, you need to create a json command file. The full, local path to that file must then be added to the textfile identified with the parameter _projectfilename_ (default: _extract_rawdata.txt_). The json command file itself must be located in the subfolder identified with the parameter _jsonfolder_ (default: _json-import_). This is a bit complicated but just take it easy and follow the steps outlined below.
+For each set of spectra that you want to work with, you need to create a json command file. The full, local path to that file must then be added to the json project file identified with the parameter _projFN_ (default: <span class='file'>extract_rawdata.json</span>). The json command files **must** be located in the subfolder identified with the parameter _jsonfolder_ (default: _json-import_). This is a bit complicated but just take it easy and follow the steps outlined below.
 
 ###### json command file structure
 
@@ -256,7 +258,7 @@ Here is the same command file, but with comments (you can not have comments in a
 
 ###### Editing the json command file
 
-To actually run the rearrangement you need to edit the json command file to fit your input data and the output you want. The example below is the command file structure for rearranging the LUKAS VIS-NIR spectral data that were downloaded in the [previous](../spectrodata-OSSL4ML01-download) post:
+To actually run the rearrangement you need to edit the json command file to fit your input data and the output you want. The example below is the command file structure for rearranging the LUCAS VIS-NIR spectral data that were downloaded in the [previous](../spectrodata-OSSL4ML01-download) post:
 
 ```
 {
@@ -337,7 +339,7 @@ Rename the file to reflect the rearrangement, in my case to _import_ossl-spectra
 
 The full path to the command file on my machine then becomes _/Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json_.
 
-Create the project file _extract_rawdata.txt_ (directly under the _arrangeddatafolder_ [default name: _arranged-data_]) and enter the full path to the command file (example for my local setup):
+Create the project file _extract_rawdata.json_ (directly under the _arrangeddatafolder_ [default name: <span class='file'>arranged-data</span>]) and enter the full path to the command file (example for my local setup):
 
 ```
 /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
@@ -353,7 +355,7 @@ To run the script (<span class='module'>OSSL_import.py</span>) make sure the [js
   "sourcedatafolder": "data",
   "arrangeddatafolder": "arranged-data",
   "jsonfolder": "json-import",
-  "projFN": "extract_rawdata.txt"
+  "projFN": "extract_rawdata.json"
   "createjsonparams": false
 }
 ```
@@ -366,13 +368,13 @@ With all the data and folder structure in place, run the script from the command
 
 ```
 python OSSL_import.py "/Users/thomasgumbricht/docs-local/OSSL/import_ossl.json"
-Processing /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/extract_rawdata.txt
+Processing /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/extract_rawdata.json
     jsonObj: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/json-import/import_ossl-spectra_sweden-LUCAS_nir_460-1050_10.json
         VISNIR extraction parameters saved as: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_460-1050_10/params-visnir_LUCAS_460-1050_10.json
         VISNIR extracted data saved as: /Users/thomasgumbricht/docs-local/OSSL/Sweden/LUCAS/arranged-data/visnir/OSSL-LUCAS-SE_460-1050_10/data-visnir_LUCAS_460-1050_10.json
 ```
 
-As I defined the rearrangement for the Swedish LUKAS NIR spectra, the output from the script includes two files as reported above. Both the generated files are in json format.
+As I defined the rearrangement for the Swedish LUCAS NIR spectra, the output from the script includes two files as reported above. Both the generated files are in json format.
 
 ###### Parameter output file
 

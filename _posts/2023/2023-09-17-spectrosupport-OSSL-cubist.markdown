@@ -129,4 +129,4 @@ The bug is that the command _df.iteritems()_ is outdated and must be replaced wi
 return {col_name: _get_data_format(col_data) for col_name, col_data in df.items()}
 ```
 
-Fix it, save the updated support module and try to run <span class='module')>OSSL_mlmodel.py</span> again.
+Fix it, save the updated support module and try to run <span class='module'>OSSL_mlmodel.py</span> again.

@@ -133,9 +133,9 @@ To setup a new virtual environment from using <span class='terminalapp'>conda</s
 - use an exported configuration (yml) file, or
 - set up a default environment and add individual packages afterwards
 
-The last alternative, to install individual packages as a post-process, is not recommended. As the packages are not installed simultaneoulsy <span class='terminalapp'>conda</span> can not assure the coherence between the installed packages.
+The last alternative, to install individual packages as a post-process, is not recommended. As the packages are not installed simultaneously, <span class='terminalapp'>conda</span> can not assure the coherence between the installed packages.
 
-Of the four additional packages required, <span class='package'>numpy, pandas and scikit-learn</span> are available in the [Anaconda package list](https://docs.anaconda.com/free/anaconda/reference/packages/pkg-docs/). <span class='package'>matplotlib</span> is instead available via the conda-forge repository. This has bearings for how to define the creation of the virtual environment combining the 4 packages.
+Of the four additional packages required, <span class='package'>numpy, pandas and scikit-learn</span> are available in the [Anaconda package list](https://docs.anaconda.com/free/anaconda/reference/packages/pkg-docs/). <span class='package'>matplotlib</span> is instead available via the conda-forge repository.
 
 ##### Default packages (.condarc)
 
@@ -249,7 +249,7 @@ Also <span class='pacakge'>pandas</span> is available from the [default Anaconda
 
 <span class='terminal'>conda install -c anaconda pandas</span>
 
-##### pandas
+##### scikit-learn
 
 Also <span class='pacakge'>scikit-learn</span> is available from the [default Anaconda repository](https://anaconda.org/anaconda/scikit-learn):
 
