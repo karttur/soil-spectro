@@ -58,7 +58,7 @@ NOTE that in earlier version (before November 2023), the _projFN_ argument was a
 
 ##### json specification file
 
-All of the paths and names listed above must be specified in a json file, and the local path to this json file is the only parameter that is required when running the <span class='module'>OSSL_mlmodel.py</span> script. The json specifiction file for modelling the data over Sweden that were [downloaded](../spectrodata-OSSL4ML01-download) and then [imported](../spectrodata-OSSL4ML02-arrange) looks like this:
+All of the paths and names listed above must be specified in a json file, and the local path to this json file is the only parameter that is required when running the <span class='module'>OSSL_mlmodel.py</span> script. The json specification file for modelling the data over Sweden that were [downloaded](../spectrodata-OSSL4ML01-download) and then [imported](../spectrodata-OSSL4ML02-arrange) looks like this:
 
 ```
 {
