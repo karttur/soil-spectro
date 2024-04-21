@@ -107,13 +107,13 @@ Figure 1 illustrates 4 different standardisation functions for enhancing informa
 
 <figure class="half">
 
-<a href="/images/spectromodel_standardisation_meancentring.png"><img src="/images/spectromodel_standardisation_meancentring.png" alt="image"></a>
+<a href="../../images/spectromodel_standardisation_meancentring.png"><img src="../../images/spectromodel_standardisation_meancentring.png" alt="image"></a>
 
-<a href="/images/spectromodel_standardisation_autoscaling.png"><img src="/images/spectromodel_standardisation_autoscaling.png" alt="image"></a>
+<a href="../../images/spectromodel_standardisation_autoscaling.png"><img src="../../images/spectromodel_standardisation_autoscaling.png" alt="image"></a>
 
-<a href="/images/spectromodel_standardisation_paretoscaling.png"><img src="/images/spectromodel_standardisation_paretoscaling.png" alt="image"></a>
+<a href="../../images/spectromodel_standardisation_paretoscaling.png"><img src="../../images/spectromodel_standardisation_paretoscaling.png" alt="image"></a>
 
-<a href="/images/spectromodel_standardisation_poissonscaling.png"><img src="/images/spectromodel_standardisation_poissonscaling.png" alt="image"></a>
+<a href="../../images/spectromodel_standardisation_poissonscaling.png"><img src="../../images/spectromodel_standardisation_poissonscaling.png" alt="image"></a>
 
 <figcaption>Figure 1. Standardisation methods included in the process flow; top row: meancentring and autoscaling, bottom row: Pareto and Poisson scaling.</figcaption>
 </figure>

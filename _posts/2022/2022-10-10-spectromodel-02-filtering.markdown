@@ -137,13 +137,13 @@ In Savitzky-Golay filtering a polynominal is fitted to each point using a window
 
 <figure class="half">
 
-<a href="/images/spectromodel_filtering_moving-average.png"><img src="/images/spectromodel_filtering_moving-average.png" alt="image"></a>
+<a href="../../images/spectromodel_filtering_moving-average.png"><img src="../../images/spectromodel_filtering_moving-average.png" alt="image"></a>
 
-<a href="/images/spectromodel_filtering_customised-kernel.png"><img src="/images/spectromodel_filtering_customised-kernel.png" alt="image"></a>
+<a href="../../images/spectromodel_filtering_customised-kernel.png"><img src="../../images/spectromodel_filtering_customised-kernel.png" alt="image"></a>
 
-<a href="/images/spectromodel_filtering_gauss.png"><img src="/images/spectromodel_filtering_gauss.png" alt="image"></a>
+<a href="../../images/spectromodel_filtering_gauss.png"><img src="../../images/spectromodel_filtering_gauss.png" alt="image"></a>
 
-<a href="/images/spectromodel_filtering_savitzky-golay.png"><img src="/images/spectromodel_filtering_savitzky-golay.png" alt="image"></a>
+<a href="../../images/spectromodel_filtering_savitzky-golay.png"><img src="../../images/spectromodel_filtering_savitzky-golay.png" alt="image"></a>
 
 <figcaption>Figure 1. Filtering methods included in the process flow; top row: moving average and customised kernel, bottom row: Gaussian and Savitzky-Golay filters.</figcaption>
 </figure>
@@ -216,7 +216,7 @@ The outcome of applying the multifilter below is illustrated in Figure 2.
 
 <figure>
 
-<a href="/images/spectromodel_mulitfiltering_gaussian.png"><img src="/images/spectromodel_mulitfiltering_gaussian.png" alt="image"></a>
+<a href="../../images/spectromodel_mulitfiltering_gaussian.png"><img src="../../images/spectromodel_mulitfiltering_gaussian.png" alt="image"></a>
 
 <figcaption>Figure 2. Multi-filtering using Gaussian filter for emulating a simpler sensor - note how the output is unevenly spaced.</figcaption>
 </figure>

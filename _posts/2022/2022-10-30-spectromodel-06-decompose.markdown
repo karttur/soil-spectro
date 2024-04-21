@@ -40,11 +40,11 @@ Figure 1 illustrates decomposition of:
 
 <figure class="half">
 
-<a href="/images/spectromodel_pca_reflectance.png"><img src="/images/spectromodel_pca_reflectance.png" alt="image"></a>
+<a href="../../images/spectromodel_pca_reflectance.png"><img src="../../images/spectromodel_pca_reflectance.png" alt="image"></a>
 
-<a href="/images/spectromodel_pca_norml2-reflectance.png"><img src="/images/spectromodel_pca_norml2-reflectance.png" alt="image"></a>
+<a href="../../images/spectromodel_pca_norml2-reflectance.png"><img src="../../images/spectromodel_pca_norml2-reflectance.png" alt="image"></a>
 
-<a href="/images/spectromodel_pca_norml2-derivatives.png"><img src="/images/spectromodel_pca_norml2-derivatives.png" alt="image"></a>
+<a href="../../images/spectromodel_pca_norml2-derivatives.png"><img src="../../images/spectromodel_pca_norml2-derivatives.png" alt="image"></a>
 
 <figcaption>Figure 1. Decomposition of spectral signals; upper left: from original spectral signals, upper right: after L2 normalisation of the spectral signals, and lower left after derivation of L2 normalised spectral signals.</figcaption>
 </figure>

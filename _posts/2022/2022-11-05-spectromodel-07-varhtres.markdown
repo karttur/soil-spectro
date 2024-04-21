@@ -91,17 +91,17 @@ The result of the two argument settings above are illustrated as the middle row 
 
 <figure class="half">
 
-<a href="/images/spectromodel_varthres-noscaling_reflectance.png"><img src="/images/spectromodel_varthres-noscaling_reflectance.png" alt="image"></a>
+<a href="/images/spectromodel_varthres-noscaling_reflectance.png"><img src="../../images/spectromodel_varthres-noscaling_reflectance.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-minmaxscaling_reflectance.png"><img src="/images/spectromodel_varthres-minmaxscaling_reflectance.png" alt="image"></a>
+<a href="/images/spectromodel_varthres-minmaxscaling_reflectance.png"><img src="../../images/spectromodel_varthres-minmaxscaling_reflectance.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-noscaling_derivatives.png"><img src="/images/spectromodel_varthres-noscaling_derivatives.png" alt="image"></a>
+<a href="/images/spectromodel_varthres-noscaling_derivatives.png"><img src="../../images/spectromodel_varthres-noscaling_derivatives.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-minmaxscaler_derivatives.png"><img src="/images/spectromodel_varthres-minmaxscaler_derivatives.png" alt="image"></a>
+<a href="/images/spectromodel_varthres-minmaxscaler_derivatives.png"><img src="../../images/spectromodel_varthres-minmaxscaler_derivatives.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-noscaling_pca.png"><img src="/images/spectromodel_varthres-noscaling_pca.png" alt="image"></a>
+<a href="/images/spectromodel_varthres-noscaling_pca.png"><img src="../../images/spectromodel_varthres-noscaling_pca.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-minmaxscaling_pca.png"><img src="/images/spectromodel_varthres-minmaxscaling_pca.png" alt="image"></a>
+<a href="/images/spectromodel_varthres-minmaxscaling_pca.png"><img src="../../images/spectromodel_varthres-minmaxscaling_pca.png" alt="image"></a>
 
 <figcaption>Figure 1. Variance thresholding for selecting covariates; From top to bottom the rows show original spectral signals (top), derivatives (middle) and PCA decompositions (bottom); the left columns show variance selection without applying a scaler and the right columns after applying the MinMaxScaler. Note how the selection of information carrying bands in the original reflectance spectra is almost completely reversed when applying the scaler whereas the selection is more stable for derivatives and completely stable for decomposed bands.
 </figcaption>

@@ -75,17 +75,17 @@ In figure 1 below I have tested two different datasets against the three outlier
 
 <figure class="third">
 
-<a href="/images/spectromodel_removoutliers-iforest_spectra-meancenter_N.png"><img src="/images/spectromodel_removoutliers-iforest_spectra-meancenter_N.png" alt="image"></a>
+<a href="../../images/spectromodel_removoutliers-iforest_spectra-meancenter_N.png"><img src="../../images/spectromodel_removoutliers-iforest_spectra-meancenter_N.png" alt="image"></a>
 
-<a href="/images/spectromodel_removoutliers-ee_spectra-meancenter_N.png"><img src="/images/spectromodel_removoutliers-ee_spectra-meancenter_N.png" alt="image"></a>
+<a href="../../images/spectromodel_removoutliers-ee_spectra-meancenter_N.png"><img src="../../images/spectromodel_removoutliers-ee_spectra-meancenter_N.png" alt="image"></a>
 
-<a href="/images/spectromodel_removoutliers-1csvm_spectra-meancenter_N.png"><img src="/images/spectromodel_removoutliers-1csvm_spectra-meancenter_N.png" alt="image"></a>
+<a href="../../images/spectromodel_removoutliers-1csvm_spectra-meancenter_N.png"><img src="../../images/spectromodel_removoutliers-1csvm_spectra-meancenter_N.png" alt="image"></a>
 
-<a href="/images/spectromodel_removoutliers-iforest_pca-varthres_N.png"><img src="/images/spectromodel_removoutliers-iforest_pca-varthres_N.png" alt="image"></a>
+<a href="../../images/spectromodel_removoutliers-iforest_pca-varthres_N.png"><img src="../../images/spectromodel_removoutliers-iforest_pca-varthres_N.png" alt="image"></a>
 
-<a href="/images/spectromodel_removoutliers-ee_pca-varthres_N.png"><img src="/images/spectromodel_removoutliers-ee_pca-varthres_N.png" alt="image"></a>
+<a href="../../images/spectromodel_removoutliers-ee_pca-varthres_N.png"><img src="../../images/spectromodel_removoutliers-ee_pca-varthres_N.png" alt="image"></a>
 
-<a href="/images/spectromodel_removoutliers-1csvm_pca-varthres_N.png"><img src="/images/spectromodel_removoutliers-1csvm_pca-varthres_N.png" alt="image"></a>
+<a href="../../images/spectromodel_removoutliers-1csvm_pca-varthres_N.png"><img src="../../images/spectromodel_removoutliers-1csvm_pca-varthres_N.png" alt="image"></a>
 
 <figcaption>Figure 1. Variance thresholding for selecting covariates; From top to bottom the rows show original spectral signals (top), derivatives (middle) and PCA decompositions (bottom); the left columns show variance selection without applying a scaler and the right columns after applying the MinMaxScaler. Note how the selection of information carrying bands in the original reflectance spectra is almost completely reversed when applying the scaler whereas the selection is more stable for derivatives and completely stable for decomposed bands.
 </figcaption>

@@ -7,7 +7,7 @@ locale: en_US
 description: soil spectral exploration
 logo: site-logo.png
 search: true
-url: https://karttur.github.io/soil-spectro
+url: https://karttur.github.io/soil-spectro/
 #commonurl is the link to common resources for all my sites
 commonurl: https://karttur.github.io/common
 

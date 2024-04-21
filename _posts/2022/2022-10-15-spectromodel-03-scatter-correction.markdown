@@ -122,15 +122,15 @@ Figure 1 illustrates 5 different functions for spectral scatter correction, all 
 
 <figure class="half">
 
-<a href="/images/spectromodel_scatter-correction_l1.png"><img src="/images/spectromodel_scatter-correction_l1.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_l1.png"><img src="../../images/spectromodel_scatter-correction_l1.png" alt="image"></a>
 
-<a href="/images/spectromodel_scatter-correction_l2.png"><img src="/images/spectromodel_scatter-correction_l2.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_l2.png"><img src="../../images/spectromodel_scatter-correction_l2.png" alt="image"></a>
 
-<a href="/images/spectromodel_scatter-correction_max.png"><img src="/images/spectromodel_scatter-correction_max.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_max.png"><img src="../../images/spectromodel_scatter-correction_max.png" alt="image"></a>
 
-<a href="/images/spectromodel_scatter-correction_snv.png"><img src="/images/spectromodel_scatter-correction_snv.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_snv.png"><img src="../../images/spectromodel_scatter-correction_snv.png" alt="image"></a>
 
-<a href="/images/spectromodel_scatter-correction_msc.png"><img src="/images/spectromodel_scatter-correction_msc.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_msc.png"><img src="../../images/spectromodel_scatter-correction_msc.png" alt="image"></a>
 
 <figcaption>Figure 1. Scatter correction methods included in the process flow; top row: norm-l1 and norm-l2, middle row: norm-max and SNV, and bottom row: MSC.</figcaption>
 </figure>
@@ -164,13 +164,13 @@ Figure 2 illustrates 4 options for consecutive scaling:
 
 <figure class="half">
 
-<a href="/images/spectromodel_scatter-correction_snv+snv.png"><img src="/images/spectromodel_scatter-correction_snv+snv.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_snv+snv.png"><img src="../../images/spectromodel_scatter-correction_snv+snv.png" alt="image"></a>
 
-<a href="/images/spectromodel_scatter-correction_snv+msc.png"><img src="/images/spectromodel_scatter-correction_snv+msc.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_snv+msc.png"><img src="../../images/spectromodel_scatter-correction_snv+msc.png" alt="image"></a>
 
-<a href="/images/spectromodel_scatter-correction_msc+snv.png"><img src="/images/spectromodel_scatter-correction_msc+snv.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_msc+snv.png"><img src="../../images/spectromodel_scatter-correction_msc+snv.png" alt="image"></a>
 
-<a href="/images/spectromodel_scatter-correction_msc+msc.png"><img src="/images/spectromodel_scatter-correction_msc+msc.png" alt="image"></a>
+<a href="../../images/spectromodel_scatter-correction_msc+msc.png"><img src="../../images/spectromodel_scatter-correction_msc+msc.png" alt="image"></a>
 
 <figcaption>Figure 2. Examples of consecutive scaling function for acatter correction flow; top row: SNV+SNV and SNV+MSC, bottom row: MSC+SNV and MSC+MSC. As the input is high quality laboratory spectra, the consecutive scaling only generates minimal scaling compared to single scaling.</figcaption>
 </figure>

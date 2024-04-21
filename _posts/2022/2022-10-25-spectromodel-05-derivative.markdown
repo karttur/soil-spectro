@@ -35,9 +35,9 @@ Figure 1 illustrates the derivatives retrieved from the original spectral data (
 
 <figure class="half">
 
-<a href="/images/spectromodel_derivatives_orignal-spectra.png"><img src="/images/spectromodel_derivatives_orignal-spectra.png" alt="image"></a>
+<a href="../../images/spectromodel_derivatives_orignal-spectra.png"><img src="../../images/spectromodel_derivatives_orignal-spectra.png" alt="image"></a>
 
-<a href="/images/spectromodel_derivatives_norml2-spectra.png"><img src="/images/spectromodel_derivatives_norml2-spectra.png" alt="image"></a>
+<a href="../../images/spectromodel_derivatives_norml2-spectra.png"><img src="../../images/spectromodel_derivatives_norml2-spectra.png" alt="image"></a>
 
 <figcaption>Figure 1. Derivatives from spectral signals; left: from original spectral signals, and right: after L2 normalisation of the spectral signals.</figcaption>
 </figure>
