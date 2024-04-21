@@ -10,15 +10,15 @@
 
 - title: Spectral Lib
   url: /libspectrodata/
-  include: 'N'
+  include: 'Y'
 
 - title: Spectral Modelling
   url: /spectromodel/
-  include: 'N'
+  include: 'Y'
 
 - title: Support
   url: /libspectrosupport/
-  include: 'N'
+  include: 'Y'
 
 - title: Search
   url: /search/
