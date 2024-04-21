@@ -1,6 +1,6 @@
 ---
 layout: page
-title: OSSL spectral library data processing
+title: "OSSL spectral library data processing"
 excerpt: "OSSL spectral library data processing using python."
 search_omit: true
 ---

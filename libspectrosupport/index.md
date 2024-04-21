@@ -2,9 +2,10 @@
 layout: page
 title: Blog
 excerpt: "An archive of blog posts sorted by date."
-image: std-trmm-3b43v7-precip_3B43_trmm_2001-2016_A
 search_omit: true
 ---
+
+The Framework is built in Python using the Eclipse Integrated Development Environment (IDE) and postreSQL as database. The setup of the IDE with all its components is covered in the [Setup IDE Blog](https://karttur.github.io/setup-ide/). If you want to setup Karttur's GeoImagine Framework you have to start with building the Eclipse Spatial Data IDE (SPIDE).
 
 <ul class="post-list">
 {% for post in site.categories.libspectrosupport %}

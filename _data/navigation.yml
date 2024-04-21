@@ -8,15 +8,15 @@
   url: /
   include: 'N'
 
-- title: Spectral Lib
+- title: Libspectrodata
   url: /libspectrodata/
   include: 'Y'
 
-- title: Spectral Modelling
+- title: Spectromodel
   url: /spectromodel/
   include: 'Y'
 
-- title: Support
+- title: Libspectrosupport
   url: /libspectrosupport/
   include: 'Y'
 
