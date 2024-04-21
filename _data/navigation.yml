@@ -12,6 +12,10 @@
   url: /libspectrodata/
   include: 'N'
 
+- title: Spectral Modelling
+  url: /spectromodel/
+  include: 'N'
+
 - title: Support
   url: /libspectrosupport/
   include: 'N'

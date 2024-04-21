@@ -52,6 +52,7 @@ The process steps implemented in the Python based program used in the blog inclu
 <ul>
     <li>spectral signal filtering/multifiltering</li>
     <li>spectral signal extraction</li>
+    <li>duplicate spectra combination [not yet implemented]</li>
 </ul>
 <li>Collation of target feature and spectral datasets</li>
 <ul>
@@ -86,13 +87,14 @@ The process steps implemented in the Python based program used in the blog inclu
     <ul> <li>Hyper parameter tuning</li>
     </ul>
     </li>
+    <li>feature importance</li>
     <li>model validation</li>
   </ul>
 </ol>
 
-If step 5 (spectral data information enhancement) is applied, the enhancement(s) are developed from predefined arguments and the training data, and then implemented using the variable settings derived from the training dataset to all subsequent tests and predictions. Step 6 is only applied during the model training and removes extreme samples (it does not affect the number of covariates). Steps 6 and 7 use different approach for reducing the number covariates during model training, only the surviving covariates are used in the model formulation and thus also in subsequent model training or predictions.
+If step 5 (spectral data information enhancement) is applied, the enhancement(s) are developed from predefined arguments applied together with the training data, and then implemented using the variable settings derived from the training dataset to all subsequent tests and predictions. Step 6 is only applied during the model training and removes extreme samples (it does not affect the number of covariates). Steps 6 and 7 use different approach for reducing the number covariates during model training, only the surviving covariates are used in the model formulation and thus also in subsequent model training or predictions.
 
-Only step 3 is compulsory. But unless at least one more step is included, the operation does not lead to any useful results. You do not, however, need to include step 9, Modelling. You can use the process flow for testing the effects of different spectral signal filtering/extraction, covariate information enhancement or feature selection. These will all result in statistical evaluations of covariate importances. If you include modelling, also model performances will be statistically evaluated.
+Unless at least one step after the collation and splitting is included, the operation does not lead to any useful results. You do not, however, need to include step 9, Modelling. You can use the process flow for testing the effects of different spectral signal filtering/extraction, covariate information enhancement or feature selection. These will all result in statistical evaluations of covariate importances. If you include modelling, also model performances will be statistically evaluated.
 
 The process steps are illustrated in Figure 1.
 
@@ -211,9 +213,9 @@ The moving average is actually just a special case of the kernel filter (with al
   }
 ```
 
-##### Multiiltering
+##### Multifiltering
 
-The process flow also includes a _multifiltering_ option, which is an extension of  _fitlering_ allowing different band (wavelengths) regions to be filtered and extracted separately. This is useful when for instance emulating the (theoretical) performance of simpler sensors with lower spectral range and resolution compared to the spectral signal at hand. Most simpler (usually filter based) sensors have relatively few bands (up to 64 or 128), with each band having a precisely defined Full Width at Half Maximum (FWHM). FWHM is an alternative manner in describing a normal (i.e. Gaussian) distribution. There is thus a direct relation between FWHM and standard deviation, such that:
+The process flow also includes a _multifiltering_ option, which is an extension of  _filtering_ allowing different band (wavelengths) regions to be filtered and extracted separately. This is useful when for instance emulating the (theoretical) performance of simpler sensors with lower spectral range and resolution compared to the spectral signal at hand. Most simpler (usually filter based) sensors have relatively few bands (up to 64 or 128), with each band having a precisely defined Full Width at Half Maximum (FWHM). FWHM is an alternative manner in describing a normal (i.e. Gaussian) distribution. There is thus a direct relation between FWHM and standard deviation, such that:
 ```
 FWHM = 2.355 * sigma
 ```
@@ -226,6 +228,7 @@ As an example, the AMS-OSRAM spectral sensor [AS7263](https://ams.com/as7263) is
 _Table 1. Spectral characteristics of the AMS-OSRAM spectral sensor AS7263_
 
 | Central wavelength | FWHM | sigma |
+| :--------------- | :----: | :----: |
 | 610 | 20 | 47 |
 | 680 | 20 | 47 |
 | 730 | 20 | 47 |
@@ -292,23 +295,25 @@ Also the DataFrame split in training and test DFs is an inescapable process step
 
 <figure>
 <img src="../../images/Spectra-lib_step03_preprocess.png">
-<figcaption>Figure 5. Spectral data preprocessing steps available in the xSpectre process flow.</figcaption>
+<figcaption>Figure 5. Spectral data information enhancement steps available in the xSpectre process flow.</figcaption>
 </figure>
 
-The spectral data information enhancement steps are specifically built for massaging _spectral_ data to reveal more information and less noise. The methods listed in this section are thus primarily applicable for spectral data and other smooth and correlated multidimensional data, but not necessarily useful for preparing other types of covariates.
-
-The preparation of spectral data requires special consideration. Spectral data can be biased due to several different causes, including variations in temperature, light source, distance and geometry between light source, sample and spectral sensor, atmospheric conditions in the air space the electromagnetic signal has to pass, variation in matrix material (e.g. structural differences in solid materials, purity of liquids etc). The spectral data preparation options available in the xSpectre process flow include:
+The preparation of spectral data requires special consideration (figure 5). Spectral data can be biased due to several different causes, including variations in temperature, light source, distance and geometry between light source, sample and spectral sensor, atmospheric conditions in the air space the electromagnetic signal has to pass, variation in matrix material (e.g. structural differences in solid materials, purity of liquids etc). The spectral data preparation options available in the xSpectre process flow include:
 
 - scatter correction,
 - standardisation (scaling),
 - derivation, and
 - decomposition.
 
+The spectral data information enhancement methods are particularly suited for massaging spectral data to reveal more information and less noise. The methods listed in this section are thus primarily applicable for spectral data and other smooth and correlated multidimensional data, but not necessarily useful for preparing other types of covariates.
+
+Scatter correction, with the exception of Multiplicative Scatter Correction (MSC) only requires single spectrum (and could thus have been applied prior to the DataFrame collation and splitting), but MSC is a key method for correcting spectra and thus all scatter correction options are performed using collated and split data. Standardisation and decomposition methods relate to complete sets of samples (and thus all the spectra) fed into each method. The variables derived from the training dataset are then applied when running tests and predictions. As the extraction of derivates is a post-process in relation to both scatter correction and standardisation/scaling, also this enhancement step is performed after the split into training and test datasets.
+
 ##### Scatter correction
 
 Scattering effects occur because of variations in specular (mirror like) reflectances, variations in the sample matrix material particle sizes and the path length of the emitted and reflected light from its source via the sample to the sensor. These effects can be additive or multiplicative and distorts the individual spectra even if derived from the same instrument.
 
-Scatter correction is a widely applied technology for reducing scatter effects while retaining the information related to mainly chemical composition properties. For a deeper discussion see the online article [Two scatter correction techniques for NIR spectroscopy in Python](https://nirpyresearch.com/two-scatter-correction-techniques-nir-spectroscopy-python/), that I also used for scripting the SNV and MSC methods in the process flow.
+Scatter correction is a widely applied technology for reducing spectral scatter effects while retaining the information related to mainly chemical composition properties. For a deeper discussion see the online article [Two scatter correction techniques for NIR spectroscopy in Python](https://nirpyresearch.com/two-scatter-correction-techniques-nir-spectroscopy-python/), that I also used for scripting the SNV and MSC methods in the process flow.
 
 The process flow includes 5 different methods for scatter correction:
 
@@ -320,7 +325,7 @@ The process flow includes 5 different methods for scatter correction:
 
 _norm-L1_ is a length (linear) defined normalisation, _norm-L2_ is area (square) defined and _norm-max_ forces the maximum value of each spectra to have the same numerical value.
 [MORE ON SNV AND MSC]
-The main difference between SNV and MSC is that MSC can use a pre-defined average spectrum derived from an ensemble of spectra. This means that applying MSC for model testing requires the mean spectral signal from the training data. The other methods only use single spectrum properties for the scatter correction and do not require any additional information.
+The main difference between SNV and MSC is that MSC can use a pre-defined average spectrum derived from an ensemble of spectra. This means that applying MSC for model testing requires the mean spectral signal from the training data.
 
 In some circumstances it can be advantageous to execute two scatter corrections in sequence, with the second using the output from the first as input. The second should rather be either SNV or MSC, whereas the first can be any of the five (including SNV or MSC), as in this example of the scatter correction arguments:
 
@@ -334,24 +339,24 @@ In some circumstances it can be advantageous to execute two scatter corrections 
   },
 ```
 
-##### Standardisation (normalized scaling)
+##### Standardisation (normalised scaling)
 
-Standardisation, or normalized scaling, can both improve the information content and reduce noise. The techniques that can be applied as part of the process flow include:
+Standardisation, or normalised scaling, can both improve the information content and reduce noise. The techniques that can be applied as part of the process flow include:
 
 - [meancentring](https://www.quora.com/In-regression-what-is-centering-on-the-mean-Can-you-explain-describe-it),
 - [autoscaling (standard score or z-score normalisation)](https://en.wikipedia.org/wiki/Standard_score),
-- [Paretoscaling](https://wiki.eigenvector.com/index.php?title=Advanced_Preprocessing:_Variable_Scaling), and
-- [Poissonscaling](https://wiki.eigenvector.com/index.php?title=Advanced_Preprocessing:_Variable_Scaling).
+- [paretoscaling](https://wiki.eigenvector.com/index.php?title=Advanced_Preprocessing:_Variable_Scaling), and
+- [poissonscaling](https://wiki.eigenvector.com/index.php?title=Advanced_Preprocessing:_Variable_Scaling).
 
 **Meancentring** subtracts the average from all the values, forces a mean of zero and thus levels any offset. In many cases this increases the information content in spectral data. As meancentring have few, or any, negative impacts it is usually applied as a robust methods for increasing information in spectral data.
 
 **Autoscaling** is perhaps the most common preprocessing method; it uses meancentring followed by division with the standard deviation. The result is a mean of zero with a standard deviation of one (1) also having a numerical value of one (1). Autoscaling is a sound approach if the signal to noise ratio is high. However, if the signal to noise ratio is low, or the standard deviation is near zero, autoscaling causes noise to dominate over the signal - this is not uncommon for spectral data. Autoscaling is thus in general not recommended to use as a preprocess for spectral data.
 
-While meancentring can improve information by removing the offset, it does not support capturing information from smaller peaks in the data. That is usually accomplished by autoscaling. But as noted in the previous paragraph, for spectral data auto scaling primarily causes the noise to increase. Enters the two alternative methods of Pareto and Poisson scaling.
+While meancentring can improve information by removing the offset, it does not support capturing information from smaller peaks in the data. That is usually accomplished by autoscaling. But as noted in the previous paragraph, for spectral data auto scaling causes the noise to increase. Enters the two alternative methods of Pareto and Poisson scaling.
 
 **Pareto scaling** scales each variable by the square root of the standard deviation without applying any prior meancentring. **Poisson scaling** (also known as square root mean scaling or "sqrt mean scale") scales each variable by the square root of the mean without applying any prior meancentring. An offset is sometimes used for adjusting variables with near-zero values as part of the Poisson scaling. This is not implemented in the present version of the  process-flow.
 
-In the json command file all 4 scaling options are stated, with meancentring set to _true_ by default. To apply any other scaling function, set _meancentring_ to _false_ and the scaling function you want to apply to _true_. If all options are set to _false_, or _apply_ is set to _false_, the covariates will not be standardised.
+In the json command file all 4 scaling options are stated, with meancentring set to _true_ by default. To apply any other scaling function, set _meancentring_ to _false_ and the scaling function you want to apply to _true_. If all options are set to _false_, or _apply_ is set to _false_, the data will not be standardised.
 
 ```
   },
@@ -366,7 +371,7 @@ In the json command file all 4 scaling options are stated, with meancentring set
 
 ##### Derivation
 
-In many cases the signal derived from derivates carries more informationen than the spectral signal itself. In the process flow you set the n:th derivative to extract and whether or not to keep or discard the original spectral signal in the subsequent steps. To invoke derivation you ave to set _apply_ to _true_ and derive to the n:th derivate you want to retrieve (_derive_ set _0_ equals the original data). If _join_ is set to _true_, the derivatives will be joined as new covariates, if set to _false_ the derivates will replace the existing covariates.
+In many cases the signal derived from derivates carries more information than the spectral signal itself. In the process flow you can extract the first derivative and either keep or discard the original spectral signal in the subsequent steps. To invoke derivation you have to set _apply_ to _true_ and _derive_ to the n:th derivate (at present only the first derivative is supported) you want to retrieve (_derive_ set _0_ equals the original data). If _join_ is set to _true_, the derivatives will be joined as new covariates, if set to _false_ the derivates will replace the existing covariates.
 
 ```
 "derivatives": {
@@ -376,10 +381,9 @@ In many cases the signal derived from derivates carries more informationen than 
   }
 ```
 
-
 ##### Decomposition
 
-The process flow decomposition only include Principal Component Analysis (PCA). The only argument required is the number of components to calculate and retain as covariates. Components will be generated from all existing input covariates and then replace these covaraites with the components. The covariates will be re-labelled as
+The process flow decomposition only include Principal Component Analysis (PCA). The single argument required is the number of components to calculate and retain as covariates. Components will be generated from all existing input covariates and then replace these covaraites with the components. The covariates will be re-labelled as
 
 ```
 pc-001, pc-002, pc-003, ...
@@ -399,7 +403,7 @@ The json command coding for applying decomposition as a pre-process:
 <figcaption>Figure 5. Spectral data preprocessing steps available in the xSpectre process flow.</figcaption>
 </figure>
 
-Outlier detection and removal only affects the model training. The purpose of removing outliers from the model training is to reduce the effects of (erroneous) extreme values. This can be critical in small datasets but should have little effect in large datasets without major errors.
+Outlier detection and removal only affects the model training. The purpose of removing outliers from the model training is to reduce the effects of (erroneous) extreme values. This can be critical in small datasets but should have little effect in large datasets without major errors. Outliers can relate both to the covariates and the target feature to detect.
 
 The process-flow implements four different outlier detectors (the links lead to the Sci-kit learn functions applied in the script):
 - [IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html),
@@ -422,7 +426,7 @@ The only parameter that can be changed in the present version is _contamination_
 
 <figure>
 <img src="../../images/Spectra-lib_step05_gen-feat-select.png">
-<figcaption>Figure 5. Spectral data preprocessing steps available in the xSpectre process flow.</figcaption>
+<figcaption>Figure 5. General covariate feature selection steps available in the xSpectre process flow..</figcaption>
 </figure>
 
 The step encompassing General covariate selection includes 2 generic methods for reducing the number of covariates:
@@ -484,6 +488,11 @@ To include the Ward clustering in the process-flow, edit the json command file t
 In the example above I have asked the tuning function to evaluate all optional cluster sizes between 4 and 12, and set the tuning process to a kfold strategy of 3 folds. As the function will seek an optimal number of clusters, I have set the _n_clusers_ parameter for the main _wardClustering_ to _0_. If  _tuneWardClustering_ is not requested, that number must instead be set to the actual number of clusters requested from _wardClustering_.
 
 #### Specific covariate selection
+
+<figure>
+<img src="../../images/Spectra-lib_step06_spec-feat-select.png">
+<figcaption>Figure 6. Specific covariate feature selection steps available in the xSpectre process flow.</figcaption>
+</figure>
 
 In contrast to the general covariate selection methods, the specific methods identify the most significant covariates in relation to the target feature or the target feature and the regressor. Three different methods are implemented in the process flow:
 

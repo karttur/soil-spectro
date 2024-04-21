@@ -846,7 +846,7 @@ The global data cleaning and selection methods analyse the independent features 
 
 ##### Outlier detection and removal
 
-To remove outliers the process-flow implements four different outlier detectors available in the package scikit learn:
+To [remove outliers](https://scikit-learn.org/stable/modules/outlier_detection.html) the process-flow implements four different outlier detectors available in the package scikit learn:
 - [IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html),
 - [EllipticEnvelope](https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EllipticEnvelope.html),
 - [LocalOutlierFactor](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.LocalOutlierFactor.html), and
@@ -902,7 +902,9 @@ There are several methods available for univariate feature selection. In the pre
 },
 ```
 
-The univariate feature selection is set separately for each target feature (soil property) to model and the selection of KBest features for one target property does not affect the selection of features for other soil properties.
+The KBest selection applies a univariate linear regression tests returning F-statistic and p-values. It is set separately for each target feature (soil property) to model and the selection of KBest features for one target property does not affect the selection of features for other soil properties.
+
+
 
 ##### Feature clustering
 
