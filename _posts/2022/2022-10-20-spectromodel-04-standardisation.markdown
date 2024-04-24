@@ -16,6 +16,21 @@ comments: true
 share: true
 ---
 
+### Process flow - standardisation
+
+Staistical standardisation (standardisation), including meancentring, autoscaling (z-score standardisation) and Pareot/Poission scaling is one of the optional methods for spectral data information enhancement (spectraInfoEnhancement). The position of the process in the chain is indicated in the schematic flow chart below.
+
+```
+|____SpectralData
+| |____filter
+| | |____singlefilter
+| | |____multiFilter
+| |____dataSetSplit
+| | |____spectralInfoEnhancement
+| | | |____scatterCorrection
+| | | |____standardisation
+```
+
 ### Introduction
 
 Standardisation, or normalised scaling, can both improve the information content and reduce noise. Standardisation is applied across spectra, scaling each recorded wavelength across a set of spectral signals. The functions that can be applied as part of the process flow include:

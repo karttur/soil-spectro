@@ -16,6 +16,20 @@ comments: true
 share: true
 ---
 
+### Process flow - scatter correction
+
+Scatter correction (scatterCorrection), including L1 and L2 normalisation, Standard Normal Variate (SNV) and Multiplicative Scatter Correction (MSC),is one of the optional methods for spectral data information enhancement (spectraInfoEnhancement). The position of the process in the chain is indicated in the schematic flow chart below.
+
+```
+|____SpectralData
+| |____filter
+| | |____singlefilter
+| | |____multiFilter
+| |____dataSetSplit
+| | |____spectralInfoEnhancement
+| | | |____scatterCorrection
+```
+
 ### Introduction
 
 Scattering effects occur because of variations in specular (mirror like) reflectances, variations in the sample matrix material particle sizes and the path length of the emitted and reflected light from its source via the sample to the sensor. These effects can be additive or multiplicative and distorts the individual spectra even if derived from the same instrument.

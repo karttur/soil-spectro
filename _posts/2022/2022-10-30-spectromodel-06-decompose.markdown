@@ -16,6 +16,23 @@ comments: true
 share: true
 ---
 
+### Process flow - decompose
+
+Decomposition (decompose) only includes principal component analys (pca) and is the last method for spectral data information enhancement (spectraInfoEnhancement). The position of the process in the chain is indicated in the schematic flow chart below.
+
+```
+|____SpectralData
+| |____filter
+| | |____singlefilter
+| | |____multiFilter
+| |____dataSetSplit
+| | |____spectralInfoEnhancement
+| | | |____scatterCorrection
+| | | |____standardisation
+| | | |____derivatives
+| | | |____decompose
+```
+
 ### Introduction
 
 Decomposing multi- and hyperspectral data into fewer bands or variables is oftn an efficient way to both enhance the information content and sped up processing.

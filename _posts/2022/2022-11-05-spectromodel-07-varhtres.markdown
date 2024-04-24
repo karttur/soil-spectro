@@ -16,6 +16,25 @@ comments: true
 share: true
 ---
 
+### Process flow - varianceThreshold
+
+In the process _General feature selection_ (varianceThreshold) includes a single process variance threshold selector (varianceThreshold). This process for selecting covariates does not relate to neither the target feature nor the regressor. It is does more general compared to other feature selection functions. Thus it is positioned prior to linking the covariates (x variables) to any target feature (y variable). The position of the process in the chain is indicated in the schematic flow chart below.
+
+```
+|____SpectralData
+| |____filter
+| | |____singlefilter
+| | |____multiFilter
+| |____dataSetSplit
+| | |____spectralInfoEnhancement
+| | | |____scatterCorrection
+| | | |____standardisation
+| | | |____derivatives
+| | | |____decompose
+| | |____generalFeatureSelection
+| | | |____varianceThreshold
+```
+
 ### Introduction
 
 A flat (constant signal) spectrum carries a minimum of information while spectrum with distinct troughs and peaks carries abundant information. Ignoring the chemometric target, the variance of a spectral signal can be used as a quick method for reducing the number of spectra by discarding those that carries the least information. This is exactly what is done by the [variance threshold selector](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.VarianceThreshold.html) method implemented in the process flow. Because the method requires neither a target feature nor a regressor, it is more general (but also more crude) compared to other covariate selection methods. It is thus placed in its own sub-category, _generalFeatureSelection_. The other covariate (or feature) selection methods that require either target or both target and regressor for selecting covariates, can not be applied in combination. The _generalFeatureSelection_ method of variance threshold can, however always be applied as an initial feature selection also when applying a more specific selector (under _specificFeatureSelection_ in the json commands).
@@ -91,17 +110,17 @@ The result of the two argument settings above are illustrated as the middle row 
 
 <figure class="half">
 
-<a href="/images/spectromodel_varthres-noscaling_reflectance.png"><img src="../../images/spectromodel_varthres-noscaling_reflectance.png" alt="image"></a>
+<a href="../../images/spectromodel_varthres-noscaling_reflectance.png"><img src="../../images/spectromodel_varthres-noscaling_reflectance.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-minmaxscaling_reflectance.png"><img src="../../images/spectromodel_varthres-minmaxscaling_reflectance.png" alt="image"></a>
+<a href="../../images/spectromodel_varthres-minmaxscaling_reflectance.png"><img src="../../images/spectromodel_varthres-minmaxscaling_reflectance.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-noscaling_derivatives.png"><img src="../../images/spectromodel_varthres-noscaling_derivatives.png" alt="image"></a>
+<a href="../../images/spectromodel_varthres-noscaling_derivatives.png"><img src="../../images/spectromodel_varthres-noscaling_derivatives.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-minmaxscaler_derivatives.png"><img src="../../images/spectromodel_varthres-minmaxscaler_derivatives.png" alt="image"></a>
+<a href="../../images/spectromodel_varthres-minmaxscaler_derivatives.png"><img src="../../images/spectromodel_varthres-minmaxscaler_derivatives.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-noscaling_pca.png"><img src="../../images/spectromodel_varthres-noscaling_pca.png" alt="image"></a>
+<a href="../../images/spectromodel_varthres-noscaling_pca.png"><img src="../../images/spectromodel_varthres-noscaling_pca.png" alt="image"></a>
 
-<a href="/images/spectromodel_varthres-minmaxscaling_pca.png"><img src="../../images/spectromodel_varthres-minmaxscaling_pca.png" alt="image"></a>
+<a href="../../images/spectromodel_varthres-minmaxscaling_pca.png"><img src="../../images/spectromodel_varthres-minmaxscaling_pca.png" alt="image"></a>
 
 <figcaption>Figure 1. Variance thresholding for selecting covariates; From top to bottom the rows show original spectral signals (top), derivatives (middle) and PCA decompositions (bottom); the left columns show variance selection without applying a scaler and the right columns after applying the MinMaxScaler. Note how the selection of information carrying bands in the original reflectance spectra is almost completely reversed when applying the scaler whereas the selection is more stable for derivatives and completely stable for decomposed bands.
 </figcaption>

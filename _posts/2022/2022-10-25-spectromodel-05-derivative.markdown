@@ -16,6 +16,22 @@ comments: true
 share: true
 ---
 
+### Process flow - decompose
+
+Calculating derivatives (dervatives) is one of the optional methods for spectral data information enhancement (spectraInfoEnhancement). The position of the process in the chain is indicated in the schematic flow chart below.
+
+```
+|____SpectralData
+| |____filter
+| | |____singlefilter
+| | |____multiFilter
+| |____dataSetSplit
+| | |____spectralInfoEnhancement
+| | | |____scatterCorrection
+| | | |____standardisation
+| | | |____derivatives
+```
+
 ### Introduction
 
 In many cases the signal derived from derivates carries more information than the spectra itself. In the process flow you can extract the first derivative and either keep or discard the original spectral signal in the subsequent steps. To invoke derivation you have to set _apply_ to _true_ and _derive_ to the n:th derivate (at present only the first derivative is supported) you want to retrieve (_derive_ set _0_ equals the original data). If _join_ is set to _true_, the derivatives will be joined as new covariates, if set to _false_ the derivates will replace the existing covariates. At present the process flow only supports retrieving the first derivative.

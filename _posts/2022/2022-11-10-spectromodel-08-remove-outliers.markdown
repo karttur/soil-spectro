@@ -16,6 +16,26 @@ comments: true
 share: true
 ---
 
+### Process flow - removeOutliers
+
+Removing outliers (removeOutliers) is perfomed independently for each target feature. The position of the process in the chain is indicated in the schematic flow chart below.
+
+```
+|____SpectralData
+| |____filter
+| | |____singlefilter
+| | |____multiFilter
+| |____dataSetSplit
+| | |____spectralInfoEnhancement
+| | | |____scatterCorrection
+| | | |____standardisation
+| | | |____derivtives
+| | | |____decompose
+| | | |____derivatives
+| | |____targetFeatureExtract
+| | | |____removeOutliers
+```
+
 ### Introduction
 
 Outliers can origin from a variety of different sources, including instrument failure, sample mixup, human translation or spelling error etc. Outliers can also have unproportional large influence on model definition and calibration. Removing any outliers prior to formulating any chemometric translation model for spectra is thus often crucial. (The very high quality OSSL spectral data used in this tutorial, however, are almost flawless).

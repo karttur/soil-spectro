@@ -16,7 +16,17 @@ comments: true
 share: true
 ---
 
+### Process flow - filtering
 
+filtering (filter and multiFilter) is the only preprocess that is done prior to splitting data into training and test datasets. The filter methods avaible include moving average, Gaussian and Savitzky-Golay filters. The position of the process in the chain is indicated in the schematic flow chart below.
+
+```
+|____SpectralData
+| |____filter
+| | |____singlefilter
+| | |____multiFilter
+
+```
 
 ### Introduction
 
