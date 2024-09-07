@@ -1,14 +1,10 @@
 ---
 layout: post
-title: Clone GitHub PyDev project
+title: Chemometric resources
 categories: libspectrosupport
-excerpt: "Clone PyDev project from GitHub"
+excerpt: "Chemometric resources"
 tags:
-  - Python
-  - GitHub
-  - OSSL
-  - clone
-  - download
+  - chemometrics
 image: ts-mdsl-rntwi_RNTWI_id_2001-2016_AS
 date: '2024-09-05 11:27'
 modified: '2024-09-05 11:27'
